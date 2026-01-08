@@ -31,6 +31,12 @@ item.adversity.difficulty_detector.usage=Right-click to view difficulty report
 # Affix Names
 adversity.affix.none=None
 adversity.affix.fiery=Fiery
+adversity.affix.frosty=Frosty
+adversity.affix.vampiric=Vampiric
+adversity.affix.reflective=Reflective
+adversity.affix.regenerating=Regenerating
+adversity.affix.teleporting=Teleporting
+adversity.affix.splitting=Splitting
 
 # Tier Names (10-tier system)
 adversity.tier.1=Elite

@@ -31,6 +31,12 @@ item.adversity.difficulty_detector.usage=右键使用查看难度报告
 # Affix Names
 adversity.affix.none=无
 adversity.affix.fiery=烈焰
+adversity.affix.frosty=冰霜
+adversity.affix.vampiric=吸血
+adversity.affix.reflective=反射
+adversity.affix.regenerating=再生
+adversity.affix.teleporting=传送
+adversity.affix.splitting=分裂
 
 # Tier Names (10级系统)
 adversity.tier.1=精英
