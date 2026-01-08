@@ -145,6 +145,7 @@ public class AdversityClientHandler {
 
     /**
      * 渲染实体名称后显示词条信息和血条
+     * 只在玩家目光对准实体时显示
      */
     @SubscribeEvent
     public void onRenderLiving(RenderLivingEvent.Post<EntityLiving> event) {
@@ -158,6 +159,9 @@ public class AdversityClientHandler {
 
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.player == null) return;
+
+        // 只在玩家目光对准该实体时显示
+        if (mc.pointedEntity != entity) return;
 
         double distance = mc.player.getDistanceSq(entity);
         if (distance > RENDER_DISTANCE * RENDER_DISTANCE) return;
