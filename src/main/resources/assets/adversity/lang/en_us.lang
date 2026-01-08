@@ -37,6 +37,10 @@ adversity.affix.reflective=Reflective
 adversity.affix.regenerating=Regenerating
 adversity.affix.teleporting=Teleporting
 adversity.affix.splitting=Splitting
+adversity.affix.withering=Withering
+adversity.affix.haste=Haste
+adversity.affix.blinding=Blinding
+adversity.affix.gravity=Gravity
 
 # Tier Names (10-tier system)
 adversity.tier.1=Elite

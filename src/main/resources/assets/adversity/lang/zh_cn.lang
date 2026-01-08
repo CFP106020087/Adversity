@@ -37,6 +37,10 @@ adversity.affix.reflective=反射
 adversity.affix.regenerating=再生
 adversity.affix.teleporting=传送
 adversity.affix.splitting=分裂
+adversity.affix.withering=凋零
+adversity.affix.haste=迅捷
+adversity.affix.blinding=致盲
+adversity.affix.gravity=引力
 
 # Tier Names (10级系统)
 adversity.tier.1=精英

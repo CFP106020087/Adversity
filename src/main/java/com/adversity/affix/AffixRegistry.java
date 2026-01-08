@@ -139,6 +139,7 @@ public class AffixRegistry {
         // ========== 攻击型词条 (OFFENSIVE) ==========
         register(new FieryAffix());           // 烈焰 - 攻击时点燃目标 (难度0+)
         register(new FrostyAffix());          // 冰霜 - 攻击时减速目标 (难度0+)
+        register(new WitheringAffix());       // 凋零 - 攻击时施加凋零 (难度5+)
 
         // ========== 防御型词条 (DEFENSIVE) ==========
         register(new VampiricAffix());        // 吸血 - 攻击回血 (难度3+)
@@ -146,7 +147,9 @@ public class AffixRegistry {
         register(new RegeneratingAffix());    // 再生 - 持续回血 (难度3+)
 
         // ========== 功能型词条 (UTILITY) ==========
-        // (暂无)
+        register(new HasteAffix());           // 迅捷 - 移动速度加成 (难度1+)
+        register(new BlindingAffix());        // 致盲 - 攻击时致盲 (难度2+)
+        register(new GravityAffix());         // 引力 - 拉动附近玩家 (难度4+)
 
         // ========== 特殊型词条 (SPECIAL) ==========
         register(new TeleportingAffix());     // 传送 - 受伤时传送 (难度5+)
