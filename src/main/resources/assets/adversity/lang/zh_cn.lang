@@ -1,7 +1,8 @@
 # Adversity Language File - Simplified Chinese
 
-# Affix Names (placeholders)
+# Affix Names
 adversity.affix.none=无
+adversity.affix.fiery=烈焰
 
 # Difficulty
 adversity.difficulty.normal=普通

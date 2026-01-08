@@ -1,7 +1,8 @@
 # Adversity Language File - English
 
-# Affix Names (placeholders)
+# Affix Names
 adversity.affix.none=None
+adversity.affix.fiery=Fiery
 
 # Difficulty
 adversity.difficulty.normal=Normal

@@ -1,6 +1,7 @@
 package com.adversity.affix;
 
 import com.adversity.Adversity;
+import com.adversity.affix.impl.FieryAffix;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -28,8 +29,8 @@ public class AffixRegistry {
 
         Adversity.LOGGER.info("Initializing Affix Registry");
 
-        // 在这里注册内置词条
-        // registerBuiltinAffixes();
+        // 注册内置词条
+        registerBuiltinAffixes();
 
         Adversity.LOGGER.info("Affix Registry initialized with {} affixes", REGISTRY.size());
     }
@@ -129,5 +130,22 @@ public class AffixRegistry {
      */
     public static Set<ResourceLocation> getAffixIds() {
         return Collections.unmodifiableSet(REGISTRY.keySet());
+    }
+
+    /**
+     * 注册内置词条
+     */
+    private static void registerBuiltinAffixes() {
+        // ========== 攻击型词条 (OFFENSIVE) ==========
+        register(new FieryAffix());           // 烈焰 - 攻击时点燃目标
+
+        // ========== 防御型词条 (DEFENSIVE) ==========
+        // TODO: 添加更多词条
+
+        // ========== 功能型词条 (UTILITY) ==========
+        // TODO: 添加更多词条
+
+        // ========== 特殊型词条 (SPECIAL) ==========
+        // TODO: 添加更多词条
     }
 }
