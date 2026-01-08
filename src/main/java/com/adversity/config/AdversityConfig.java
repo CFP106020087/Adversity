@@ -104,6 +104,20 @@ public class AdversityConfig {
         public double damageMultiplierPerDifficulty = 0.08;
 
         @Config.Comment({
+            "Armor bonus per difficulty point (added to base armor)",
+            "每点难度增加的盔甲值"
+        })
+        @Config.RangeDouble(min = 0, max = 5)
+        public double armorPerDifficulty = 0.5;
+
+        @Config.Comment({
+            "Maximum armor bonus from difficulty",
+            "难度系统提供的最大盔甲值加成"
+        })
+        @Config.RangeDouble(min = 0, max = 30)
+        public double maxArmorBonus = 20;
+
+        @Config.Comment({
             "Maximum difficulty from distance",
             "距离难度的最大值"
         })

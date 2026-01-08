@@ -4,11 +4,17 @@
 adversity.affix.none=无
 adversity.affix.fiery=烈焰
 
-# Tier Names
+# Tier Names (10级系统)
 adversity.tier.1=精英
 adversity.tier.2=稀有
-adversity.tier.3=史诗
-adversity.tier.4=首领
+adversity.tier.3=精锐
+adversity.tier.4=史诗
+adversity.tier.5=传说
+adversity.tier.6=神话
+adversity.tier.7=远古
+adversity.tier.8=虚空
+adversity.tier.9=深渊
+adversity.tier.10=终焉
 
 # Difficulty
 adversity.difficulty.normal=普通

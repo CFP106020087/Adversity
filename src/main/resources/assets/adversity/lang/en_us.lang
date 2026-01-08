@@ -4,11 +4,17 @@
 adversity.affix.none=None
 adversity.affix.fiery=Fiery
 
-# Tier Names
+# Tier Names (10-tier system)
 adversity.tier.1=Elite
 adversity.tier.2=Rare
-adversity.tier.3=Epic
-adversity.tier.4=Boss
+adversity.tier.3=Veteran
+adversity.tier.4=Epic
+adversity.tier.5=Legendary
+adversity.tier.6=Mythic
+adversity.tier.7=Ancient
+adversity.tier.8=Void
+adversity.tier.9=Abyssal
+adversity.tier.10=Terminus
 
 # Difficulty
 adversity.difficulty.normal=Normal

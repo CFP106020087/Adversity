@@ -39,8 +39,20 @@ public class AdversityClientHandler {
     private static final float HEALTH_BAR_WIDTH = 40.0f;
     private static final float HEALTH_BAR_HEIGHT = 4.0f;
 
-    // 等级名称（后备，优先使用翻译）
-    private static final String[] TIER_NAMES_FALLBACK = {"", "Elite", "Rare", "Epic", "Boss"};
+    // 等级名称（后备，优先使用翻译）- 10级系统
+    private static final String[] TIER_NAMES_FALLBACK = {
+        "",           // T0
+        "Elite",      // T1 - 精英
+        "Rare",       // T2 - 稀有
+        "Veteran",    // T3 - 精锐
+        "Epic",       // T4 - 史诗
+        "Legendary",  // T5 - 传说
+        "Mythic",     // T6 - 神话
+        "Ancient",    // T7 - 远古
+        "Void",       // T8 - 虚空
+        "Abyssal",    // T9 - 深渊
+        "Terminus"    // T10 - 终焉
+    };
 
     private static final Random RANDOM = new Random();
     private int tickCounter = 0;
@@ -108,7 +120,8 @@ public class AdversityClientHandler {
     }
 
     /**
-     * 根据等级生成不同的粒子
+     * 根据等级生成不同的粒子 (10级系统)
+     * 高等级粒子更密集
      */
     private void spawnParticlesForTier(Minecraft mc, Entity entity, int tier) {
         double x = entity.posX + (RANDOM.nextDouble() - 0.5) * entity.width;
@@ -121,23 +134,53 @@ public class AdversityClientHandler {
         double vz = (RANDOM.nextDouble() - 0.5) * 0.05;
 
         switch (tier) {
-            case 1: // Elite - 绿色火焰
-                if (RANDOM.nextInt(3) == 0) {
+            case 1: // 精英 - 绿色粒子（稀疏）
+                if (RANDOM.nextInt(4) == 0) {
                     mc.world.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, x, y, z, vx, vy, vz);
                 }
                 break;
-            case 2: // Rare - 蓝色魔法
-                if (RANDOM.nextInt(2) == 0) {
+            case 2: // 稀有 - 蓝色水花
+                if (RANDOM.nextInt(3) == 0) {
                     mc.world.spawnParticle(EnumParticleTypes.WATER_SPLASH, x, y, z, vx, vy, vz);
                 }
                 break;
-            case 3: // Epic - 紫色附魔
-                mc.world.spawnParticle(EnumParticleTypes.PORTAL, x, y, z, vx, vy * 2, vz);
+            case 3: // 精锐 - 青色气泡
+                if (RANDOM.nextInt(3) == 0) {
+                    mc.world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, x, y, z, vx, vy, vz);
+                }
                 break;
-            case 4: // Boss - 金色火焰 + 更多粒子
+            case 4: // 史诗 - 紫色传送门
+                if (RANDOM.nextInt(2) == 0) {
+                    mc.world.spawnParticle(EnumParticleTypes.PORTAL, x, y, z, vx, vy * 2, vz);
+                }
+                break;
+            case 5: // 传说 - 金色火焰
+                mc.world.spawnParticle(EnumParticleTypes.FLAME, x, y, z, vx, vy, vz);
+                break;
+            case 6: // 神话 - 红色火焰 + 烟雾
                 mc.world.spawnParticle(EnumParticleTypes.FLAME, x, y, z, vx, vy, vz);
                 if (RANDOM.nextInt(2) == 0) {
-                    mc.world.spawnParticle(EnumParticleTypes.LAVA, x, y, z, 0, 0, 0);
+                    mc.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x, y, z, 0, 0.02, 0);
+                }
+                break;
+            case 7: // 远古 - 紫色 + 附魔
+                mc.world.spawnParticle(EnumParticleTypes.PORTAL, x, y, z, vx, vy * 2, vz);
+                mc.world.spawnParticle(EnumParticleTypes.ENCHANTMENT_TABLE, x, y + 0.5, z, 0, 0.1, 0);
+                break;
+            case 8: // 虚空 - 末影粒子
+                mc.world.spawnParticle(EnumParticleTypes.PORTAL, x, y, z, vx, vy * 3, vz);
+                mc.world.spawnParticle(EnumParticleTypes.SUSPENDED_DEPTH, x, y, z, 0, 0, 0);
+                break;
+            case 9: // 深渊 - 岩浆 + 火焰
+                mc.world.spawnParticle(EnumParticleTypes.FLAME, x, y, z, vx, vy, vz);
+                mc.world.spawnParticle(EnumParticleTypes.LAVA, x, y, z, 0, 0, 0);
+                break;
+            case 10: // 终焉 - 所有效果 + 爆炸
+                mc.world.spawnParticle(EnumParticleTypes.FLAME, x, y, z, vx, vy, vz);
+                mc.world.spawnParticle(EnumParticleTypes.PORTAL, x, y, z, vx, vy * 2, vz);
+                mc.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, x, y, z, 0, 0.05, 0);
+                if (RANDOM.nextInt(3) == 0) {
+                    mc.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x, y, z, 0, 0, 0);
                 }
                 break;
         }
@@ -278,10 +321,10 @@ public class AdversityClientHandler {
     }
 
     /**
-     * 根据等级获取翻译后的名称
+     * 根据等级获取翻译后的名称 (10级系统)
      */
     private String getTierName(int tier) {
-        if (tier <= 0 || tier > 4) {
+        if (tier <= 0 || tier > 10) {
             return "T" + tier;
         }
         String key = "adversity.tier." + tier;
@@ -294,28 +337,40 @@ public class AdversityClientHandler {
     }
 
     /**
-     * 根据等级获取文字颜色
+     * 根据等级获取文字颜色 (10级系统)
      */
     private TextFormatting getTierColor(int tier) {
         switch (tier) {
-            case 1: return TextFormatting.GREEN;
-            case 2: return TextFormatting.BLUE;
-            case 3: return TextFormatting.LIGHT_PURPLE;
-            case 4: return TextFormatting.GOLD;
+            case 1: return TextFormatting.GREEN;        // 精英 - 绿色
+            case 2: return TextFormatting.BLUE;         // 稀有 - 蓝色
+            case 3: return TextFormatting.AQUA;         // 精锐 - 青色
+            case 4: return TextFormatting.LIGHT_PURPLE; // 史诗 - 淡紫
+            case 5: return TextFormatting.GOLD;         // 传说 - 金色
+            case 6: return TextFormatting.RED;          // 神话 - 红色
+            case 7: return TextFormatting.DARK_PURPLE;  // 远古 - 深紫
+            case 8: return TextFormatting.DARK_BLUE;    // 虚空 - 深蓝
+            case 9: return TextFormatting.DARK_RED;     // 深渊 - 深红
+            case 10: return TextFormatting.BLACK;       // 终焉 - 黑色
             default: return TextFormatting.WHITE;
         }
     }
 
     /**
-     * 根据等级获取血条颜色
+     * 根据等级获取血条颜色 (10级系统)
      */
     private int[] getTierHealthColor(int tier) {
         switch (tier) {
-            case 1: return new int[]{85, 255, 85};      // 绿色
-            case 2: return new int[]{85, 85, 255};      // 蓝色
-            case 3: return new int[]{255, 85, 255};     // 紫色
-            case 4: return new int[]{255, 170, 0};      // 金色
-            default: return new int[]{255, 85, 85};     // 红色
+            case 1: return new int[]{85, 255, 85};      // 精英 - 绿色
+            case 2: return new int[]{85, 85, 255};      // 稀有 - 蓝色
+            case 3: return new int[]{85, 255, 255};     // 精锐 - 青色
+            case 4: return new int[]{255, 85, 255};     // 史诗 - 紫色
+            case 5: return new int[]{255, 170, 0};      // 传说 - 金色
+            case 6: return new int[]{255, 85, 85};      // 神话 - 红色
+            case 7: return new int[]{170, 0, 170};      // 远古 - 深紫
+            case 8: return new int[]{0, 0, 170};        // 虚空 - 深蓝
+            case 9: return new int[]{170, 0, 0};        // 深渊 - 深红
+            case 10: return new int[]{50, 50, 50};      // 终焉 - 黑灰
+            default: return new int[]{255, 255, 255};   // 白色
         }
     }
 

@@ -212,14 +212,21 @@ public class DifficultyManager {
     }
 
     /**
-     * 根据难度计算等级
+     * 根据难度计算等级 (10级系统)
+     * 难度区间更细分，适应高难度模组包
      */
     private static int calculateTier(float difficulty) {
-        if (difficulty < 2.0f) return 0;      // 普通
-        if (difficulty < 4.0f) return 1;      // T1
-        if (difficulty < 6.0f) return 2;      // T2
-        if (difficulty < 8.0f) return 3;      // T3
-        return 4;                              // T4 (Boss级)
+        if (difficulty < 2.0f) return 0;       // 普通 (无词条)
+        if (difficulty < 3.0f) return 1;       // T1 - 精英
+        if (difficulty < 4.5f) return 2;       // T2 - 稀有
+        if (difficulty < 6.0f) return 3;       // T3 - 精锐
+        if (difficulty < 8.0f) return 4;       // T4 - 史诗
+        if (difficulty < 10.0f) return 5;      // T5 - 传说
+        if (difficulty < 13.0f) return 6;      // T6 - 神话
+        if (difficulty < 16.0f) return 7;      // T7 - 远古
+        if (difficulty < 20.0f) return 8;      // T8 - 虚空
+        if (difficulty < 25.0f) return 9;      // T9 - 深渊
+        return 10;                              // T10 - 终焉
     }
 
     /**
@@ -229,6 +236,10 @@ public class DifficultyManager {
         // 从配置读取倍率参数
         float healthMult = 1.0f + difficulty * (float) AdversityConfig.difficulty.healthMultiplierPerDifficulty;
         float damageMult = 1.0f + difficulty * (float) AdversityConfig.difficulty.damageMultiplierPerDifficulty;
+        float armorBonus = (float) Math.min(
+            difficulty * AdversityConfig.difficulty.armorPerDifficulty,
+            AdversityConfig.difficulty.maxArmorBonus
+        );
 
         cap.setHealthMultiplier(healthMult);
         cap.setDamageMultiplier(damageMult);
@@ -246,6 +257,13 @@ public class DifficultyManager {
         if (damageAttr != null) {
             double baseDamage = damageAttr.getBaseValue();
             damageAttr.setBaseValue(baseDamage * damageMult);
+        }
+
+        // 应用盔甲值加成
+        IAttributeInstance armorAttr = entity.getEntityAttribute(SharedMonsterAttributes.ARMOR);
+        if (armorAttr != null && armorBonus > 0) {
+            double baseArmor = armorAttr.getBaseValue();
+            armorAttr.setBaseValue(baseArmor + armorBonus);
         }
     }
 
@@ -290,14 +308,20 @@ public class DifficultyManager {
     }
 
     /**
-     * 根据等级计算词条数量
+     * 根据等级计算词条数量 (10级系统)
      */
     private static int calculateAffixCount(int tier) {
         switch (tier) {
-            case 1: return 1 + RANDOM.nextInt(2);      // 1-2
-            case 2: return 2 + RANDOM.nextInt(2);      // 2-3
-            case 3: return 3 + RANDOM.nextInt(2);      // 3-4
-            case 4: return 4 + RANDOM.nextInt(2);      // 4-5
+            case 1: return 1;                          // T1: 1
+            case 2: return 1 + RANDOM.nextInt(2);      // T2: 1-2
+            case 3: return 2;                          // T3: 2
+            case 4: return 2 + RANDOM.nextInt(2);      // T4: 2-3
+            case 5: return 3;                          // T5: 3
+            case 6: return 3 + RANDOM.nextInt(2);      // T6: 3-4
+            case 7: return 4;                          // T7: 4
+            case 8: return 4 + RANDOM.nextInt(2);      // T8: 4-5
+            case 9: return 5;                          // T9: 5
+            case 10: return 5 + RANDOM.nextInt(2);     // T10: 5-6
             default: return 0;
         }
     }
