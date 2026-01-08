@@ -43,13 +43,26 @@ public class ReflectiveAffix extends AbstractAffix {
 
     @Override
     public float onHurt(EntityLiving entity, DamageSource source, float damage, IAffixData data) {
+        // 不反弹荆棘伤害（防止无限反弹循环）
+        if (source.getDamageType().equals("thorns")) {
+            return damage;
+        }
+
         // 只反弹来自生物的伤害
         if (source.getTrueSource() instanceof EntityLivingBase) {
             EntityLivingBase attacker = (EntityLivingBase) source.getTrueSource();
 
-            // 不反弹自己（防止无限循环）
+            // 不反弹自己的伤害（防止自我伤害循环）
             if (attacker == entity) {
                 return damage;
+            }
+
+            // 不反弹其他拥有反射词条的怪物的伤害（防止怪物间无限反弹）
+            if (attacker instanceof EntityLiving) {
+                IAdversityCapability attackerCap = CapabilityHandler.getCapability((EntityLiving) attacker);
+                if (attackerCap != null && attackerCap.hasAffix(this)) {
+                    return damage;
+                }
             }
 
             int tier = getTier(entity);

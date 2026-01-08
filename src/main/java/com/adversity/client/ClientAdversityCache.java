@@ -19,6 +19,8 @@ public class ClientAdversityCache {
 
     /**
      * 缓存的实体数据
+     * 注意：怪物词条数据在生成后不会改变，因此缓存不会过期
+     * 只有当实体死亡或被卸载时才会清除缓存
      */
     public static class CachedEntityData {
         public final int tier;
@@ -26,7 +28,6 @@ public class ClientAdversityCache {
         public final float healthMultiplier;
         public final float damageMultiplier;
         public final List<ResourceLocation> affixIds;
-        public final long timestamp;
 
         public CachedEntityData(int tier, float difficultyLevel, float healthMultiplier,
                                 float damageMultiplier, List<ResourceLocation> affixIds) {
@@ -35,24 +36,11 @@ public class ClientAdversityCache {
             this.healthMultiplier = healthMultiplier;
             this.damageMultiplier = damageMultiplier;
             this.affixIds = new ArrayList<>(affixIds);
-            this.timestamp = System.currentTimeMillis();
-        }
-
-        /**
-         * 检查缓存是否过期（5分钟）
-         * 词条数据在生成后不会改变，所以可以缓存较长时间
-         */
-        public boolean isExpired() {
-            return System.currentTimeMillis() - timestamp > 300000; // 5分钟
         }
     }
 
     // 实体ID -> 缓存数据
     private static final Map<Integer, CachedEntityData> CACHE = new ConcurrentHashMap<>();
-
-    // 上次清理时间
-    private static long lastCleanup = 0;
-    private static final long CLEANUP_INTERVAL = 30000; // 30秒清理一次
 
     /**
      * 更新实体数据
@@ -63,22 +51,15 @@ public class ClientAdversityCache {
         CachedEntityData data = new CachedEntityData(tier, difficultyLevel,
                                                       healthMultiplier, damageMultiplier, affixIds);
         CACHE.put(entityId, data);
-
-        // 定期清理过期数据
-        cleanupIfNeeded();
     }
 
     /**
      * 获取实体数据
+     * 缓存不会过期，只有实体死亡/卸载时才会被清除
      */
     @Nullable
     public static CachedEntityData getEntityData(int entityId) {
-        CachedEntityData data = CACHE.get(entityId);
-        if (data != null && data.isExpired()) {
-            CACHE.remove(entityId);
-            return null;
-        }
-        return data;
+        return CACHE.get(entityId);
     }
 
     /**
@@ -96,17 +77,6 @@ public class ClientAdversityCache {
     }
 
     /**
-     * 定期清理过期数据
-     */
-    private static void cleanupIfNeeded() {
-        long now = System.currentTimeMillis();
-        if (now - lastCleanup > CLEANUP_INTERVAL) {
-            lastCleanup = now;
-            CACHE.entrySet().removeIf(entry -> entry.getValue().isExpired());
-        }
-    }
-
-    /**
      * 获取缓存大小（调试用）
      */
     public static int getCacheSize() {
@@ -115,8 +85,16 @@ public class ClientAdversityCache {
 
     /**
      * 清理不在指定 ID 集合中的缓存（清理死亡/移除的实体）
+     * 由 AdversityClientHandler 定期调用
      */
     public static void retainOnly(java.util.Set<Integer> validIds) {
         CACHE.keySet().retainAll(validIds);
+    }
+
+    /**
+     * 检查实体是否在缓存中
+     */
+    public static boolean hasEntity(int entityId) {
+        return CACHE.containsKey(entityId);
     }
 }

@@ -6,6 +6,8 @@ import com.adversity.affix.AffixType;
 import com.adversity.affix.IAffixData;
 import com.adversity.capability.CapabilityHandler;
 import com.adversity.capability.IAdversityCapability;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -83,12 +85,24 @@ public class SplittingAffix extends AbstractAffix {
 
     /**
      * 生成分裂副本
+     * 使用 EntityList 创建实体，比反射更安全
      */
     private void spawnSplitCopy(EntityLiving original, World world, int index) {
-        // 创建同类型实体
-        EntityLiving copy = (EntityLiving) original.getClass()
-            .getConstructor(World.class)
-            .newInstance(world);
+        // 获取原实体的注册名
+        ResourceLocation entityId = EntityList.getKey(original);
+        if (entityId == null) {
+            Adversity.LOGGER.warn("Cannot split entity without registry name: {}", original.getClass().getName());
+            return;
+        }
+
+        // 使用 EntityList 创建同类型实体（更安全的方式）
+        Entity newEntity = EntityList.createEntityByIDFromName(entityId, world);
+        if (!(newEntity instanceof EntityLiving)) {
+            Adversity.LOGGER.warn("Failed to create split copy for: {}", entityId);
+            return;
+        }
+
+        EntityLiving copy = (EntityLiving) newEntity;
 
         // 设置位置（轻微偏移）
         double offsetX = (index == 0 ? -1 : 1) * 0.5;

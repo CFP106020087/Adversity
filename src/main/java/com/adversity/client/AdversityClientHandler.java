@@ -13,6 +13,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -21,6 +24,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
@@ -31,13 +35,16 @@ import java.util.Random;
 @SideOnly(Side.CLIENT)
 public class AdversityClientHandler {
 
-    // 渲染距离
-    private static final double RENDER_DISTANCE = 32.0;
+    // 渲染距离 - 玩家看向怪物时显示UI的最大距离
+    private static final double LOOK_AT_DISTANCE = 32.0;
     private static final double PARTICLE_DISTANCE = 24.0;
 
     // 血条尺寸
     private static final float HEALTH_BAR_WIDTH = 40.0f;
     private static final float HEALTH_BAR_HEIGHT = 4.0f;
+
+    // 缓存当前玩家看向的实体（每tick更新一次）
+    private static Entity lookedAtEntity = null;
 
     // 等级名称（后备，优先使用翻译）- 10级系统
     private static final String[] TIER_NAMES_FALLBACK = {
@@ -68,14 +75,68 @@ public class AdversityClientHandler {
         if (mc.world == null) {
             // 退出世界时清除缓存
             ClientAdversityCache.clearAll();
+            lookedAtEntity = null;
             return;
         }
+
+        // 每 tick 更新玩家看向的实体（用于UI显示）
+        updateLookedAtEntity(mc);
 
         // 每 5 tick 生成粒子（减少性能开销）
         tickCounter++;
         if (tickCounter % 5 == 0) {
             spawnTierParticles(mc);
         }
+    }
+
+    /**
+     * 更新玩家当前看向的实体
+     * 使用自定义射线检测，范围为 LOOK_AT_DISTANCE
+     */
+    private void updateLookedAtEntity(Minecraft mc) {
+        if (mc.player == null || mc.world == null) {
+            lookedAtEntity = null;
+            return;
+        }
+
+        // 获取玩家视线方向
+        Vec3d eyePos = mc.player.getPositionEyes(1.0f);
+        Vec3d lookVec = mc.player.getLook(1.0f);
+        Vec3d endPos = eyePos.add(lookVec.scale(LOOK_AT_DISTANCE));
+
+        // 射线检测实体
+        lookedAtEntity = rayTraceEntities(mc, eyePos, endPos);
+    }
+
+    /**
+     * 射线检测实体
+     * @return 射线命中的最近实体，如果没有则返回 null
+     */
+    @Nullable
+    private Entity rayTraceEntities(Minecraft mc, Vec3d start, Vec3d end) {
+        Entity result = null;
+        double closestDistance = Double.MAX_VALUE;
+        Vec3d direction = end.subtract(start).normalize();
+
+        for (Entity entity : mc.world.loadedEntityList) {
+            if (!(entity instanceof EntityLiving)) continue;
+            if (!entity.isEntityAlive()) continue;
+
+            // 扩展碰撞箱以便更容易命中
+            AxisAlignedBB box = entity.getEntityBoundingBox().grow(0.3);
+
+            // 检查射线是否与碰撞箱相交
+            RayTraceResult rayResult = box.calculateIntercept(start, end);
+            if (rayResult != null) {
+                double distance = start.distanceTo(rayResult.hitVec);
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    result = entity;
+                }
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -188,7 +249,7 @@ public class AdversityClientHandler {
 
     /**
      * 渲染实体名称后显示词条信息和血条
-     * 只在玩家目光对准实体时显示
+     * 只在玩家目光对准实体时显示（使用自定义射线检测，范围32格）
      */
     @SubscribeEvent
     public void onRenderLiving(RenderLivingEvent.Post<EntityLiving> event) {
@@ -203,11 +264,8 @@ public class AdversityClientHandler {
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.player == null) return;
 
-        // 只在玩家目光对准该实体时显示
-        if (mc.pointedEntity != entity) return;
-
-        double distance = mc.player.getDistanceSq(entity);
-        if (distance > RENDER_DISTANCE * RENDER_DISTANCE) return;
+        // 只在玩家目光对准该实体时显示（使用自定义射线检测）
+        if (lookedAtEntity != entity) return;
 
         // 渲染等级、词条信息和血条
         renderAffixInfo(entity, data, event.getX(), event.getY(), event.getZ());

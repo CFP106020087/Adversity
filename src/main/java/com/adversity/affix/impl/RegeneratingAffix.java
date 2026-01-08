@@ -72,8 +72,7 @@ public class RegeneratingAffix extends AbstractAffix {
             }
         }
 
-        // 增加计数器
-        data.incrementTickCount();
+        // 注意：tick计数由 MobEventHandler 统一调用 incrementTick() 管理
     }
 
     private int getTier(EntityLiving entity) {
