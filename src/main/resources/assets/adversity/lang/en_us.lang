@@ -4,6 +4,12 @@
 adversity.affix.none=None
 adversity.affix.fiery=Fiery
 
+# Tier Names
+adversity.tier.1=Elite
+adversity.tier.2=Rare
+adversity.tier.3=Epic
+adversity.tier.4=Boss
+
 # Difficulty
 adversity.difficulty.normal=Normal
 adversity.difficulty.hard=Hard

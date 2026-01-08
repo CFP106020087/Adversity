@@ -4,11 +4,14 @@ import com.adversity.affix.AffixRegistry;
 import com.adversity.affix.IAffix;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -18,6 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * 客户端事件处理器 - 处理渲染等客户端逻辑
@@ -28,13 +32,20 @@ public class AdversityClientHandler {
 
     // 渲染距离
     private static final double RENDER_DISTANCE = 32.0;
+    private static final double PARTICLE_DISTANCE = 24.0;
 
     // 血条尺寸
     private static final float HEALTH_BAR_WIDTH = 40.0f;
     private static final float HEALTH_BAR_HEIGHT = 4.0f;
 
+    // 等级名称（后备，优先使用翻译）
+    private static final String[] TIER_NAMES_FALLBACK = {"", "Elite", "Rare", "Epic", "Boss"};
+
+    private static final Random RANDOM = new Random();
+    private int tickCounter = 0;
+
     /**
-     * 玩家切换维度时清除缓存
+     * 玩家切换维度时清除缓存，并处理粒子效果
      */
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
@@ -44,6 +55,69 @@ public class AdversityClientHandler {
         if (mc.world == null) {
             // 退出世界时清除缓存
             ClientAdversityCache.clearAll();
+            return;
+        }
+
+        // 每 5 tick 生成粒子（减少性能开销）
+        tickCounter++;
+        if (tickCounter % 5 == 0) {
+            spawnTierParticles(mc);
+        }
+    }
+
+    /**
+     * 为有等级的怪物生成粒子效果（类似 Champions）
+     */
+    private void spawnTierParticles(Minecraft mc) {
+        if (mc.player == null || mc.world == null) return;
+
+        for (Entity entity : mc.world.loadedEntityList) {
+            if (!(entity instanceof EntityLiving)) continue;
+
+            double distSq = mc.player.getDistanceSq(entity);
+            if (distSq > PARTICLE_DISTANCE * PARTICLE_DISTANCE) continue;
+
+            ClientAdversityCache.CachedEntityData data = ClientAdversityCache.getEntityData(entity.getEntityId());
+            if (data == null || data.tier <= 0) continue;
+
+            // 根据等级选择粒子类型和数量
+            spawnParticlesForTier(mc, entity, data.tier);
+        }
+    }
+
+    /**
+     * 根据等级生成不同的粒子
+     */
+    private void spawnParticlesForTier(Minecraft mc, Entity entity, int tier) {
+        double x = entity.posX + (RANDOM.nextDouble() - 0.5) * entity.width;
+        double y = entity.posY + RANDOM.nextDouble() * entity.height;
+        double z = entity.posZ + (RANDOM.nextDouble() - 0.5) * entity.width;
+
+        // 粒子速度（向上飘动）
+        double vx = (RANDOM.nextDouble() - 0.5) * 0.05;
+        double vy = 0.02 + RANDOM.nextDouble() * 0.03;
+        double vz = (RANDOM.nextDouble() - 0.5) * 0.05;
+
+        switch (tier) {
+            case 1: // Elite - 绿色火焰
+                if (RANDOM.nextInt(3) == 0) {
+                    mc.world.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, x, y, z, vx, vy, vz);
+                }
+                break;
+            case 2: // Rare - 蓝色魔法
+                if (RANDOM.nextInt(2) == 0) {
+                    mc.world.spawnParticle(EnumParticleTypes.WATER_SPLASH, x, y, z, vx, vy, vz);
+                }
+                break;
+            case 3: // Epic - 紫色附魔
+                mc.world.spawnParticle(EnumParticleTypes.PORTAL, x, y, z, vx, vy * 2, vz);
+                break;
+            case 4: // Boss - 金色火焰 + 更多粒子
+                mc.world.spawnParticle(EnumParticleTypes.FLAME, x, y, z, vx, vy, vz);
+                if (RANDOM.nextInt(2) == 0) {
+                    mc.world.spawnParticle(EnumParticleTypes.LAVA, x, y, z, 0, 0, 0);
+                }
+                break;
         }
     }
 
@@ -104,13 +178,12 @@ public class AdversityClientHandler {
 
         GlStateManager.enableTexture2D();
 
-        // 构建显示文本 - 等级
-        StringBuilder tierText = new StringBuilder();
+        // 构建显示文本 - 等级名称（如 Elite, Rare, Epic, Boss）
         TextFormatting tierColor = getTierColor(data.tier);
-        tierText.append(tierColor).append("[T").append(data.tier).append("]");
+        String tierName = getTierName(data.tier);
+        String tierStr = tierColor + "★ " + tierName + " ★";
 
         // 绘制等级文本
-        String tierStr = tierText.toString();
         int tierWidth = fontRenderer.getStringWidth(tierStr);
         fontRenderer.drawString(tierStr, -tierWidth / 2, -12, 0xFFFFFF);
 
@@ -176,6 +249,22 @@ public class AdversityClientHandler {
         buffer.pos(-halfWidth + currentWidth, yOffset + HEALTH_BAR_HEIGHT, 0).color(color[0], color[1], color[2], 220).endVertex();
         buffer.pos(-halfWidth + currentWidth, yOffset, 0).color(color[0], color[1], color[2], 220).endVertex();
         tessellator.draw();
+    }
+
+    /**
+     * 根据等级获取翻译后的名称
+     */
+    private String getTierName(int tier) {
+        if (tier <= 0 || tier > 4) {
+            return "T" + tier;
+        }
+        String key = "adversity.tier." + tier;
+        String translated = I18n.format(key);
+        // 如果没有翻译，使用后备名称
+        if (translated.equals(key)) {
+            return tier < TIER_NAMES_FALLBACK.length ? TIER_NAMES_FALLBACK[tier] : "T" + tier;
+        }
+        return translated;
     }
 
     /**

@@ -4,6 +4,12 @@
 adversity.affix.none=无
 adversity.affix.fiery=烈焰
 
+# Tier Names
+adversity.tier.1=精英
+adversity.tier.2=稀有
+adversity.tier.3=史诗
+adversity.tier.4=首领
+
 # Difficulty
 adversity.difficulty.normal=普通
 adversity.difficulty.hard=困难
