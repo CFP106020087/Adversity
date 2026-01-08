@@ -98,6 +98,16 @@ public interface IAdversityCapability {
      */
     void setDamageMultiplier(float multiplier);
 
+    /**
+     * 获取减伤百分比 (0.0 - 1.0)
+     */
+    float getDamageReduction();
+
+    /**
+     * 设置减伤百分比
+     */
+    void setDamageReduction(float reduction);
+
     // ==================== 序列化 ====================
 
     /**

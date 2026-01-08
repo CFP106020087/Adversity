@@ -125,15 +125,34 @@ public class DifficultyManager {
         float difficulty = applyPlayerMultiplier(baseDifficulty, nearestPlayer);
         cap.setDifficultyLevel(difficulty);
 
-        // 计算等级（tier）
-        int tier = calculateTier(difficulty);
+        // 计算精英概率
+        double eliteChance = Math.min(
+            AdversityConfig.difficulty.eliteChance + difficulty * AdversityConfig.difficulty.eliteChancePerDifficulty,
+            AdversityConfig.difficulty.maxEliteChance
+        );
+
+        // 检查是否成为精英（难度 >= 2.0 时才有机会）
+        int tier = 0;
+        if (difficulty >= 2.0f && RANDOM.nextDouble() < eliteChance) {
+            tier = calculateTier(difficulty);
+        }
         cap.setTier(tier);
 
-        // 应用属性修正
-        applyStatModifiers(entity, cap, difficulty);
+        // 计算减伤（所有怪物都有基础减伤，精英更高）
+        float damageReduction = (float) Math.min(
+            difficulty * AdversityConfig.difficulty.damageReductionPerDifficulty,
+            AdversityConfig.difficulty.maxDamageReduction
+        );
+        cap.setDamageReduction(damageReduction);
 
-        // 应用词条
-        applyAffixes(entity, cap, difficulty, tier);
+        // 只有精英才应用属性修正和词条
+        if (tier > 0) {
+            // 应用属性修正
+            applyStatModifiers(entity, cap, difficulty);
+
+            // 应用词条
+            applyAffixes(entity, cap, difficulty, tier);
+        }
 
         // 标记已处理
         cap.setProcessed(true);
@@ -143,14 +162,17 @@ public class DifficultyManager {
             entity.getEntityData().setBoolean("adversity.hasAffixes", true);
         }
 
-        // 始终输出日志以便调试
-        Adversity.LOGGER.info("[Adversity] {} at ({}, {}, {}) | difficulty={} | tier={} | health={}x | damage={}x | affixes={}",
-            entity.getName(),
-            (int) entity.posX, (int) entity.posY, (int) entity.posZ,
-            String.format("%.2f", difficulty), tier,
-            String.format("%.2f", cap.getHealthMultiplier()),
-            String.format("%.2f", cap.getDamageMultiplier()),
-            cap.getAffixCount());
+        // 只输出精英怪物日志（减少日志量）
+        if (tier > 0) {
+            Adversity.LOGGER.info("[Adversity] ELITE {} at ({}, {}, {}) | diff={} | tier={} | hp={}x | dmg={}x | dr={}% | affixes={}",
+                entity.getName(),
+                (int) entity.posX, (int) entity.posY, (int) entity.posZ,
+                String.format("%.2f", difficulty), tier,
+                String.format("%.2f", cap.getHealthMultiplier()),
+                String.format("%.2f", cap.getDamageMultiplier()),
+                String.format("%.0f", cap.getDamageReduction() * 100),
+                cap.getAffixCount());
+        }
 
         // 同步数据到客户端
         syncToClients(entity, cap);

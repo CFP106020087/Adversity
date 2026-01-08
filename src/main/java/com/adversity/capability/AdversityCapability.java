@@ -21,6 +21,7 @@ public class AdversityCapability implements IAdversityCapability {
     private int tier = 0;
     private float healthMultiplier = 1.0f;
     private float damageMultiplier = 1.0f;
+    private float damageReduction = 0f;
     private boolean processed = false;
 
     // ==================== 词条管理 ====================
@@ -114,6 +115,16 @@ public class AdversityCapability implements IAdversityCapability {
         this.damageMultiplier = Math.max(0.1f, multiplier);
     }
 
+    @Override
+    public float getDamageReduction() {
+        return damageReduction;
+    }
+
+    @Override
+    public void setDamageReduction(float reduction) {
+        this.damageReduction = Math.max(0f, Math.min(1f, reduction));
+    }
+
     // ==================== 序列化 ====================
 
     @Override
@@ -132,6 +143,7 @@ public class AdversityCapability implements IAdversityCapability {
         nbt.setInteger("tier", tier);
         nbt.setFloat("healthMultiplier", healthMultiplier);
         nbt.setFloat("damageMultiplier", damageMultiplier);
+        nbt.setFloat("damageReduction", damageReduction);
         nbt.setBoolean("processed", processed);
 
         return nbt;
@@ -161,6 +173,7 @@ public class AdversityCapability implements IAdversityCapability {
         this.tier = nbt.getInteger("tier");
         this.healthMultiplier = nbt.hasKey("healthMultiplier") ? nbt.getFloat("healthMultiplier") : 1.0f;
         this.damageMultiplier = nbt.hasKey("damageMultiplier") ? nbt.getFloat("damageMultiplier") : 1.0f;
+        this.damageReduction = nbt.hasKey("damageReduction") ? nbt.getFloat("damageReduction") : 0f;
         this.processed = nbt.getBoolean("processed");
     }
 

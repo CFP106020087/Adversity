@@ -112,16 +112,24 @@ public class MobEventHandler {
             }
         }
 
-        // 检查被攻击者是否有词条
+        // 检查被攻击者是否有 Adversity 数据（减伤和词条）
         if (event.getEntityLiving() instanceof EntityLiving) {
             EntityLiving target = (EntityLiving) event.getEntityLiving();
             IAdversityCapability targetCap = CapabilityHandler.getCapability(target);
 
-            if (targetCap != null && targetCap.getAffixCount() > 0) {
-                // 处理防御型词条
-                for (AffixData data : targetCap.getAllAffixData()) {
-                    if (data.isActive() && data.getCooldown() <= 0) {
-                        damage = data.getAffix().onHurt(target, source, damage, data);
+            if (targetCap != null) {
+                // 应用减伤（所有受 Adversity 处理的怪物都有减伤）
+                float damageReduction = targetCap.getDamageReduction();
+                if (damageReduction > 0) {
+                    damage *= (1.0f - damageReduction);
+                }
+
+                // 处理防御型词条（只有有词条的怪物）
+                if (targetCap.getAffixCount() > 0) {
+                    for (AffixData data : targetCap.getAllAffixData()) {
+                        if (data.isActive() && data.getCooldown() <= 0) {
+                            damage = data.getAffix().onHurt(target, source, damage, data);
+                        }
                     }
                 }
             }

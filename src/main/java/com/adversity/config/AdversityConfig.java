@@ -116,6 +116,45 @@ public class AdversityConfig {
         })
         @Config.RangeDouble(min = 1, max = 50)
         public double maxTimeDifficulty = 8;
+
+        @Config.Comment({
+            "Base chance for a mob to become elite (have tier > 0)",
+            "Range: 0.0 (never) to 1.0 (always)",
+            "怪物成为精英（获得等级）的基础概率",
+            "范围: 0.0 (永不) 到 1.0 (总是)"
+        })
+        @Config.RangeDouble(min = 0.0, max = 1.0)
+        public double eliteChance = 0.15;
+
+        @Config.Comment({
+            "Additional elite chance per difficulty point",
+            "每点难度增加的精英概率",
+            "Final chance = eliteChance + (difficulty * eliteChancePerDifficulty)",
+            "最终概率 = 基础概率 + (难度 × 每点难度增加概率)"
+        })
+        @Config.RangeDouble(min = 0.0, max = 0.2)
+        public double eliteChancePerDifficulty = 0.02;
+
+        @Config.Comment({
+            "Maximum elite chance (cap)",
+            "精英概率上限"
+        })
+        @Config.RangeDouble(min = 0.1, max = 1.0)
+        public double maxEliteChance = 0.5;
+
+        @Config.Comment({
+            "Damage reduction per difficulty point (e.g., 0.02 = 2% per point)",
+            "每点难度的减伤百分比 (例如 0.02 = 每点 2%)"
+        })
+        @Config.RangeDouble(min = 0.0, max = 0.1)
+        public double damageReductionPerDifficulty = 0.02;
+
+        @Config.Comment({
+            "Maximum damage reduction (cap)",
+            "减伤上限 (例如 0.5 = 最多减少 50% 伤害)"
+        })
+        @Config.RangeDouble(min = 0.0, max = 0.9)
+        public double maxDamageReduction = 0.5;
     }
 
     // ==================== 运行时缓存 ====================
