@@ -3,9 +3,11 @@ package com.adversity.event;
 import com.adversity.Adversity;
 import com.adversity.capability.CapabilityHandler;
 import com.adversity.capability.IAdversityCapability;
+import com.adversity.config.AdversityConfig;
 import com.adversity.item.ItemRegistry;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -13,7 +15,10 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Random;
@@ -50,6 +55,9 @@ public class EliteDropHandler {
         IAdversityCapability cap = CapabilityHandler.getCapability(entity);
         if (cap == null || cap.getTier() <= 0) return;
 
+        // 检查模组物品掉落是否启用
+        if (!AdversityConfig.lootSettings.enableModItemDrops) return;
+
         // 检查是否被玩家击杀
         DamageSource source = event.getSource();
         if (!isPlayerKill(source)) return;
@@ -62,6 +70,81 @@ public class EliteDropHandler {
         processDrops(world, pos, tier, cap.getDifficultyLevel());
 
         Adversity.LOGGER.debug("Elite T{} dropped loot at {}", tier, pos);
+    }
+
+    /**
+     * 经验加成 - 精英怪物掉落更多经验
+     */
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void onExperienceDrop(LivingExperienceDropEvent event) {
+        if (!AdversityConfig.lootSettings.enableBonusXp) return;
+
+        if (!(event.getEntity() instanceof EntityLiving)) return;
+        EntityLiving entity = (EntityLiving) event.getEntity();
+
+        IAdversityCapability cap = CapabilityHandler.getCapability(entity);
+        if (cap == null || cap.getTier() <= 0) return;
+
+        int tier = cap.getTier();
+        int originalXp = event.getDroppedExperience();
+
+        // 计算经验倍率
+        double xpMultiplier = 1.0 + (tier * AdversityConfig.lootSettings.xpMultiplierPerTier);
+        xpMultiplier = Math.min(xpMultiplier, AdversityConfig.lootSettings.maxXpMultiplier);
+
+        int newXp = (int) (originalXp * xpMultiplier);
+        event.setDroppedExperience(newXp);
+
+        if (tier >= 3) {
+            Adversity.LOGGER.debug("Elite T{} XP bonus: {} -> {} ({}x)",
+                tier, originalXp, newXp, String.format("%.1f", xpMultiplier));
+        }
+    }
+
+    /**
+     * 战利品加成 - 精英怪物掉落更多原版物品
+     */
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void onLivingDrops(LivingDropsEvent event) {
+        if (!AdversityConfig.lootSettings.enableExtraLoot) return;
+
+        if (!(event.getEntity() instanceof EntityLiving)) return;
+        EntityLiving entity = (EntityLiving) event.getEntity();
+
+        IAdversityCapability cap = CapabilityHandler.getCapability(entity);
+        if (cap == null || cap.getTier() <= 0) return;
+
+        int tier = cap.getTier();
+
+        // 计算战利品倍率
+        double lootMultiplier = 1.0 + (tier * AdversityConfig.lootSettings.lootMultiplierPerTier);
+        lootMultiplier = Math.min(lootMultiplier, AdversityConfig.lootSettings.maxLootMultiplier);
+
+        // 对每个掉落物应用倍率
+        for (EntityItem drop : event.getDrops()) {
+            ItemStack stack = drop.getItem();
+            if (!stack.isEmpty() && stack.getCount() > 0) {
+                // 计算新数量（使用随机加成来增加变化性）
+                int originalCount = stack.getCount();
+                int extraCount = 0;
+
+                // 基础加成
+                double extraChance = (lootMultiplier - 1.0) * originalCount;
+
+                // 整数部分
+                extraCount += (int) extraChance;
+
+                // 小数部分有几率额外+1
+                double fractional = extraChance - (int) extraChance;
+                if (RANDOM.nextDouble() < fractional) {
+                    extraCount++;
+                }
+
+                if (extraCount > 0) {
+                    stack.setCount(originalCount + extraCount);
+                }
+            }
+        }
     }
 
     /**

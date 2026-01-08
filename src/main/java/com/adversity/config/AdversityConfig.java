@@ -45,6 +45,18 @@ public class AdversityConfig {
     })
     public static final EliteSettings eliteSettings = new EliteSettings();
 
+    @Config.Comment({
+        "Affix Settings - Control which affixes are enabled/disabled",
+        "词条设置 - 控制哪些词条启用/禁用"
+    })
+    public static final AffixSettings affixSettings = new AffixSettings();
+
+    @Config.Comment({
+        "Loot and Reward Settings",
+        "战利品和奖励设置"
+    })
+    public static final LootSettings lootSettings = new LootSettings();
+
     // ==================== 实体过滤 ====================
 
     public static class EntityFilter {
@@ -375,6 +387,117 @@ public class AdversityConfig {
         };
     }
 
+    // ==================== 词条设置 ====================
+
+    public static class AffixSettings {
+
+        @Config.Comment({
+            "Disabled affixes. These affixes will never be applied to any mob.",
+            "禁用的词条列表。这些词条永远不会被应用到任何怪物上。",
+            "Format: modid:affix_name (e.g., adversity:splitting, adversity:teleporting)",
+            "格式: modid:affix_name（例如 adversity:splitting, adversity:teleporting）"
+        })
+        public String[] disabledAffixes = new String[] {};
+
+        @Config.Comment({
+            "=== FORCED ELITE ENTITIES ===",
+            "=== 强制精英实体 ===",
+            "",
+            "Entities in this list will ALWAYS become elite with affixes.",
+            "此列表中的实体将始终成为带词条的精英。",
+            "Format: modid:entity_name",
+            "格式: modid:entity_name"
+        })
+        public String[] forcedEliteEntities = new String[] {};
+
+        @Config.Comment({
+            "Minimum tier for forced elite entities (1-10)",
+            "强制精英实体的最低等级（1-10）"
+        })
+        @Config.RangeInt(min = 1, max = 10)
+        public int forcedEliteMinTier = 1;
+
+        @Config.Comment({
+            "=== ELITE BLACKLIST ===",
+            "=== 精英黑名单 ===",
+            "",
+            "Entities in this list will NEVER become elite (but still get stat scaling).",
+            "此列表中的实体永远不会成为精英（但仍会获得属性加成）。",
+            "Format: modid:entity_name",
+            "格式: modid:entity_name"
+        })
+        public String[] eliteBlacklistEntities = new String[] {};
+
+        @Config.Comment({
+            "=== PER-AFFIX ENTITY BLACKLIST ===",
+            "=== 词条实体黑名单 ===",
+            "",
+            "Block specific affixes from specific entities.",
+            "阻止特定词条应用于特定实体。",
+            "Format: affix_id|entity_id (e.g., adversity:splitting|minecraft:slime)",
+            "格式: affix_id|entity_id（例如 adversity:splitting|minecraft:slime）"
+        })
+        public String[] affixEntityBlacklist = new String[] {
+            "adversity:splitting|minecraft:slime",  // 史莱姆不应该分裂（已经会分裂了）
+            "adversity:splitting|minecraft:magma_cube"  // 岩浆怪同理
+        };
+    }
+
+    // ==================== 战利品设置 ====================
+
+    public static class LootSettings {
+
+        @Config.Comment({
+            "Enable mod item drops from elite mobs",
+            "启用精英怪物的模组物品掉落"
+        })
+        public boolean enableModItemDrops = true;
+
+        @Config.Comment({
+            "Base XP multiplier for elite mobs (multiplied by tier)",
+            "精英怪物的基础经验倍率（乘以等级）",
+            "Formula: baseXP × (1 + tier × xpMultiplierPerTier)",
+            "公式: 基础经验 × (1 + 等级 × xpMultiplierPerTier)"
+        })
+        @Config.RangeDouble(min = 0, max = 10)
+        public double xpMultiplierPerTier = 0.5;
+
+        @Config.Comment({
+            "Maximum XP multiplier (cap)",
+            "经验倍率上限"
+        })
+        @Config.RangeDouble(min = 1, max = 100)
+        public double maxXpMultiplier = 10.0;
+
+        @Config.Comment({
+            "Drop multiplier for vanilla loot (based on tier)",
+            "原版战利品的掉落倍率（基于等级）",
+            "Formula: baseDrops × (1 + tier × lootMultiplierPerTier)",
+            "公式: 基础掉落 × (1 + 等级 × lootMultiplierPerTier)"
+        })
+        @Config.RangeDouble(min = 0, max = 5)
+        public double lootMultiplierPerTier = 0.2;
+
+        @Config.Comment({
+            "Maximum loot multiplier (cap)",
+            "战利品倍率上限"
+        })
+        @Config.RangeDouble(min = 1, max = 50)
+        public double maxLootMultiplier = 5.0;
+
+        @Config.Comment({
+            "Enable bonus XP orbs for elite kills",
+            "启用精英击杀的额外经验球"
+        })
+        public boolean enableBonusXp = true;
+
+        @Config.Comment({
+            "Enable extra vanilla loot drops for elite kills",
+            "启用精英击杀的额外原版战利品"
+        })
+        public boolean enableExtraLoot = true;
+    }
+
     // ==================== 兼容性配置（为旧系统保留） ====================
 
     /**
@@ -405,12 +528,20 @@ public class AdversityConfig {
 
     private static Set<ResourceLocation> whitelistCache = new HashSet<>();
     private static Set<ResourceLocation> blacklistCache = new HashSet<>();
+    private static Set<ResourceLocation> disabledAffixCache = new HashSet<>();
+    private static Set<ResourceLocation> forcedEliteCache = new HashSet<>();
+    private static Set<ResourceLocation> eliteBlacklistCache = new HashSet<>();
+    private static Map<ResourceLocation, Set<ResourceLocation>> affixEntityBlacklistCache = new java.util.HashMap<>();
     private static boolean cacheInitialized = false;
     private static final Map<Class<?>, Boolean> entityClassCache = new WeakHashMap<>();
 
     public static void refreshCache() {
         whitelistCache.clear();
         blacklistCache.clear();
+        disabledAffixCache.clear();
+        forcedEliteCache.clear();
+        eliteBlacklistCache.clear();
+        affixEntityBlacklistCache.clear();
         entityClassCache.clear();
 
         for (String entry : entityFilter.whitelist) {
@@ -425,9 +556,43 @@ public class AdversityConfig {
             }
         }
 
+        // 缓存禁用的词条
+        for (String entry : affixSettings.disabledAffixes) {
+            if (entry != null && !entry.isEmpty()) {
+                disabledAffixCache.add(new ResourceLocation(entry.trim()));
+            }
+        }
+
+        // 缓存强制精英实体
+        for (String entry : affixSettings.forcedEliteEntities) {
+            if (entry != null && !entry.isEmpty()) {
+                forcedEliteCache.add(new ResourceLocation(entry.trim()));
+            }
+        }
+
+        // 缓存精英黑名单
+        for (String entry : affixSettings.eliteBlacklistEntities) {
+            if (entry != null && !entry.isEmpty()) {
+                eliteBlacklistCache.add(new ResourceLocation(entry.trim()));
+            }
+        }
+
+        // 缓存词条-实体黑名单
+        for (String entry : affixSettings.affixEntityBlacklist) {
+            if (entry != null && !entry.isEmpty() && entry.contains("|")) {
+                String[] parts = entry.split("\\|", 2);
+                if (parts.length == 2) {
+                    ResourceLocation affixId = new ResourceLocation(parts[0].trim());
+                    ResourceLocation entityId = new ResourceLocation(parts[1].trim());
+                    affixEntityBlacklistCache.computeIfAbsent(affixId, k -> new HashSet<>()).add(entityId);
+                }
+            }
+        }
+
         cacheInitialized = true;
-        Adversity.LOGGER.info("Config cache refreshed: {} whitelist, {} blacklist",
-            whitelistCache.size(), blacklistCache.size());
+        Adversity.LOGGER.info("Config cache refreshed: {} whitelist, {} blacklist, {} disabled affixes, {} forced elite, {} elite blacklist",
+            whitelistCache.size(), blacklistCache.size(), disabledAffixCache.size(),
+            forcedEliteCache.size(), eliteBlacklistCache.size());
     }
 
     public static boolean shouldProcess(EntityLiving entity) {
@@ -465,6 +630,62 @@ public class AdversityConfig {
         }
 
         return entity instanceof IMob;
+    }
+
+    // ==================== 词条配置检查 ====================
+
+    /**
+     * 检查词条是否被禁用
+     */
+    public static boolean isAffixDisabled(ResourceLocation affixId) {
+        if (!cacheInitialized) {
+            refreshCache();
+        }
+        return disabledAffixCache.contains(affixId);
+    }
+
+    /**
+     * 检查实体是否应该强制成为精英
+     */
+    public static boolean isForcedElite(EntityLiving entity) {
+        if (!cacheInitialized) {
+            refreshCache();
+        }
+        ResourceLocation entityId = EntityList.getKey(entity);
+        return entityId != null && forcedEliteCache.contains(entityId);
+    }
+
+    /**
+     * 检查实体是否在精英黑名单中（永远不会成为精英）
+     */
+    public static boolean isEliteBlacklisted(EntityLiving entity) {
+        if (!cacheInitialized) {
+            refreshCache();
+        }
+        ResourceLocation entityId = EntityList.getKey(entity);
+        return entityId != null && eliteBlacklistCache.contains(entityId);
+    }
+
+    /**
+     * 检查特定词条是否被特定实体屏蔽
+     */
+    public static boolean isAffixBlockedForEntity(ResourceLocation affixId, EntityLiving entity) {
+        if (!cacheInitialized) {
+            refreshCache();
+        }
+        Set<ResourceLocation> blockedEntities = affixEntityBlacklistCache.get(affixId);
+        if (blockedEntities == null || blockedEntities.isEmpty()) {
+            return false;
+        }
+        ResourceLocation entityId = EntityList.getKey(entity);
+        return entityId != null && blockedEntities.contains(entityId);
+    }
+
+    /**
+     * 获取强制精英的最低等级
+     */
+    public static int getForcedEliteMinTier() {
+        return affixSettings.forcedEliteMinTier;
     }
 
     // ==================== 配置同步 ====================

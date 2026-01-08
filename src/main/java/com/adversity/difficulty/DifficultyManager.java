@@ -308,6 +308,12 @@ public class DifficultyManager {
         // 检查区域压制
         boolean suppressed = SuppressionManager.isSuppressed(world.provider.getDimension(), pos);
 
+        // 检查是否在精英黑名单中
+        boolean eliteBlacklisted = AdversityConfig.isEliteBlacklisted(entity);
+
+        // 检查是否强制精英
+        boolean forcedElite = AdversityConfig.isForcedElite(entity);
+
         // 计算精英概率
         double eliteChance = Math.min(
             AdversityConfig.eliteSettings.eliteChance +
@@ -317,9 +323,18 @@ public class DifficultyManager {
 
         // 检查是否成为精英
         int tier = 0;
-        double minDiff = AdversityConfig.eliteSettings.minDifficultyForElite;
-        if (!suppressed && difficulty >= minDiff && RANDOM.nextDouble() < eliteChance) {
-            tier = calculateTier(difficulty);
+        if (eliteBlacklisted) {
+            // 在黑名单中，永远不会成为精英
+            tier = 0;
+        } else if (forcedElite) {
+            // 强制成为精英
+            tier = Math.max(calculateTier(difficulty), AdversityConfig.getForcedEliteMinTier());
+        } else {
+            // 正常随机检查
+            double minDiff = AdversityConfig.eliteSettings.minDifficultyForElite;
+            if (!suppressed && difficulty >= minDiff && RANDOM.nextDouble() < eliteChance) {
+                tier = calculateTier(difficulty);
+            }
         }
         cap.setTier(tier);
 
@@ -415,9 +430,18 @@ public class DifficultyManager {
         int affixCount = calculateAffixCount(tier);
         if (affixCount <= 0) return;
 
-        // 获取可用词条
+        // 获取可用词条（排除禁用的和该实体的黑名单词条）
         List<IAffix> availableAffixes = new ArrayList<>();
         for (IAffix affix : AffixRegistry.getAllAffixes()) {
+            // 检查词条是否被全局禁用
+            if (AdversityConfig.isAffixDisabled(affix.getId())) {
+                continue;
+            }
+            // 检查词条是否被该实体类型屏蔽
+            if (AdversityConfig.isAffixBlockedForEntity(affix.getId(), entity)) {
+                continue;
+            }
+            // 检查词条的难度和实体要求
             if (affix.getMinDifficulty() <= difficulty && affix.canApplyTo(entity)) {
                 availableAffixes.add(affix);
             }
