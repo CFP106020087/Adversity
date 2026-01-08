@@ -58,6 +58,7 @@ public class DifficultyManager {
 
     /**
      * 计算指定位置的综合难度
+     * 使用加权总和，让距离和时间难度能够叠加
      */
     public static float calculateDifficulty(World world, BlockPos pos, @Nullable EntityPlayer nearestPlayer) {
         if (PROVIDERS.isEmpty()) {
@@ -65,18 +66,16 @@ public class DifficultyManager {
         }
 
         float totalDifficulty = 0f;
-        float totalWeight = 0f;
 
         for (IDifficultyProvider provider : PROVIDERS) {
             if (provider.isApplicable(world, pos, nearestPlayer)) {
                 float weight = provider.getWeight();
                 float difficulty = provider.calculateDifficulty(world, pos, nearestPlayer);
                 totalDifficulty += difficulty * weight;
-                totalWeight += weight;
             }
         }
 
-        return totalWeight > 0 ? totalDifficulty / totalWeight : 0f;
+        return totalDifficulty;
     }
 
     /**
@@ -144,10 +143,14 @@ public class DifficultyManager {
             entity.getEntityData().setBoolean("adversity.hasAffixes", true);
         }
 
-        if (tier > 0) {
-            Adversity.LOGGER.debug("Processed entity {} with difficulty {}, tier {}, {} affixes",
-                entity.getName(), difficulty, tier, cap.getAffixCount());
-        }
+        // 始终输出日志以便调试
+        Adversity.LOGGER.info("[Adversity] {} at ({}, {}, {}) | difficulty={} | tier={} | health={}x | damage={}x | affixes={}",
+            entity.getName(),
+            (int) entity.posX, (int) entity.posY, (int) entity.posZ,
+            String.format("%.2f", difficulty), tier,
+            String.format("%.2f", cap.getHealthMultiplier()),
+            String.format("%.2f", cap.getDamageMultiplier()),
+            cap.getAffixCount());
 
         // 同步数据到客户端
         syncToClients(entity, cap);
