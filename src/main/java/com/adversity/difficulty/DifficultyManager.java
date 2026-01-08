@@ -310,7 +310,8 @@ public class DifficultyManager {
                 selected.add(chosen);
 
                 // 从池中移除不兼容的词条
-                pool.removeIf(a -> a.equals(chosen) || !a.isCompatibleWith(chosen));
+                final IAffix finalChosen = chosen;
+                pool.removeIf(a -> a.equals(finalChosen) || !a.isCompatibleWith(finalChosen));
             }
         }
 
