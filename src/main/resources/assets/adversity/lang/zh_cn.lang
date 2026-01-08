@@ -1,5 +1,33 @@
 # Adversity Language File - Simplified Chinese
 
+# Creative Tab
+itemGroup.adversity=逆境
+
+# Item Names
+item.adversity.affix_essence.name=词条残渣
+item.adversity.affix_crystal.name=词条水晶
+item.adversity.void_shard.name=虚空碎片
+item.adversity.calm_dust.name=宁静之尘
+item.adversity.difficulty_detector.name=难度探测器
+
+# Item Tooltips
+item.adversity.affix_essence.tooltip=蕴含词条力量的残留物
+item.adversity.affix_essence.source=掉落自 T1-T4 精英怪物
+
+item.adversity.affix_crystal.tooltip=凝聚的词条能量结晶
+item.adversity.affix_crystal.source=掉落自 T5-T7 精英怪物
+
+item.adversity.void_shard.tooltip=来自深渊的神秘碎片
+item.adversity.void_shard.source=掉落自 T8-T10 精英怪物
+
+item.adversity.calm_dust.tooltip=释放后可临时压制区域内精英生成
+item.adversity.calm_dust.effect=范围: %d格 | 持续: %d分钟
+item.adversity.calm_dust.hint=右键使用
+item.adversity.calm_dust.activated=宁静之尘已激活! 范围%d格，持续%d分钟
+
+item.adversity.difficulty_detector.tooltip=探测当前位置的难度信息
+item.adversity.difficulty_detector.usage=右键使用查看难度报告
+
 # Affix Names
 adversity.affix.none=无
 adversity.affix.fiery=烈焰

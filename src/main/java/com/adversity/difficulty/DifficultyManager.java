@@ -8,6 +8,7 @@ import com.adversity.capability.CapabilityHandler;
 import com.adversity.capability.IAdversityCapability;
 import com.adversity.capability.IPlayerDifficulty;
 import com.adversity.config.AdversityConfig;
+import com.adversity.effect.SuppressionManager;
 import com.adversity.network.PacketHandler;
 import com.adversity.network.PacketSyncAdversity;
 import net.minecraft.entity.EntityLiving;
@@ -79,6 +80,22 @@ public class DifficultyManager {
     }
 
     /**
+     * 公开的难度计算接口，用于物品和UI显示
+     * 包含玩家倍率
+     */
+    public static float calculateDifficultyAt(World world, BlockPos pos, @Nullable EntityPlayer player) {
+        float baseDifficulty = calculateDifficulty(world, pos, player);
+        return applyPlayerMultiplier(baseDifficulty, player);
+    }
+
+    /**
+     * 检查位置是否被压制（不应生成精英）
+     */
+    public static boolean isLocationSuppressed(World world, BlockPos pos) {
+        return SuppressionManager.isSuppressed(world.provider.getDimension(), pos);
+    }
+
+    /**
      * 应用玩家的难度倍率
      */
     private static float applyPlayerMultiplier(float baseDifficulty, @Nullable EntityPlayer player) {
@@ -125,15 +142,18 @@ public class DifficultyManager {
         float difficulty = applyPlayerMultiplier(baseDifficulty, nearestPlayer);
         cap.setDifficultyLevel(difficulty);
 
+        // 检查区域是否被压制
+        boolean suppressed = SuppressionManager.isSuppressed(world.provider.getDimension(), pos);
+
         // 计算精英概率
         double eliteChance = Math.min(
             AdversityConfig.difficulty.eliteChance + difficulty * AdversityConfig.difficulty.eliteChancePerDifficulty,
             AdversityConfig.difficulty.maxEliteChance
         );
 
-        // 检查是否成为精英（难度 >= 2.0 时才有机会）
+        // 检查是否成为精英（难度 >= 2.0 时才有机会，且区域未被压制）
         int tier = 0;
-        if (difficulty >= 2.0f && RANDOM.nextDouble() < eliteChance) {
+        if (!suppressed && difficulty >= 2.0f && RANDOM.nextDouble() < eliteChance) {
             tier = calculateTier(difficulty);
         }
         cap.setTier(tier);

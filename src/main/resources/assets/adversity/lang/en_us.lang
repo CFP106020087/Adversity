@@ -1,5 +1,33 @@
 # Adversity Language File - English
 
+# Creative Tab
+itemGroup.adversity=Adversity
+
+# Item Names
+item.adversity.affix_essence.name=Affix Essence
+item.adversity.affix_crystal.name=Affix Crystal
+item.adversity.void_shard.name=Void Shard
+item.adversity.calm_dust.name=Calm Dust
+item.adversity.difficulty_detector.name=Difficulty Detector
+
+# Item Tooltips
+item.adversity.affix_essence.tooltip=Residue containing affix energy
+item.adversity.affix_essence.source=Drops from T1-T4 elite mobs
+
+item.adversity.affix_crystal.tooltip=Crystallized affix energy
+item.adversity.affix_crystal.source=Drops from T5-T7 elite mobs
+
+item.adversity.void_shard.tooltip=A mysterious fragment from the abyss
+item.adversity.void_shard.source=Drops from T8-T10 elite mobs
+
+item.adversity.calm_dust.tooltip=Temporarily suppresses elite spawns in the area
+item.adversity.calm_dust.effect=Range: %d blocks | Duration: %d minutes
+item.adversity.calm_dust.hint=Right-click to use
+item.adversity.calm_dust.activated=Calm Dust activated! Range %d blocks, duration %d minutes
+
+item.adversity.difficulty_detector.tooltip=Detect difficulty information at current location
+item.adversity.difficulty_detector.usage=Right-click to view difficulty report
+
 # Affix Names
 adversity.affix.none=None
 adversity.affix.fiery=Fiery
