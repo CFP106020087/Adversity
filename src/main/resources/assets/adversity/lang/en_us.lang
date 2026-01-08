@@ -41,6 +41,7 @@ adversity.affix.withering=Withering
 adversity.affix.haste=Haste
 adversity.affix.blinding=Blinding
 adversity.affix.gravity=Gravity
+adversity.affix.horror=Horror
 
 # Tier Names (10-tier system)
 adversity.tier.1=Elite

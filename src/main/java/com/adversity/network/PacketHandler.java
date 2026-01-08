@@ -26,6 +26,14 @@ public class PacketHandler {
             Side.CLIENT
         );
 
+        // 同步视觉效果到客户端
+        INSTANCE.registerMessage(
+            PacketVisualEffect.Handler.class,
+            PacketVisualEffect.class,
+            id++,
+            Side.CLIENT
+        );
+
         Adversity.LOGGER.info("Network packets registered");
     }
 }

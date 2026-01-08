@@ -2,6 +2,7 @@ package com.adversity.proxy;
 
 import com.adversity.Adversity;
 import com.adversity.client.AdversityClientHandler;
+import com.adversity.client.visual.VisualOverlayRenderer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -20,6 +21,9 @@ public class ClientProxy extends CommonProxy {
 
         // 注册客户端事件处理器（用于渲染词条标识等）
         MinecraftForge.EVENT_BUS.register(new AdversityClientHandler());
+
+        // 注册视觉效果覆盖层渲染器
+        MinecraftForge.EVENT_BUS.register(new VisualOverlayRenderer());
 
         Adversity.LOGGER.info("Client handlers registered");
     }

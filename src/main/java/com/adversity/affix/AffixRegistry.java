@@ -154,5 +154,6 @@ public class AffixRegistry {
         // ========== 特殊型词条 (SPECIAL) ==========
         register(new TeleportingAffix());     // 传送 - 受伤时传送 (难度5+)
         register(new SplittingAffix());       // 分裂 - 死亡时分裂 (难度6+)
+        register(new HorrorAffix());          // 恐惧 - 强制后退+恐惧光环 (难度4+)
     }
 }

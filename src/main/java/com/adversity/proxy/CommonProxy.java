@@ -3,6 +3,7 @@ package com.adversity.proxy;
 import com.adversity.Adversity;
 import com.adversity.affix.AffixRegistry;
 import com.adversity.capability.CapabilityHandler;
+import com.adversity.debuff.DebuffEventHandler;
 import com.adversity.difficulty.DifficultyManager;
 import com.adversity.event.MobEventHandler;
 import com.adversity.network.PacketHandler;
@@ -30,6 +31,9 @@ public class CommonProxy {
         // 注册事件处理器
         MinecraftForge.EVENT_BUS.register(new MobEventHandler());
         MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
+
+        // 注册Debuff处理器
+        MinecraftForge.EVENT_BUS.register(new DebuffEventHandler());
 
         // 初始化难度管理器
         DifficultyManager.init();
