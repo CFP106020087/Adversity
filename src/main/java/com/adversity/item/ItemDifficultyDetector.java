@@ -80,13 +80,14 @@ public class ItemDifficultyDetector extends Item {
 
         // 计算难度
         float difficulty = DifficultyManager.calculateDifficultyAt(world, pos, player);
-        int tier = calculateTier(difficulty);
+        int tier = DifficultyManager.calculateTier(difficulty);
 
         // 计算精英概率
+        double minDiff = AdversityConfig.eliteSettings.minDifficultyForElite;
         double eliteChance = Math.min(
-            AdversityConfig.difficulty.eliteChance +
-                difficulty * AdversityConfig.difficulty.eliteChancePerDifficulty,
-            AdversityConfig.difficulty.maxEliteChance
+            AdversityConfig.eliteSettings.eliteChance +
+                difficulty * AdversityConfig.eliteSettings.eliteChancePerDifficulty,
+            AdversityConfig.eliteSettings.maxEliteChance
         );
 
         // 检查压制状态
@@ -115,7 +116,7 @@ public class ItemDifficultyDetector extends Item {
         ));
 
         // 精英概率
-        if (difficulty >= 2.0) {
+        if (difficulty >= minDiff) {
             player.sendMessage(new TextComponentString(
                 TextFormatting.YELLOW + "Elite Chance: " +
                 TextFormatting.WHITE + String.format("%.1f%%", eliteChance * 100)
@@ -123,25 +124,30 @@ public class ItemDifficultyDetector extends Item {
         } else {
             player.sendMessage(new TextComponentString(
                 TextFormatting.YELLOW + "Elite Chance: " +
-                TextFormatting.GRAY + "None (difficulty < 2.0)"
+                TextFormatting.GRAY + String.format("None (difficulty < %.1f)", minDiff)
             ));
         }
 
-        // 怪物属性预览
+        // 怪物属性预览 - 使用新的缩放系统
         if (tier > 0) {
-            float healthMult = 1.0f + (difficulty * (float) AdversityConfig.difficulty.healthMultiplierPerDifficulty);
-            float damageMult = 1.0f + (difficulty * (float) AdversityConfig.difficulty.damageMultiplierPerDifficulty);
-            float armorBonus = (float) Math.min(difficulty * AdversityConfig.difficulty.armorPerDifficulty,
-                AdversityConfig.difficulty.maxArmorBonus);
-            float damageReduction = (float) Math.min(difficulty * AdversityConfig.difficulty.damageReductionPerDifficulty,
-                AdversityConfig.difficulty.maxDamageReduction);
+            double healthMult = DifficultyManager.calculateHealthMultiplier(difficulty);
+            double damageMult = DifficultyManager.calculateDamageMultiplier(difficulty);
+            double armorBonus = DifficultyManager.calculateArmorBonus(difficulty);
+            double damageReduction = DifficultyManager.calculateDamageReduction(difficulty);
 
             player.sendMessage(new TextComponentString(
                 TextFormatting.GRAY + "Elite Stats: " +
-                TextFormatting.RED + String.format("%.0f%% HP", healthMult * 100) + TextFormatting.GRAY + ", " +
-                TextFormatting.RED + String.format("%.0f%% DMG", damageMult * 100) + TextFormatting.GRAY + ", " +
+                TextFormatting.RED + String.format("%.1fx HP", healthMult) + TextFormatting.GRAY + ", " +
+                TextFormatting.RED + String.format("%.1fx DMG", damageMult) + TextFormatting.GRAY + ", " +
                 TextFormatting.AQUA + String.format("+%.1f Armor", armorBonus) + TextFormatting.GRAY + ", " +
                 TextFormatting.BLUE + String.format("%.0f%% DR", damageReduction * 100)
+            ));
+
+            // 显示缩放模式
+            player.sendMessage(new TextComponentString(
+                TextFormatting.DARK_GRAY + "Scaling: " +
+                AdversityConfig.statScaling.healthScalingMode + "/" +
+                AdversityConfig.statScaling.damageScalingMode
             ));
         }
 
@@ -173,20 +179,6 @@ public class ItemDifficultyDetector extends Item {
             TextFormatting.GRAY + "Distance from spawn: " +
             TextFormatting.WHITE + String.format("%.0f blocks", distance)
         ));
-    }
-
-    private int calculateTier(float difficulty) {
-        if (difficulty < 2.0f) return 0;
-        if (difficulty < 3.0f) return 1;
-        if (difficulty < 4.5f) return 2;
-        if (difficulty < 6.0f) return 3;
-        if (difficulty < 8.0f) return 4;
-        if (difficulty < 10.0f) return 5;
-        if (difficulty < 13.0f) return 6;
-        if (difficulty < 16.0f) return 7;
-        if (difficulty < 20.0f) return 8;
-        if (difficulty < 25.0f) return 9;
-        return 10;
     }
 
     private TextFormatting getDifficultyColor(float difficulty) {

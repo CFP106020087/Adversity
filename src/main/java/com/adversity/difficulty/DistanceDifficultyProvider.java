@@ -19,7 +19,7 @@ public class DistanceDifficultyProvider implements IDifficultyProvider {
 
     @Override
     public float getWeight() {
-        return 1.0f;
+        return (float) AdversityConfig.difficultySource.distanceWeight;
     }
 
     @Override
@@ -32,12 +32,17 @@ public class DistanceDifficultyProvider implements IDifficultyProvider {
         double distance = Math.sqrt(dx * dx + dz * dz);
 
         // 从配置读取参数
-        double blocksPerDifficulty = AdversityConfig.difficulty.blocksPerDifficulty;
-        double maxDifficulty = AdversityConfig.difficulty.maxDistanceDifficulty;
+        double blocksPerDifficulty = AdversityConfig.difficultySource.blocksPerDifficulty;
+        double maxDifficulty = AdversityConfig.difficultySource.maxDistanceDifficulty;
 
         // 计算难度
         float difficulty = (float) (distance / blocksPerDifficulty);
-        return (float) Math.min(difficulty, maxDifficulty);
+
+        // 应用上限（0 表示无上限）
+        if (maxDifficulty > 0) {
+            return (float) Math.min(difficulty, maxDifficulty);
+        }
+        return difficulty;
     }
 
     @Override

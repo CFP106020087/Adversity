@@ -26,148 +26,378 @@ public class AdversityConfig {
     public static final EntityFilter entityFilter = new EntityFilter();
 
     @Config.Comment({
-        "Difficulty Settings",
-        "难度设置"
+        "Difficulty Source Settings (Distance, Time, etc.)",
+        "难度来源设置（距离、时间等）"
     })
-    public static final DifficultySettings difficulty = new DifficultySettings();
+    public static final DifficultySource difficultySource = new DifficultySource();
+
+    @Config.Comment({
+        "Mob Stat Scaling Settings",
+        "怪物属性缩放设置",
+        "This is where you configure how mob stats scale with difficulty.",
+        "这里配置怪物属性如何随难度缩放。"
+    })
+    public static final StatScaling statScaling = new StatScaling();
+
+    @Config.Comment({
+        "Elite Spawn Settings",
+        "精英生成设置"
+    })
+    public static final EliteSettings eliteSettings = new EliteSettings();
+
+    // ==================== 实体过滤 ====================
 
     public static class EntityFilter {
 
         @Config.Comment({
             "If true, only entities in the whitelist will be affected.",
-            "If false, all hostile mobs (IMob) + whitelist will be affected.",
-            "若为 true，只有白名单中的实体会被影响。",
-            "若为 false，所有敌对生物 + 白名单中的实体会被影响。"
+            "若为 true，只有白名单中的实体会被影响。"
         })
         public boolean whitelistOnly = false;
 
         @Config.Comment({
             "Entity whitelist. Format: modid:entity_name",
-            "These entities will ALWAYS be affected by the difficulty system.",
-            "实体白名单。格式: modid:entity_name",
-            "这些实体将始终受到难度系统影响。",
-            "",
-            "Examples:",
-            "  minecraft:zombie",
-            "  lycanitesmobs:geonach",
-            "  iceandfire:firedragon"
+            "实体白名单。格式: modid:entity_name"
         })
-        public String[] whitelist = new String[] {
-            // 默认为空，敌对生物自动包含
-        };
+        public String[] whitelist = new String[] {};
 
         @Config.Comment({
-            "Entity blacklist. Format: modid:entity_name",
-            "These entities will NEVER be affected, even if they are hostile.",
-            "实体黑名单。格式: modid:entity_name",
-            "这些实体永远不会受到影响，即使它们是敌对生物。",
-            "",
-            "Examples:",
-            "  minecraft:ender_dragon",
-            "  minecraft:wither"
+            "Entity blacklist. These entities will NEVER be affected.",
+            "实体黑名单。这些实体永远不会受到影响。"
         })
         public String[] blacklist = new String[] {
-            // 默认排除原版 Boss
             "minecraft:ender_dragon",
             "minecraft:wither"
         };
     }
 
-    public static class DifficultySettings {
+    // ==================== 难度来源 ====================
+
+    public static class DifficultySource {
 
         @Config.Comment({
             "Distance (in blocks) per 1 difficulty point",
             "每增加多少格距离增加 1 点难度"
         })
-        @Config.RangeDouble(min = 100, max = 5000)
+        @Config.RangeDouble(min = 50, max = 10000)
         public double blocksPerDifficulty = 500;
+
+        @Config.Comment({
+            "Maximum difficulty from distance",
+            "距离难度的最大值 (0 = 无上限)"
+        })
+        @Config.RangeDouble(min = 0, max = 1000)
+        public double maxDistanceDifficulty = 50;
 
         @Config.Comment({
             "Days per 1 difficulty point",
             "每过多少天增加 1 点难度"
         })
-        @Config.RangeDouble(min = 1, max = 100)
+        @Config.RangeDouble(min = 0.5, max = 100)
         public double daysPerDifficulty = 5;
 
         @Config.Comment({
-            "Health multiplier per difficulty point (e.g., 0.15 = +15% per point)",
-            "每点难度的生命值倍率 (例如 0.15 = 每点 +15%)"
+            "Maximum difficulty from time (0 = no limit)",
+            "时间难度的最大值 (0 = 无上限)"
         })
-        @Config.RangeDouble(min = 0, max = 1)
-        public double healthMultiplierPerDifficulty = 0.15;
+        @Config.RangeDouble(min = 0, max = 1000)
+        public double maxTimeDifficulty = 50;
 
         @Config.Comment({
-            "Damage multiplier per difficulty point (e.g., 0.08 = +8% per point)",
-            "每点难度的伤害倍率 (例如 0.08 = 每点 +8%)"
+            "Weight for distance difficulty in final calculation",
+            "距离难度在最终计算中的权重"
         })
-        @Config.RangeDouble(min = 0, max = 1)
-        public double damageMultiplierPerDifficulty = 0.08;
+        @Config.RangeDouble(min = 0, max = 10)
+        public double distanceWeight = 1.0;
 
         @Config.Comment({
-            "Armor bonus per difficulty point (added to base armor)",
+            "Weight for time difficulty in final calculation",
+            "时间难度在最终计算中的权重"
+        })
+        @Config.RangeDouble(min = 0, max = 10)
+        public double timeWeight = 0.8;
+    }
+
+    // ==================== 属性缩放 (核心重构) ====================
+
+    public static class StatScaling {
+
+        @Config.Comment({
+            "=== HEALTH SCALING ===",
+            "=== 生命值缩放 ===",
+            "",
+            "Scaling mode for health. Options:",
+            "  LINEAR     - base + diff × rate (predictable, vanilla-like)",
+            "  EXPONENTIAL - base × e^(diff × rate) (mid-game ramp up)",
+            "  COMPOUND   - base × (1 + rate)^diff (smooth exponential, recommended)",
+            "  POLYNOMIAL - base + diff^power × rate (end-game explosion)",
+            "  LOGARITHMIC - base + ln(1+diff) × rate (soft cap)",
+            "  SIGMOID    - smooth transition to max value",
+            "",
+            "生命值缩放模式。可选:",
+            "  LINEAR - 线性增长，适合原版体验",
+            "  EXPONENTIAL - 指数增长，适合中型模组包",
+            "  COMPOUND - 复合增长，推荐通用模组包",
+            "  POLYNOMIAL - 多项式增长，适合重型模组包",
+            "  LOGARITHMIC - 对数增长，软上限",
+            "  SIGMOID - 平滑过渡到最大值"
+        })
+        public String healthScalingMode = "COMPOUND";
+
+        @Config.Comment({
+            "Base health multiplier (usually 1.0)",
+            "基础生命值倍率（通常为 1.0）"
+        })
+        @Config.RangeDouble(min = 0.1, max = 10)
+        public double healthBase = 1.0;
+
+        @Config.Comment({
+            "Health growth rate per difficulty point",
+            "每点难度的生命值增长率",
+            "",
+            "Examples with COMPOUND mode:",
+            "  0.10 = diff20 → 6.7x, diff50 → 117x",
+            "  0.15 = diff20 → 16x, diff50 → 1084x",
+            "  0.20 = diff20 → 38x, diff50 → 9100x",
+            "  0.30 = diff20 → 190x, diff50 → 497929x"
+        })
+        @Config.RangeDouble(min = 0, max = 2)
+        public double healthRate = 0.12;
+
+        @Config.Comment({
+            "Power exponent for POLYNOMIAL mode",
+            "POLYNOMIAL 模式的幂次"
+        })
+        @Config.RangeDouble(min = 1, max = 5)
+        public double healthPower = 2.0;
+
+        @Config.Comment({
+            "Maximum health multiplier (0 = no limit)",
+            "最大生命值倍率 (0 = 无上限)",
+            "",
+            "For heavy modpacks, set this to 0 or a very high value",
+            "重型模组包建议设为 0 或极高值"
+        })
+        @Config.RangeDouble(min = 0, max = 1000000000)
+        public double healthMax = 0;
+
+        @Config.Comment({
+            "=== DAMAGE SCALING ===",
+            "=== 攻击力缩放 ===",
+            "",
+            "Scaling mode for damage"
+        })
+        public String damageScalingMode = "COMPOUND";
+
+        @Config.Comment("Base damage multiplier")
+        @Config.RangeDouble(min = 0.1, max = 10)
+        public double damageBase = 1.0;
+
+        @Config.Comment({
+            "Damage growth rate per difficulty point",
+            "每点难度的攻击力增长率",
+            "",
+            "Typically lower than health to keep fights challenging but fair"
+        })
+        @Config.RangeDouble(min = 0, max = 2)
+        public double damageRate = 0.08;
+
+        @Config.Comment("Power exponent for POLYNOMIAL mode")
+        @Config.RangeDouble(min = 1, max = 5)
+        public double damagePower = 2.0;
+
+        @Config.Comment("Maximum damage multiplier (0 = no limit)")
+        @Config.RangeDouble(min = 0, max = 1000000000)
+        public double damageMax = 0;
+
+        @Config.Comment({
+            "=== ARMOR SCALING ===",
+            "=== 盔甲值缩放 ===",
+            "",
+            "Scaling mode for armor (added to base armor)"
+        })
+        public String armorScalingMode = "LINEAR";
+
+        @Config.Comment("Base armor bonus")
+        @Config.RangeDouble(min = 0, max = 100)
+        public double armorBase = 0;
+
+        @Config.Comment({
+            "Armor bonus per difficulty point",
             "每点难度增加的盔甲值"
         })
-        @Config.RangeDouble(min = 0, max = 5)
-        public double armorPerDifficulty = 0.5;
+        @Config.RangeDouble(min = 0, max = 10)
+        public double armorRate = 0.5;
+
+        @Config.Comment("Power exponent for POLYNOMIAL mode")
+        @Config.RangeDouble(min = 1, max = 5)
+        public double armorPower = 1.5;
 
         @Config.Comment({
-            "Maximum armor bonus from difficulty",
-            "难度系统提供的最大盔甲值加成"
+            "Maximum armor bonus (recommended: 20-30 for vanilla, higher for modpacks)",
+            "最大盔甲加成 (原版建议 20-30，模组包可更高)"
         })
-        @Config.RangeDouble(min = 0, max = 30)
-        public double maxArmorBonus = 20;
+        @Config.RangeDouble(min = 0, max = 10000)
+        public double armorMax = 30;
 
         @Config.Comment({
-            "Maximum difficulty from distance",
-            "距离难度的最大值"
+            "=== DAMAGE REDUCTION SCALING ===",
+            "=== 减伤系统缩放 ===",
+            "",
+            "Damage reduction is a percentage that reduces incoming damage",
+            "减伤是一个减少受到伤害的百分比",
+            "",
+            "Scaling mode for damage reduction"
         })
-        @Config.RangeDouble(min = 1, max = 50)
-        public double maxDistanceDifficulty = 10;
+        public String damageReductionScalingMode = "SIGMOID";
+
+        @Config.Comment("Base damage reduction (0-1, e.g., 0.1 = 10%)")
+        @Config.RangeDouble(min = 0, max = 0.99)
+        public double damageReductionBase = 0;
 
         @Config.Comment({
-            "Maximum difficulty from time",
-            "时间难度的最大值"
+            "Damage reduction growth rate",
+            "减伤增长率",
+            "",
+            "For SIGMOID mode, this controls how fast it approaches max"
         })
-        @Config.RangeDouble(min = 1, max = 50)
-        public double maxTimeDifficulty = 8;
+        @Config.RangeDouble(min = 0, max = 1)
+        public double damageReductionRate = 0.05;
+
+        @Config.Comment("Power exponent for POLYNOMIAL mode")
+        @Config.RangeDouble(min = 1, max = 5)
+        public double damageReductionPower = 1.5;
 
         @Config.Comment({
-            "Base chance for a mob to become elite (have tier > 0)",
-            "Range: 0.0 (never) to 1.0 (always)",
-            "怪物成为精英（获得等级）的基础概率",
-            "范围: 0.0 (永不) 到 1.0 (总是)"
+            "Maximum damage reduction (cap)",
+            "减伤上限",
+            "",
+            "0.9 = max 90% reduction (mobs take at least 10% damage)",
+            "0.99 = near-immunity (only for extreme modpacks)",
+            "0.9 = 最多减少 90% 伤害",
+            "0.99 = 接近免疫（仅限极端模组包）"
+        })
+        @Config.RangeDouble(min = 0, max = 0.99)
+        public double damageReductionMax = 0.75;
+
+        @Config.Comment({
+            "=== ADVANCED: ARMOR PENETRATION RESISTANCE ===",
+            "=== 高级：护甲穿透抗性 ===",
+            "",
+            "Some modpacks have armor penetration/true damage mechanics.",
+            "This setting adds resistance to such effects.",
+            "某些模组包有护甲穿透/真实伤害机制。",
+            "此设置可添加对这些效果的抗性。",
+            "",
+            "Enable armor penetration resistance scaling"
+        })
+        public boolean enableArmorPenResist = false;
+
+        @Config.Comment("Armor penetration resistance per difficulty (percentage)")
+        @Config.RangeDouble(min = 0, max = 0.1)
+        public double armorPenResistRate = 0.01;
+
+        @Config.Comment("Maximum armor penetration resistance")
+        @Config.RangeDouble(min = 0, max = 0.9)
+        public double armorPenResistMax = 0.5;
+    }
+
+    // ==================== 精英设置 ====================
+
+    public static class EliteSettings {
+
+        @Config.Comment({
+            "Base chance for a mob to become elite (0.0 to 1.0)",
+            "怪物成为精英的基础概率"
         })
         @Config.RangeDouble(min = 0.0, max = 1.0)
         public double eliteChance = 0.15;
 
         @Config.Comment({
             "Additional elite chance per difficulty point",
-            "每点难度增加的精英概率",
-            "Final chance = eliteChance + (difficulty * eliteChancePerDifficulty)",
-            "最终概率 = 基础概率 + (难度 × 每点难度增加概率)"
+            "每点难度增加的精英概率"
         })
-        @Config.RangeDouble(min = 0.0, max = 0.2)
+        @Config.RangeDouble(min = 0.0, max = 0.5)
         public double eliteChancePerDifficulty = 0.02;
 
         @Config.Comment({
-            "Maximum elite chance (cap)",
+            "Maximum elite chance",
             "精英概率上限"
         })
         @Config.RangeDouble(min = 0.1, max = 1.0)
+        public double maxEliteChance = 0.6;
+
+        @Config.Comment({
+            "Minimum difficulty required for elite spawns",
+            "生成精英所需的最低难度"
+        })
+        @Config.RangeDouble(min = 0, max = 50)
+        public double minDifficultyForElite = 2.0;
+
+        @Config.Comment({
+            "=== TIER THRESHOLDS ===",
+            "=== 等级阈值 ===",
+            "",
+            "Difficulty thresholds for each tier (T1-T10)",
+            "Mobs below the first threshold are normal (T0)",
+            "各等级的难度阈值（T1-T10）",
+            "低于第一个阈值的为普通怪物（T0）"
+        })
+        public double[] tierThresholds = new double[] {
+            2.0,   // T1 - Elite
+            3.5,   // T2 - Rare
+            5.5,   // T3 - Veteran
+            8.0,   // T4 - Epic
+            11.0,  // T5 - Legendary
+            15.0,  // T6 - Mythic
+            20.0,  // T7 - Ancient
+            27.0,  // T8 - Void
+            35.0,  // T9 - Abyssal
+            45.0   // T10 - Terminus
+        };
+
+        @Config.Comment({
+            "Number of affixes per tier (T1-T10)",
+            "各等级的词条数量（T1-T10）",
+            "Format: min for each tier, randomness added internally"
+        })
+        public int[] affixCountPerTier = new int[] {
+            1,  // T1
+            1,  // T2 (+0-1 random)
+            2,  // T3
+            2,  // T4 (+0-1 random)
+            3,  // T5
+            3,  // T6 (+0-1 random)
+            4,  // T7
+            4,  // T8 (+0-1 random)
+            5,  // T9
+            5   // T10 (+0-1 random)
+        };
+    }
+
+    // ==================== 兼容性配置（为旧系统保留） ====================
+
+    /**
+     * @deprecated Use statScaling and difficultySource instead
+     */
+    @Deprecated
+    public static final DifficultySettings difficulty = new DifficultySettings();
+
+    @Deprecated
+    public static class DifficultySettings {
+        // 保留旧字段以兼容，但实际使用新配置
+        public double blocksPerDifficulty = 500;
+        public double daysPerDifficulty = 5;
+        public double healthMultiplierPerDifficulty = 0.15;
+        public double damageMultiplierPerDifficulty = 0.08;
+        public double armorPerDifficulty = 0.5;
+        public double maxArmorBonus = 20;
+        public double maxDistanceDifficulty = 10;
+        public double maxTimeDifficulty = 8;
+        public double eliteChance = 0.15;
+        public double eliteChancePerDifficulty = 0.02;
         public double maxEliteChance = 0.5;
-
-        @Config.Comment({
-            "Damage reduction per difficulty point (e.g., 0.02 = 2% per point)",
-            "每点难度的减伤百分比 (例如 0.02 = 每点 2%)"
-        })
-        @Config.RangeDouble(min = 0.0, max = 0.1)
         public double damageReductionPerDifficulty = 0.02;
-
-        @Config.Comment({
-            "Maximum damage reduction (cap)",
-            "减伤上限 (例如 0.5 = 最多减少 50% 伤害)"
-        })
-        @Config.RangeDouble(min = 0.0, max = 0.9)
         public double maxDamageReduction = 0.5;
     }
 
@@ -176,18 +406,12 @@ public class AdversityConfig {
     private static Set<ResourceLocation> whitelistCache = new HashSet<>();
     private static Set<ResourceLocation> blacklistCache = new HashSet<>();
     private static boolean cacheInitialized = false;
-
-    // 类级别缓存：避免重复查询相同类型的实体
-    // 使用 WeakHashMap 防止内存泄漏（类卸载时自动清理）
     private static final Map<Class<?>, Boolean> entityClassCache = new WeakHashMap<>();
 
-    /**
-     * 刷新缓存
-     */
     public static void refreshCache() {
         whitelistCache.clear();
         blacklistCache.clear();
-        entityClassCache.clear();  // 配置变更时清空类缓存
+        entityClassCache.clear();
 
         for (String entry : entityFilter.whitelist) {
             if (entry != null && !entry.isEmpty()) {
@@ -206,53 +430,40 @@ public class AdversityConfig {
             whitelistCache.size(), blacklistCache.size());
     }
 
-    /**
-     * 检查实体是否应该被难度系统处理
-     * 优化：使用类级别缓存，相同类型的实体只查询一次
-     */
     public static boolean shouldProcess(EntityLiving entity) {
         if (!cacheInitialized) {
             refreshCache();
         }
 
-        // 快速路径：检查类缓存
         Class<?> entityClass = entity.getClass();
         Boolean cached = entityClassCache.get(entityClass);
         if (cached != null) {
             return cached;
         }
 
-        // 慢速路径：首次遇到此类型，进行完整检查
         boolean result = shouldProcessInternal(entity);
         entityClassCache.put(entityClass, result);
         return result;
     }
 
-    /**
-     * 内部检查逻辑
-     */
     private static boolean shouldProcessInternal(EntityLiving entity) {
         ResourceLocation entityId = EntityList.getKey(entity);
         if (entityId == null) {
             return false;
         }
 
-        // 黑名单优先 - 永远不处理
         if (blacklistCache.contains(entityId)) {
             return false;
         }
 
-        // 在白名单中 - 始终处理
         if (whitelistCache.contains(entityId)) {
             return true;
         }
 
-        // 白名单模式 - 只处理白名单
         if (entityFilter.whitelistOnly) {
             return false;
         }
 
-        // 默认模式 - 处理敌对生物
         return entity instanceof IMob;
     }
 

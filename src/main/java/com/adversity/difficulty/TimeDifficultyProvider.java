@@ -22,7 +22,7 @@ public class TimeDifficultyProvider implements IDifficultyProvider {
 
     @Override
     public float getWeight() {
-        return 0.8f;
+        return (float) AdversityConfig.difficultySource.timeWeight;
     }
 
     @Override
@@ -31,11 +31,16 @@ public class TimeDifficultyProvider implements IDifficultyProvider {
         float days = worldTime / (float) TICKS_PER_DAY;
 
         // 从配置读取参数
-        double daysPerDifficulty = AdversityConfig.difficulty.daysPerDifficulty;
-        double maxDifficulty = AdversityConfig.difficulty.maxTimeDifficulty;
+        double daysPerDifficulty = AdversityConfig.difficultySource.daysPerDifficulty;
+        double maxDifficulty = AdversityConfig.difficultySource.maxTimeDifficulty;
 
         float difficulty = (float) (days / daysPerDifficulty);
-        return (float) Math.min(difficulty, maxDifficulty);
+
+        // 应用上限（0 表示无上限）
+        if (maxDifficulty > 0) {
+            return (float) Math.min(difficulty, maxDifficulty);
+        }
+        return difficulty;
     }
 
     @Override
