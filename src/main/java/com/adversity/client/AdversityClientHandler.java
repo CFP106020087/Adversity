@@ -15,6 +15,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -71,6 +72,9 @@ public class AdversityClientHandler {
     private void spawnTierParticles(Minecraft mc) {
         if (mc.player == null || mc.world == null) return;
 
+        // 清理已死亡实体的缓存
+        cleanupDeadEntities(mc);
+
         for (Entity entity : mc.world.loadedEntityList) {
             if (!(entity instanceof EntityLiving)) continue;
 
@@ -83,6 +87,24 @@ public class AdversityClientHandler {
             // 根据等级选择粒子类型和数量
             spawnParticlesForTier(mc, entity, data.tier);
         }
+    }
+
+    /**
+     * 清理已死亡或不存在的实体缓存
+     */
+    private void cleanupDeadEntities(Minecraft mc) {
+        // 每 100 tick 清理一次（约 5 秒）
+        if (tickCounter % 100 != 0) return;
+
+        java.util.Set<Integer> validIds = new java.util.HashSet<>();
+        for (Entity entity : mc.world.loadedEntityList) {
+            if (entity instanceof EntityLiving && entity.isEntityAlive()) {
+                validIds.add(entity.getEntityId());
+            }
+        }
+
+        // 清理已死亡/移除的实体缓存
+        ClientAdversityCache.retainOnly(validIds);
     }
 
     /**

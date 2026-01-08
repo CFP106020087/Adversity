@@ -39,10 +39,11 @@ public class ClientAdversityCache {
         }
 
         /**
-         * 检查缓存是否过期（10秒）
+         * 检查缓存是否过期（5分钟）
+         * 词条数据在生成后不会改变，所以可以缓存较长时间
          */
         public boolean isExpired() {
-            return System.currentTimeMillis() - timestamp > 10000;
+            return System.currentTimeMillis() - timestamp > 300000; // 5分钟
         }
     }
 
@@ -110,5 +111,12 @@ public class ClientAdversityCache {
      */
     public static int getCacheSize() {
         return CACHE.size();
+    }
+
+    /**
+     * 清理不在指定 ID 集合中的缓存（清理死亡/移除的实体）
+     */
+    public static void retainOnly(java.util.Set<Integer> validIds) {
+        CACHE.keySet().retainAll(validIds);
     }
 }
