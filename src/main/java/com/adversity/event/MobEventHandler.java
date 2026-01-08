@@ -40,9 +40,6 @@ public class MobEventHandler {
 
         EntityLiving entity = (EntityLiving) event.getEntity();
 
-        // 排除玩家
-        if (entity instanceof EntityPlayer) return;
-
         // 检查配置 - 是否应该处理此实体
         if (!AdversityConfig.shouldProcess(entity)) return;
 

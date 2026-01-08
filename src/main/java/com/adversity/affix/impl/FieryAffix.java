@@ -4,6 +4,8 @@ import com.adversity.Adversity;
 import com.adversity.affix.AbstractAffix;
 import com.adversity.affix.AffixType;
 import com.adversity.affix.IAffixData;
+import com.adversity.capability.CapabilityHandler;
+import com.adversity.capability.IAdversityCapability;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -37,8 +39,14 @@ public class FieryAffix extends AbstractAffix {
 
     @Override
     public float onAttack(EntityLiving attacker, EntityLivingBase target, float damage, IAffixData data) {
+        // 从 capability 获取 tier
+        int tier = 1; // 默认值
+        IAdversityCapability cap = CapabilityHandler.getCapability(attacker);
+        if (cap != null) {
+            tier = cap.getTier();
+        }
+
         // 计算燃烧时间：基础时间 + 每等级额外时间
-        int tier = data.getTier();
         int burnSeconds = BASE_BURN_SECONDS + (tier * BURN_SECONDS_PER_TIER);
 
         // 点燃目标（参数是 tick 数，1秒=20tick）
