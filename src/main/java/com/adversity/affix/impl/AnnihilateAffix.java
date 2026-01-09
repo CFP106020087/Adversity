@@ -96,11 +96,19 @@ public class AnnihilateAffix extends AbstractAffix {
         ItemStack targetItem = player.inventory.mainInventory.get(targetSlot);
 
         // 计算返还时间
-        long returnTime = player.world.getTotalWorldTime() + BASE_RETURN_TIME + (tier * 200);
+        long currentTime = player.world.getTotalWorldTime();
+        long returnTime = currentTime + BASE_RETURN_TIME + (tier * 200);
+        long durationTicks = returnTime - currentTime;
 
-        // 存入虚空
-        SealedItemManager manager = SealedItemManager.get(player.world);
+        Adversity.LOGGER.info("[VoidDebug] Annihilating '{}' from slot {} for player {}, returnTime={}, duration={} ticks ({} sec)",
+            targetItem.getDisplayName(), targetSlot, player.getName(), returnTime, durationTicks, durationTicks / 20);
+
+        // 存入虚空 - 使用主世界存储以避免跨维度问题
+        SealedItemManager manager = SealedItemManager.get(player.getServer().getWorld(0));
         manager.storeInVoid(player, targetItem, returnTime, targetSlot);
+
+        Adversity.LOGGER.info("[VoidDebug] Stored in void, manager voidCount for player = {}",
+            manager.getVoidStorageCount(player));
 
         // 从背包移除
         player.inventory.mainInventory.set(targetSlot, ItemStack.EMPTY);
@@ -110,8 +118,6 @@ public class AnnihilateAffix extends AbstractAffix {
 
         // 发送视觉效果
         VisualEffectHelper.sendToPlayer(player, VisualEffectType.VOID_GAZE, 60, 0.8f, attacker.getEntityId());
-
-        Adversity.LOGGER.debug("Annihilated item from slot {} for player {}", targetSlot, player.getName());
     }
 
     // 注意：虚空物品的返还现在由 SealedItemHandler.onPlayerTick 处理

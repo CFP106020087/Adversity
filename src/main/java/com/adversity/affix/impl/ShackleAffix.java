@@ -96,10 +96,19 @@ public class ShackleAffix extends AbstractAffix {
         ItemStack targetItem = player.getItemStackFromSlot(targetSlot);
 
         // 计算封印时间
-        long endTime = player.world.getTotalWorldTime() + BASE_SEAL_DURATION + (tier * 100);
+        long currentTime = player.world.getTotalWorldTime();
+        long endTime = currentTime + BASE_SEAL_DURATION + (tier * 100);
+        long durationTicks = endTime - currentTime;
+
+        Adversity.LOGGER.info("[SealDebug] Sealing '{}' in slot {} for player {}, endTime={}, duration={} ticks ({} sec)",
+            targetItem.getDisplayName(), targetSlot, player.getName(), endTime, durationTicks, durationTicks / 20);
 
         // 执行封印
         ItemStack sealedItem = SealedItemManager.sealItem(targetItem, endTime);
+
+        Adversity.LOGGER.info("[SealDebug] Created sealed item, isSealed={}, sealEndTime={}",
+            SealedItemManager.isSealed(sealedItem), SealedItemManager.getSealEndTime(sealedItem));
+
         player.setItemStackToSlot(targetSlot, sealedItem);
 
         // 播放效果
@@ -107,8 +116,6 @@ public class ShackleAffix extends AbstractAffix {
 
         // 发送视觉效果
         VisualEffectHelper.sendToPlayer(player, VisualEffectType.GRAVITY_DISTORT, 40, 0.5f, attacker.getEntityId());
-
-        Adversity.LOGGER.debug("Sealed equipment in slot {} for player {}", targetSlot, player.getName());
     }
 
     /**

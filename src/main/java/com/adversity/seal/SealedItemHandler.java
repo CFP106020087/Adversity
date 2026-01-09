@@ -4,6 +4,7 @@ import com.adversity.Adversity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -52,43 +53,56 @@ public class SealedItemHandler {
         long currentTime = player.world.getTotalWorldTime();
         boolean anyUnsealed = false;
 
+        // DEBUG: 每60秒输出一次检查状态
+        if (player.ticksExisted % 1200 == 0) {
+            Adversity.LOGGER.info("[SealDebug] Checking seals for player {}, worldTime={}", player.getName(), currentTime);
+        }
+
         // 检查盔甲栏（armorInventory: 0=boots, 1=legs, 2=chest, 3=head）
         for (int i = 0; i < player.inventory.armorInventory.size(); i++) {
             ItemStack stack = player.inventory.armorInventory.get(i);
-            if (SealedItemManager.isSealed(stack)) {
+            if (!stack.isEmpty() && SealedItemManager.isSealed(stack)) {
                 long endTime = SealedItemManager.getSealEndTime(stack);
-                Adversity.LOGGER.debug("Found sealed armor in slot {}, endTime={}, currentTime={}", i, endTime, currentTime);
+                long remaining = endTime - currentTime;
+                Adversity.LOGGER.info("[SealDebug] Found sealed armor '{}' in slot {}, endTime={}, currentTime={}, remaining={} ticks ({} sec)",
+                    stack.getDisplayName(), i, endTime, currentTime, remaining, remaining / 20);
                 if (currentTime >= endTime) {
-                    // 解除封印
-                    SealedItemManager.unsealItem(stack);
-                    // 重新设置到槽位以触发同步
-                    player.inventory.armorInventory.set(i, stack);
+                    // 解除封印 - 创建新的ItemStack确保同步
+                    ItemStack unsealed = SealedItemManager.unsealItem(stack.copy());
+                    player.inventory.armorInventory.set(i, unsealed);
                     anyUnsealed = true;
-                    Adversity.LOGGER.info("Unsealed armor in slot {}", i);
+                    Adversity.LOGGER.info("[SealDebug] >>> UNSEALED armor '{}' in slot {}, isStillSealed={}",
+                        unsealed.getDisplayName(), i, SealedItemManager.isSealed(unsealed));
                 }
             }
         }
 
         // 检查副手
         ItemStack offhand = player.inventory.offHandInventory.get(0);
-        if (SealedItemManager.isSealed(offhand)) {
-            if (currentTime >= SealedItemManager.getSealEndTime(offhand)) {
-                SealedItemManager.unsealItem(offhand);
-                player.inventory.offHandInventory.set(0, offhand);
+        if (!offhand.isEmpty() && SealedItemManager.isSealed(offhand)) {
+            long endTime = SealedItemManager.getSealEndTime(offhand);
+            Adversity.LOGGER.info("[SealDebug] Found sealed offhand '{}', endTime={}, currentTime={}",
+                offhand.getDisplayName(), endTime, currentTime);
+            if (currentTime >= endTime) {
+                ItemStack unsealed = SealedItemManager.unsealItem(offhand.copy());
+                player.inventory.offHandInventory.set(0, unsealed);
                 anyUnsealed = true;
-                Adversity.LOGGER.info("Unsealed offhand item");
+                Adversity.LOGGER.info("[SealDebug] >>> UNSEALED offhand '{}'", unsealed.getDisplayName());
             }
         }
 
         // 检查主手（热键栏当前选中的槽位）
         int currentSlot = player.inventory.currentItem;
         ItemStack mainhand = player.inventory.mainInventory.get(currentSlot);
-        if (SealedItemManager.isSealed(mainhand)) {
-            if (currentTime >= SealedItemManager.getSealEndTime(mainhand)) {
-                SealedItemManager.unsealItem(mainhand);
-                player.inventory.mainInventory.set(currentSlot, mainhand);
+        if (!mainhand.isEmpty() && SealedItemManager.isSealed(mainhand)) {
+            long endTime = SealedItemManager.getSealEndTime(mainhand);
+            Adversity.LOGGER.info("[SealDebug] Found sealed mainhand '{}' in slot {}, endTime={}, currentTime={}",
+                mainhand.getDisplayName(), currentSlot, endTime, currentTime);
+            if (currentTime >= endTime) {
+                ItemStack unsealed = SealedItemManager.unsealItem(mainhand.copy());
+                player.inventory.mainInventory.set(currentSlot, unsealed);
                 anyUnsealed = true;
-                Adversity.LOGGER.info("Unsealed mainhand item in slot {}", currentSlot);
+                Adversity.LOGGER.info("[SealDebug] >>> UNSEALED mainhand '{}' in slot {}", unsealed.getDisplayName(), currentSlot);
             }
         }
 
@@ -96,20 +110,17 @@ public class SealedItemHandler {
         for (int i = 0; i < player.inventory.mainInventory.size(); i++) {
             if (i == currentSlot) continue;  // 已经检查过主手
             ItemStack stack = player.inventory.mainInventory.get(i);
-            if (SealedItemManager.isSealed(stack)) {
-                if (currentTime >= SealedItemManager.getSealEndTime(stack)) {
-                    SealedItemManager.unsealItem(stack);
-                    player.inventory.mainInventory.set(i, stack);
+            if (!stack.isEmpty() && SealedItemManager.isSealed(stack)) {
+                long endTime = SealedItemManager.getSealEndTime(stack);
+                Adversity.LOGGER.info("[SealDebug] Found sealed item '{}' in inventory slot {}, endTime={}, currentTime={}",
+                    stack.getDisplayName(), i, endTime, currentTime);
+                if (currentTime >= endTime) {
+                    ItemStack unsealed = SealedItemManager.unsealItem(stack.copy());
+                    player.inventory.mainInventory.set(i, unsealed);
                     anyUnsealed = true;
-                    Adversity.LOGGER.debug("Unsealed item in inventory slot {}", i);
+                    Adversity.LOGGER.info("[SealDebug] >>> UNSEALED item '{}' in inventory slot {}", unsealed.getDisplayName(), i);
                 }
             }
-        }
-
-        // 强制同步物品栏到客户端
-        if (anyUnsealed) {
-            player.inventory.markDirty();
-            player.inventoryContainer.detectAndSendChanges();
         }
 
         // 检查Baubles饰品栏
@@ -119,6 +130,18 @@ public class SealedItemHandler {
 
         // 检查并返还虚空存储的物品（湮灭词条）
         boolean anyReturned = checkVoidStorage(player, currentTime);
+
+        Adversity.LOGGER.info("[SealDebug] Check complete: anyUnsealed={}, anyReturned={}", anyUnsealed, anyReturned);
+
+        // 强制同步物品栏到客户端
+        if (anyUnsealed || anyReturned) {
+            player.inventory.markDirty();
+            if (player instanceof EntityPlayerMP) {
+                // 使用sendContainerToPlayer强制完整同步
+                ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
+            }
+            player.inventoryContainer.detectAndSendChanges();
+        }
 
         // 通知玩家
         if (anyUnsealed) {
@@ -133,22 +156,34 @@ public class SealedItemHandler {
      * 检查并返还虚空存储中的物品
      */
     private static boolean checkVoidStorage(EntityPlayer player, long currentTime) {
-        SealedItemManager manager = SealedItemManager.get(player.world);
+        // 使用主世界的存储以避免跨维度问题
+        if (player.getServer() == null) {
+            Adversity.LOGGER.warn("[VoidDebug] Server is null for player {}", player.getName());
+            return false;
+        }
+
+        SealedItemManager manager = SealedItemManager.get(player.getServer().getWorld(0));
+        int totalVoidItems = manager.getVoidStorageCount(player);
+
+        // 每60秒输出一次虚空存储状态
+        if (player.ticksExisted % 1200 == 0 && totalVoidItems > 0) {
+            Adversity.LOGGER.info("[VoidDebug] Player {} has {} items in void storage, currentTime={}",
+                player.getName(), totalVoidItems, currentTime);
+        }
+
         java.util.List<SealedItemManager.VoidStoredItem> returnItems = manager.getReturnableItems(player, currentTime);
 
         if (returnItems.isEmpty()) {
             return false;
         }
 
-        for (SealedItemManager.VoidStoredItem item : returnItems) {
-            returnItemToPlayer(player, item);
-            Adversity.LOGGER.debug("Returned void item {} to player {}",
-                item.stack.getDisplayName(), player.getName());
-        }
+        Adversity.LOGGER.info("[VoidDebug] Returning {} items from void to player {}", returnItems.size(), player.getName());
 
-        // 强制同步物品栏到客户端
-        player.inventory.markDirty();
-        player.inventoryContainer.detectAndSendChanges();
+        for (SealedItemManager.VoidStoredItem item : returnItems) {
+            Adversity.LOGGER.info("[VoidDebug] >>> Returning '{}' (originalSlot={}, returnTime={})",
+                item.stack.getDisplayName(), item.slotIndex, item.returnTime);
+            returnItemToPlayer(player, item);
+        }
 
         return true;
     }
@@ -161,18 +196,27 @@ public class SealedItemHandler {
         if (item.slotIndex >= 0 && item.slotIndex < player.inventory.mainInventory.size()) {
             if (player.inventory.mainInventory.get(item.slotIndex).isEmpty()) {
                 player.inventory.mainInventory.set(item.slotIndex, item.stack);
+                Adversity.LOGGER.info("[VoidDebug] Placed '{}' back to original slot {}",
+                    item.stack.getDisplayName(), item.slotIndex);
                 playReturnEffects(player);
                 return;
+            } else {
+                Adversity.LOGGER.info("[VoidDebug] Original slot {} is occupied, trying other slots",
+                    item.slotIndex);
             }
         }
 
         // 尝试放入背包其他位置
         if (player.inventory.addItemStackToInventory(item.stack)) {
+            Adversity.LOGGER.info("[VoidDebug] Added '{}' to inventory via addItemStackToInventory",
+                item.stack.getDisplayName());
             playReturnEffects(player);
             return;
         }
 
         // 背包已满，掉落在地上
+        Adversity.LOGGER.info("[VoidDebug] Inventory full, dropping '{}' on ground",
+            item.stack.getDisplayName());
         player.dropItem(item.stack, false);
         playReturnEffects(player);
     }
