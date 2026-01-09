@@ -109,26 +109,20 @@ public class ShackleAffix extends AbstractAffix {
         // 随机选择一个盔甲槽
         int targetIndex = availableIndices.get(RANDOM.nextInt(availableIndices.size()));
 
-        // 直接从槽位提取物品（这会同时移除它）
-        // 使用 decrStackSize 或直接 get+set 的组合
+        // 获取目标物品
         ItemStack armorToSeal = player.inventory.armorInventory.get(targetIndex);
 
         // 立即序列化为NBT，保存当前状态
         NBTTagCompound armorNBT = armorToSeal.serializeNBT();
 
-        // 立即清空该槽位，防止后续代码修改它
-        player.inventory.armorInventory.set(targetIndex, ItemStack.EMPTY);
-
         Adversity.LOGGER.info("[SealToken] 选中槽位: {}, 物品: '{}'",
             targetIndex, armorToSeal.getDisplayName());
 
-        // 从NBT创建完全独立的副本用于令牌
+        // 从NBT创建完全独立的副本用于令牌（先创建令牌，成功后再清空槽位）
         ItemStack armorForToken = new ItemStack(armorNBT);
 
         if (armorForToken.isEmpty()) {
-            Adversity.LOGGER.error("[SealToken] 物品为空，恢复原物品!");
-            // 恢复原物品
-            player.inventory.armorInventory.set(targetIndex, new ItemStack(armorNBT));
+            Adversity.LOGGER.error("[SealToken] 物品副本为空!");
             return;
         }
 
@@ -147,18 +141,19 @@ public class ShackleAffix extends AbstractAffix {
             default: slotType = "ARMOR"; break;
         }
 
-        // 创建令牌
+        // 先创建令牌（在清空槽位之前）
         ItemStack token = ItemSealedToken.createToken(armorForToken, slotType, targetIndex, endTime, duration);
         if (token.isEmpty() || !token.hasTagCompound()) {
-            Adversity.LOGGER.error("[SealToken] 令牌创建失败，恢复原物品!");
-            // 恢复原物品
-            player.inventory.armorInventory.set(targetIndex, new ItemStack(armorNBT));
+            Adversity.LOGGER.error("[SealToken] 令牌创建失败!");
             return;
         }
 
-        Adversity.LOGGER.info("[SealToken] 令牌创建成功");
+        Adversity.LOGGER.info("[SealToken] 令牌创建成功，现在清空槽位");
 
-        // 验证盔甲状态（不修改，只读取验证）
+        // 令牌创建成功后，才清空槽位
+        player.inventory.armorInventory.set(targetIndex, ItemStack.EMPTY);
+
+        // 验证盔甲状态
         Adversity.LOGGER.info("[SealToken] === 当前盔甲状态 ===");
         for (int i = 0; i < 4; i++) {
             ItemStack a = player.inventory.armorInventory.get(i);
