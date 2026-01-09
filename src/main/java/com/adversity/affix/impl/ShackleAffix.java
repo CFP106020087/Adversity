@@ -79,38 +79,38 @@ public class ShackleAffix extends AbstractAffix {
     }
 
     /**
-     * 随机封印一件装备
+     * 随机封印一件盔甲
      */
     private void sealRandomEquipment(EntityPlayer player, EntityLiving attacker, int tier) {
         // 检查物品是否已注册
         if (ItemRegistry.SEALED_TOKEN == null) {
-            Adversity.LOGGER.warn("[SealToken] SEALED_TOKEN not registered yet!");
             return;
         }
 
-        // 收集可封印的装备槽（排除主手）
-        List<EntityEquipmentSlot> availableSlots = new ArrayList<>();
-        for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
-            // 排除主手 - 主手操作可能导致物品栏同步问题
-            if (slot == EntityEquipmentSlot.MAINHAND) {
-                continue;
-            }
-            ItemStack stack = player.getItemStackFromSlot(slot);
-            if (!stack.isEmpty() && !(stack.getItem() instanceof ItemSealedToken)) {
-                availableSlots.add(slot);
+        // 直接检查四个盔甲槽，不使用循环
+        // armorInventory: 0=boots, 1=legs, 2=chest, 3=head
+        int[] armorIndices = {0, 1, 2, 3};
+        List<Integer> availableIndices = new ArrayList<>();
+
+        for (int i : armorIndices) {
+            ItemStack armor = player.inventory.armorInventory.get(i);
+            if (!armor.isEmpty() && !(armor.getItem() instanceof ItemSealedToken)) {
+                availableIndices.add(i);
             }
         }
 
-        if (availableSlots.isEmpty()) {
+        if (availableIndices.isEmpty()) {
             return;
         }
 
-        // 随机选择一个槽位
-        EntityEquipmentSlot targetSlot = availableSlots.get(RANDOM.nextInt(availableSlots.size()));
+        // 随机选择一个盔甲槽
+        int targetIndex = availableIndices.get(RANDOM.nextInt(availableIndices.size()));
 
-        // 获取物品 - 必须先复制再操作
-        ItemStack itemCopy = player.getItemStackFromSlot(targetSlot).copy();
-        if (itemCopy.isEmpty()) {
+        // 直接从armorInventory获取并复制
+        ItemStack originalArmor = player.inventory.armorInventory.get(targetIndex);
+        ItemStack armorCopy = originalArmor.copy();
+
+        if (armorCopy.isEmpty()) {
             return;
         }
 
@@ -119,21 +119,27 @@ public class ShackleAffix extends AbstractAffix {
         long duration = BASE_SEAL_DURATION + (tier * 100);
         long endTime = currentTime + duration;
 
-        // 获取槽位信息
-        String slotType = getSlotTypeString(targetSlot);
-        int slotIndex = targetSlot.getIndex();
+        // 获取槽位类型
+        String slotType;
+        switch (targetIndex) {
+            case 0: slotType = "ARMOR_FEET"; break;
+            case 1: slotType = "ARMOR_LEGS"; break;
+            case 2: slotType = "ARMOR_CHEST"; break;
+            case 3: slotType = "ARMOR_HEAD"; break;
+            default: slotType = "ARMOR"; break;
+        }
 
         // 创建令牌
-        ItemStack token = ItemSealedToken.createToken(itemCopy, slotType, slotIndex, endTime, duration);
+        ItemStack token = ItemSealedToken.createToken(armorCopy, slotType, targetIndex, endTime, duration);
         if (token.isEmpty() || !token.hasTagCompound()) {
             Adversity.LOGGER.error("[SealToken] Failed to create token!");
             return;
         }
 
-        Adversity.LOGGER.info("[SealToken] Sealing '{}' from slot {}", itemCopy.getDisplayName(), targetSlot);
+        Adversity.LOGGER.info("[SealToken] Sealing '{}' from armor slot {}", armorCopy.getDisplayName(), targetIndex);
 
-        // 移除原物品（使用原生API）
-        player.setItemStackToSlot(targetSlot, ItemStack.EMPTY);
+        // 直接设置armorInventory槽位为空
+        player.inventory.armorInventory.set(targetIndex, ItemStack.EMPTY);
 
         // 添加令牌到背包
         if (!player.inventory.addItemStackToInventory(token)) {
