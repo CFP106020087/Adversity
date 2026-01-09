@@ -88,9 +88,13 @@ public class ShackleAffix extends AbstractAffix {
             return;
         }
 
-        // 收集可封印的装备槽
+        // 收集可封印的装备槽（排除主手）
         List<EntityEquipmentSlot> availableSlots = new ArrayList<>();
         for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
+            // 排除主手 - 主手操作可能导致物品栏同步问题
+            if (slot == EntityEquipmentSlot.MAINHAND) {
+                continue;
+            }
             ItemStack stack = player.getItemStackFromSlot(slot);
             if (!stack.isEmpty() && !(stack.getItem() instanceof ItemSealedToken)) {
                 availableSlots.add(slot);
@@ -128,35 +132,13 @@ public class ShackleAffix extends AbstractAffix {
 
         Adversity.LOGGER.info("[SealToken] Sealing '{}' from slot {}", itemCopy.getDisplayName(), targetSlot);
 
-        // 先添加令牌到背包（确保不会丢失）
+        // 移除原物品（使用原生API）
+        player.setItemStackToSlot(targetSlot, ItemStack.EMPTY);
+
+        // 添加令牌到背包
         if (!player.inventory.addItemStackToInventory(token)) {
             player.dropItem(token, false);
         }
-
-        // 再移除原物品
-        switch (targetSlot) {
-            case HEAD:
-                player.inventory.armorInventory.set(3, ItemStack.EMPTY);
-                break;
-            case CHEST:
-                player.inventory.armorInventory.set(2, ItemStack.EMPTY);
-                break;
-            case LEGS:
-                player.inventory.armorInventory.set(1, ItemStack.EMPTY);
-                break;
-            case FEET:
-                player.inventory.armorInventory.set(0, ItemStack.EMPTY);
-                break;
-            case MAINHAND:
-                player.inventory.mainInventory.set(player.inventory.currentItem, ItemStack.EMPTY);
-                break;
-            case OFFHAND:
-                player.inventory.offHandInventory.set(0, ItemStack.EMPTY);
-                break;
-        }
-
-        // 标记脏数据
-        player.inventory.markDirty();
 
         // 播放效果
         playSealEffects(player, attacker);
