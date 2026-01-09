@@ -1,6 +1,7 @@
 package com.adversity.seal;
 
 import com.adversity.Adversity;
+import com.adversity.item.ItemSealedToken;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -42,7 +43,7 @@ public class SealedItemHandler {
     }
 
     /**
-     * 定期检查并解除过期封印
+     * 定期检查并解除过期封印令牌
      */
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
@@ -52,110 +53,56 @@ public class SealedItemHandler {
 
         EntityPlayer player = event.player;
         long currentTime = player.world.getTotalWorldTime();
-        boolean anyUnsealed = false;
+        boolean anyRestored = false;
 
-        // DEBUG: 每60秒输出一次检查状态
-        if (player.ticksExisted % 1200 == 0) {
-            Adversity.LOGGER.info("[SealDebug] Checking seals for player {}, worldTime={}", player.getName(), currentTime);
-            // 打印所有盔甲栏内容
-            for (int i = 0; i < player.inventory.armorInventory.size(); i++) {
-                ItemStack stack = player.inventory.armorInventory.get(i);
-                if (!stack.isEmpty()) {
-                    NBTTagCompound nbt = stack.getTagCompound();
-                    Adversity.LOGGER.info("[SealDebug] ArmorSlot[{}]: '{}', hasNBT={}, isSealed={}, nbt={}",
-                        i, stack.getDisplayName(), nbt != null, SealedItemManager.isSealed(stack),
-                        nbt != null ? nbt.toString() : "null");
-                }
-            }
-        }
-
-        // 检查盔甲栏（armorInventory: 0=boots, 1=legs, 2=chest, 3=head）
-        for (int i = 0; i < player.inventory.armorInventory.size(); i++) {
-            ItemStack stack = player.inventory.armorInventory.get(i);
-            if (!stack.isEmpty() && SealedItemManager.isSealed(stack)) {
-                long endTime = SealedItemManager.getSealEndTime(stack);
-                long remaining = endTime - currentTime;
-                Adversity.LOGGER.info("[SealDebug] Found sealed armor '{}' in slot {}, endTime={}, currentTime={}, remaining={} ticks ({} sec)",
-                    stack.getDisplayName(), i, endTime, currentTime, remaining, remaining / 20);
-                if (currentTime >= endTime) {
-                    // 解除封印 - 创建新的ItemStack确保同步
-                    ItemStack unsealed = SealedItemManager.unsealItem(stack.copy());
-                    player.inventory.armorInventory.set(i, unsealed);
-                    anyUnsealed = true;
-                    Adversity.LOGGER.info("[SealDebug] >>> UNSEALED armor '{}' in slot {}, isStillSealed={}",
-                        unsealed.getDisplayName(), i, SealedItemManager.isSealed(unsealed));
-                }
-            }
-        }
-
-        // 检查副手
-        ItemStack offhand = player.inventory.offHandInventory.get(0);
-        if (!offhand.isEmpty() && SealedItemManager.isSealed(offhand)) {
-            long endTime = SealedItemManager.getSealEndTime(offhand);
-            Adversity.LOGGER.info("[SealDebug] Found sealed offhand '{}', endTime={}, currentTime={}",
-                offhand.getDisplayName(), endTime, currentTime);
-            if (currentTime >= endTime) {
-                ItemStack unsealed = SealedItemManager.unsealItem(offhand.copy());
-                player.inventory.offHandInventory.set(0, unsealed);
-                anyUnsealed = true;
-                Adversity.LOGGER.info("[SealDebug] >>> UNSEALED offhand '{}'", unsealed.getDisplayName());
-            }
-        }
-
-        // 检查主手（热键栏当前选中的槽位）
-        int currentSlot = player.inventory.currentItem;
-        ItemStack mainhand = player.inventory.mainInventory.get(currentSlot);
-        if (!mainhand.isEmpty() && SealedItemManager.isSealed(mainhand)) {
-            long endTime = SealedItemManager.getSealEndTime(mainhand);
-            Adversity.LOGGER.info("[SealDebug] Found sealed mainhand '{}' in slot {}, endTime={}, currentTime={}",
-                mainhand.getDisplayName(), currentSlot, endTime, currentTime);
-            if (currentTime >= endTime) {
-                ItemStack unsealed = SealedItemManager.unsealItem(mainhand.copy());
-                player.inventory.mainInventory.set(currentSlot, unsealed);
-                anyUnsealed = true;
-                Adversity.LOGGER.info("[SealDebug] >>> UNSEALED mainhand '{}' in slot {}", unsealed.getDisplayName(), currentSlot);
-            }
-        }
-
-        // 检查主背包其他槽位
+        // 检查背包中的封印令牌
         for (int i = 0; i < player.inventory.mainInventory.size(); i++) {
-            if (i == currentSlot) continue;  // 已经检查过主手
             ItemStack stack = player.inventory.mainInventory.get(i);
-            if (!stack.isEmpty() && SealedItemManager.isSealed(stack)) {
-                long endTime = SealedItemManager.getSealEndTime(stack);
-                Adversity.LOGGER.info("[SealDebug] Found sealed item '{}' in inventory slot {}, endTime={}, currentTime={}",
-                    stack.getDisplayName(), i, endTime, currentTime);
-                if (currentTime >= endTime) {
-                    ItemStack unsealed = SealedItemManager.unsealItem(stack.copy());
-                    player.inventory.mainInventory.set(i, unsealed);
-                    anyUnsealed = true;
-                    Adversity.LOGGER.info("[SealDebug] >>> UNSEALED item '{}' in inventory slot {}", unsealed.getDisplayName(), i);
+            if (!stack.isEmpty() && stack.getItem() instanceof ItemSealedToken) {
+                long endTime = ItemSealedToken.getSealEndTime(stack);
+                long remaining = endTime - currentTime;
+
+                // DEBUG: 输出令牌信息
+                if (player.ticksExisted % 200 == 0) {  // 每10秒输出一次
+                    ItemStack original = ItemSealedToken.getOriginalItem(stack);
+                    Adversity.LOGGER.info("[SealToken] Found token in slot {}: '{}', remaining={} ticks ({} sec)",
+                        i, original.getDisplayName(), remaining, remaining / 20);
+                }
+
+                // 检查是否到期
+                if (ItemSealedToken.isExpired(stack, currentTime)) {
+                    ItemStack original = ItemSealedToken.getOriginalItem(stack);
+                    Adversity.LOGGER.info("[SealToken] Token expired! Restoring '{}' from slot {}",
+                        original.getDisplayName(), i);
+
+                    // 恢复物品
+                    if (ItemSealedToken.restoreItem(player, stack, i)) {
+                        anyRestored = true;
+                        Adversity.LOGGER.info("[SealToken] Successfully restored item");
+                    }
                 }
             }
         }
 
-        // 检查Baubles饰品栏
+        // 检查Baubles饰品栏中的封印状态（旧系统兼容）
         if (isBaublesLoaded()) {
-            anyUnsealed |= checkBaublesInventory(player, currentTime);
+            anyRestored |= checkBaublesInventory(player, currentTime);
         }
 
         // 检查并返还虚空存储的物品（湮灭词条）
         boolean anyReturned = checkVoidStorage(player, currentTime);
 
-        Adversity.LOGGER.info("[SealDebug] Check complete: anyUnsealed={}, anyReturned={}", anyUnsealed, anyReturned);
-
         // 强制同步物品栏到客户端
-        if (anyUnsealed || anyReturned) {
+        if (anyRestored || anyReturned) {
             player.inventory.markDirty();
             if (player instanceof EntityPlayerMP) {
-                // 使用sendContainerToPlayer强制完整同步
                 ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
             }
             player.inventoryContainer.detectAndSendChanges();
         }
 
         // 通知玩家
-        if (anyUnsealed) {
+        if (anyRestored) {
             player.sendMessage(new TextComponentTranslation("adversity.seal.expired"));
         }
         if (anyReturned) {
