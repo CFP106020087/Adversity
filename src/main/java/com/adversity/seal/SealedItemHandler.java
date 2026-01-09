@@ -59,7 +59,10 @@ public class SealedItemHandler {
                 if (currentTime >= SealedItemManager.getSealEndTime(stack)) {
                     // 解除封印
                     SealedItemManager.unsealItem(stack);
+                    // 重新设置到槽位以触发同步
+                    player.setItemStackToSlot(slot, stack);
                     anyUnsealed = true;
+                    Adversity.LOGGER.debug("Unsealed equipment in slot {}", slot);
                 }
             }
         }
@@ -70,9 +73,18 @@ public class SealedItemHandler {
             if (SealedItemManager.isSealed(stack)) {
                 if (currentTime >= SealedItemManager.getSealEndTime(stack)) {
                     SealedItemManager.unsealItem(stack);
+                    // 重新设置到槽位以触发同步
+                    player.inventory.mainInventory.set(i, stack);
                     anyUnsealed = true;
+                    Adversity.LOGGER.debug("Unsealed item in inventory slot {}", i);
                 }
             }
+        }
+
+        // 强制同步物品栏到客户端
+        if (anyUnsealed) {
+            player.inventory.markDirty();
+            player.inventoryContainer.detectAndSendChanges();
         }
 
         // 检查Baubles饰品栏
@@ -105,7 +117,13 @@ public class SealedItemHandler {
 
         for (SealedItemManager.VoidStoredItem item : returnItems) {
             returnItemToPlayer(player, item);
+            Adversity.LOGGER.debug("Returned void item {} to player {}",
+                item.stack.getDisplayName(), player.getName());
         }
+
+        // 强制同步物品栏到客户端
+        player.inventory.markDirty();
+        player.inventoryContainer.detectAndSendChanges();
 
         return true;
     }
