@@ -638,32 +638,6 @@ public class AdversityConfig {
         public boolean enableExtraLoot = true;
     }
 
-    // ==================== 兼容性配置（为旧系统保留） ====================
-
-    /**
-     * @deprecated Use statScaling and difficultySource instead
-     */
-    @Deprecated
-    public static final DifficultySettings difficulty = new DifficultySettings();
-
-    @Deprecated
-    public static class DifficultySettings {
-        // 保留旧字段以兼容，但实际使用新配置
-        public double blocksPerDifficulty = 500;
-        public double daysPerDifficulty = 5;
-        public double healthMultiplierPerDifficulty = 0.15;
-        public double damageMultiplierPerDifficulty = 0.08;
-        public double armorPerDifficulty = 0.5;
-        public double maxArmorBonus = 20;
-        public double maxDistanceDifficulty = 10;
-        public double maxTimeDifficulty = 8;
-        public double eliteChance = 0.15;
-        public double eliteChancePerDifficulty = 0.02;
-        public double maxEliteChance = 0.5;
-        public double damageReductionPerDifficulty = 0.02;
-        public double maxDamageReduction = 0.5;
-    }
-
     // ==================== 运行时缓存 ====================
 
     private static Set<ResourceLocation> whitelistCache = new HashSet<>();

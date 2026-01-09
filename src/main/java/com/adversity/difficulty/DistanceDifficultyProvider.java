@@ -47,7 +47,7 @@ public class DistanceDifficultyProvider implements IDifficultyProvider {
 
     @Override
     public boolean isApplicable(World world, BlockPos pos, @Nullable EntityPlayer player) {
-        // 在主世界生效
-        return world.provider.getDimension() == 0;
+        // 在所有维度生效（包括模组维度）
+        return true;
     }
 }
