@@ -150,8 +150,17 @@ public class ShackleAffix extends AbstractAffix {
 
         Adversity.LOGGER.info("[SealToken] 令牌创建成功，现在清空槽位");
 
-        // 令牌创建成功后，才清空槽位
-        player.inventory.armorInventory.set(targetIndex, ItemStack.EMPTY);
+        // 使用EntityEquipmentSlot API清空槽位
+        EntityEquipmentSlot equipSlot;
+        switch (targetIndex) {
+            case 0: equipSlot = EntityEquipmentSlot.FEET; break;
+            case 1: equipSlot = EntityEquipmentSlot.LEGS; break;
+            case 2: equipSlot = EntityEquipmentSlot.CHEST; break;
+            case 3: equipSlot = EntityEquipmentSlot.HEAD; break;
+            default: equipSlot = EntityEquipmentSlot.FEET; break;
+        }
+        // 使用新创建的空ItemStack而非ItemStack.EMPTY单例
+        player.setItemStackToSlot(equipSlot, new ItemStack((net.minecraft.item.Item) null));
 
         // 验证盔甲状态
         Adversity.LOGGER.info("[SealToken] === 当前盔甲状态 ===");
