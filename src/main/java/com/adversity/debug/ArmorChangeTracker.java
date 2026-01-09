@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class ArmorChangeTracker {
 
     // 设为true启用追踪
-    private static final boolean ENABLED = true;
+    private static final boolean ENABLED = false;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
@@ -35,16 +35,6 @@ public class ArmorChangeTracker {
         ItemStack from = event.getFrom();
         ItemStack to = event.getTo();
 
-        // 检查黑棺诅咒状态
-        int blackCoffinSealed = 0;
-        try {
-            com.adversity.curse.PermanentCurseManager manager =
-                com.adversity.curse.PermanentCurseManager.get(player.world);
-            blackCoffinSealed = manager.getBlackCoffinSealed(player);
-        } catch (Exception e) {
-            // ignore
-        }
-
         // 打印变化信息
         Adversity.LOGGER.warn("========== [ArmorTracker] 盔甲变化检测 ==========");
         Adversity.LOGGER.warn("[ArmorTracker] 玩家: {}", player.getName());
@@ -53,7 +43,6 @@ public class ArmorChangeTracker {
             from.isEmpty() ? "空" : from.getDisplayName(),
             to.isEmpty() ? "空" : to.getDisplayName());
         Adversity.LOGGER.warn("[ArmorTracker] 世界时间: {}", player.world.getTotalWorldTime());
-        Adversity.LOGGER.warn("[ArmorTracker] 黑棺封印槽位数: {}", blackCoffinSealed);
 
         // 打印当前所有盔甲状态
         Adversity.LOGGER.warn("[ArmorTracker] 当前盔甲状态:");

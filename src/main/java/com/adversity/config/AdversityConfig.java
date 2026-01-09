@@ -211,7 +211,7 @@ public class AdversityConfig {
             "",
             "Scaling mode for damage"
         })
-        public String damageScalingMode = "COMPOUND";
+        public String damageScalingMode = "LINEAR";
 
         @Config.Comment("Base damage multiplier")
         @Config.RangeDouble(min = 0.1, max = 10)
