@@ -106,25 +106,34 @@ public class ShackleAffix extends AbstractAffix {
         // 执行封印
         ItemStack sealedItem = SealedItemManager.sealItem(targetItem, endTime);
 
-        Adversity.LOGGER.info("[SealDebug] Created sealed item, isSealed={}, sealEndTime={}",
-            SealedItemManager.isSealed(sealedItem), SealedItemManager.getSealEndTime(sealedItem));
+        Adversity.LOGGER.info("[SealDebug] Created sealed item, isSealed={}, sealEndTime={}, nbt={}",
+            SealedItemManager.isSealed(sealedItem), SealedItemManager.getSealEndTime(sealedItem),
+            sealedItem.getTagCompound() != null ? sealedItem.getTagCompound().toString() : "null");
 
-        player.setItemStackToSlot(targetSlot, sealedItem);
+        // 直接设置到inventory而不是使用setItemStackToSlot，避免NBT丢失
+        if (targetSlot.getSlotType() == EntityEquipmentSlot.Type.ARMOR) {
+            int armorIndex = targetSlot.getIndex();
+            player.inventory.armorInventory.set(armorIndex, sealedItem);
+            Adversity.LOGGER.info("[SealDebug] Set armor directly to armorInventory[{}]", armorIndex);
+        } else if (targetSlot == EntityEquipmentSlot.MAINHAND) {
+            player.inventory.mainInventory.set(player.inventory.currentItem, sealedItem);
+        } else if (targetSlot == EntityEquipmentSlot.OFFHAND) {
+            player.inventory.offHandInventory.set(0, sealedItem);
+        }
+
+        // 强制同步
+        player.inventory.markDirty();
+        if (player instanceof net.minecraft.entity.player.EntityPlayerMP) {
+            ((net.minecraft.entity.player.EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
+        }
 
         // 验证设置后的物品
         ItemStack verifyItem = player.getItemStackFromSlot(targetSlot);
-        Adversity.LOGGER.info("[SealDebug] After setItemStackToSlot: slot={}, item='{}', isSealed={}, sealEndTime={}",
+        Adversity.LOGGER.info("[SealDebug] After set: slot={}, item='{}', isSealed={}, hasNBT={}, nbt={}",
             targetSlot, verifyItem.getDisplayName(),
-            SealedItemManager.isSealed(verifyItem), SealedItemManager.getSealEndTime(verifyItem));
-
-        // 也检查armorInventory
-        if (targetSlot.getSlotType() == EntityEquipmentSlot.Type.ARMOR) {
-            int armorIndex = targetSlot.getIndex();
-            ItemStack armorSlotItem = player.inventory.armorInventory.get(armorIndex);
-            Adversity.LOGGER.info("[SealDebug] ArmorInventory[{}]: item='{}', isSealed={}, sameInstance={}",
-                armorIndex, armorSlotItem.getDisplayName(),
-                SealedItemManager.isSealed(armorSlotItem), armorSlotItem == verifyItem);
-        }
+            SealedItemManager.isSealed(verifyItem),
+            verifyItem.getTagCompound() != null,
+            verifyItem.getTagCompound() != null ? verifyItem.getTagCompound().toString() : "null");
 
         // 播放效果
         playSealEffects(player, attacker);
