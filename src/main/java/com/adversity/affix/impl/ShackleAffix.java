@@ -168,25 +168,47 @@ public class ShackleAffix extends AbstractAffix {
             return false;
         }
 
-        // ===== 第五步：原子执行 =====
+        // ===== 第五步：通过Container系统修改（防止客户端覆盖） =====
         // 先找到令牌的目标位置
         int tokenSlot = player.inventory.getFirstEmptyStack();
         if (tokenSlot == -1) {
-            // 背包满，直接掉落令牌
             Adversity.LOGGER.info("[Shackle] 背包满，令牌将掉落");
         }
 
-        // 执行：清空盔甲槽
-        player.inventory.armorInventory.set(targetSlot, ItemStack.EMPTY);
+        // 通过inventoryContainer修改盔甲槽，确保Container和Inventory同步
+        // ContainerPlayer的盔甲槽: 5=HEAD, 6=CHEST, 7=LEGS, 8=FEET
+        int containerSlot;
+        switch (targetSlot) {
+            case 0: containerSlot = 8; break;  // FEET
+            case 1: containerSlot = 7; break;  // LEGS
+            case 2: containerSlot = 6; break;  // CHEST
+            case 3: containerSlot = 5; break;  // HEAD
+            default: containerSlot = 8; break;
+        }
 
-        // 执行：放置令牌
+        // 使用putStackInSlot通过Container系统清空盔甲槽
+        player.inventoryContainer.putStackInSlot(containerSlot, ItemStack.EMPTY);
+
+        // 放置令牌到背包
         if (tokenSlot != -1) {
-            player.inventory.mainInventory.set(tokenSlot, token);
-            Adversity.LOGGER.info("[Shackle] 令牌放入背包槽 {}", tokenSlot);
+            // 背包槽在Container中的位置是 9-35 (主背包) 和 36-44 (快捷栏)
+            // mainInventory的0-8是快捷栏，9-35是主背包
+            // Container中：9-35是主背包(对应mainInventory 9-35)，36-44是快捷栏(对应mainInventory 0-8)
+            int containerTokenSlot;
+            if (tokenSlot < 9) {
+                containerTokenSlot = 36 + tokenSlot;  // 快捷栏
+            } else {
+                containerTokenSlot = tokenSlot;  // 主背包
+            }
+            player.inventoryContainer.putStackInSlot(containerTokenSlot, token);
+            Adversity.LOGGER.info("[Shackle] 令牌放入背包槽 {} (container槽 {})", tokenSlot, containerTokenSlot);
         } else {
             player.dropItem(token, false);
             Adversity.LOGGER.info("[Shackle] 令牌掉落到地上");
         }
+
+        // 强制同步Container到客户端
+        player.inventoryContainer.detectAndSendChanges();
 
         // ===== 第六步：验证结果 =====
         Adversity.LOGGER.info("[Shackle] === 操作后盔甲状态 ===");
