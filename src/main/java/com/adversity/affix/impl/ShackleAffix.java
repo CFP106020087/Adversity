@@ -81,7 +81,7 @@ public class ShackleAffix extends AbstractAffix {
     /**
      * 随机封印一件盔甲
      *
-     * 解决方案：先复制所有盔甲，再一次性重新设置，避免NonNullList的潜在问题
+     * 使用EntityEquipmentSlot API正确设置盔甲
      */
     private void sealRandomEquipment(EntityPlayer player, EntityLiving attacker, int tier) {
         // 检查物品是否已注册
@@ -89,20 +89,24 @@ public class ShackleAffix extends AbstractAffix {
             return;
         }
 
-        // 首先，复制所有盔甲到临时数组（确保独立副本）
-        ItemStack[] armorCopies = new ItemStack[4];
+        // 定义盔甲槽位映射
+        EntityEquipmentSlot[] armorSlots = {
+            EntityEquipmentSlot.FEET,   // index 0
+            EntityEquipmentSlot.LEGS,   // index 1
+            EntityEquipmentSlot.CHEST,  // index 2
+            EntityEquipmentSlot.HEAD    // index 3
+        };
+
+        // 收集可封印的槽位
         List<Integer> availableIndices = new ArrayList<>();
-
         for (int i = 0; i < 4; i++) {
-            ItemStack armor = player.inventory.armorInventory.get(i);
-            armorCopies[i] = armor.copy();  // 创建独立副本
-
+            ItemStack armor = player.getItemStackFromSlot(armorSlots[i]);
             if (!armor.isEmpty() && !(armor.getItem() instanceof ItemSealedToken)) {
                 availableIndices.add(i);
             }
         }
 
-        Adversity.LOGGER.info("[SealToken] 可封印槽位: {}, 盔甲副本已创建", availableIndices);
+        Adversity.LOGGER.info("[SealToken] 可封印槽位: {}", availableIndices);
 
         if (availableIndices.isEmpty()) {
             Adversity.LOGGER.info("[SealToken] 没有可封印的盔甲!");
@@ -111,9 +115,14 @@ public class ShackleAffix extends AbstractAffix {
 
         // 随机选择一个盔甲槽
         int targetIndex = availableIndices.get(RANDOM.nextInt(availableIndices.size()));
-        ItemStack armorToSeal = armorCopies[targetIndex];  // 使用已复制的副本
+        EntityEquipmentSlot targetSlot = armorSlots[targetIndex];
 
-        Adversity.LOGGER.info("[SealToken] 选中槽位: {}, 物品: '{}'", targetIndex, armorToSeal.getDisplayName());
+        // 获取并复制目标盔甲
+        ItemStack originalArmor = player.getItemStackFromSlot(targetSlot);
+        ItemStack armorToSeal = originalArmor.copy();
+
+        Adversity.LOGGER.info("[SealToken] 选中槽位: {} ({}), 物品: '{}'",
+            targetIndex, targetSlot.getName(), armorToSeal.getDisplayName());
 
         if (armorToSeal.isEmpty()) {
             Adversity.LOGGER.error("[SealToken] 目标物品为空!");
@@ -125,7 +134,7 @@ public class ShackleAffix extends AbstractAffix {
         long duration = BASE_SEAL_DURATION + (tier * 100);
         long endTime = currentTime + duration;
 
-        // 获取槽位类型
+        // 获取槽位类型字符串
         String slotType;
         switch (targetIndex) {
             case 0: slotType = "ARMOR_FEET"; break;
@@ -135,7 +144,7 @@ public class ShackleAffix extends AbstractAffix {
             default: slotType = "ARMOR"; break;
         }
 
-        // 创建令牌（使用之前复制的物品）
+        // 创建令牌
         ItemStack token = ItemSealedToken.createToken(armorToSeal, slotType, targetIndex, endTime, duration);
         if (token.isEmpty() || !token.hasTagCompound()) {
             Adversity.LOGGER.error("[SealToken] 令牌创建失败!");
@@ -144,21 +153,15 @@ public class ShackleAffix extends AbstractAffix {
 
         Adversity.LOGGER.info("[SealToken] 令牌创建成功");
 
-        // 标记目标槽位为空
-        armorCopies[targetIndex] = ItemStack.EMPTY;
-
-        // 一次性重新设置所有盔甲槽（使用复制的副本）
-        // 这样确保每个槽位都被正确设置
-        for (int i = 0; i < 4; i++) {
-            player.inventory.armorInventory.set(i, armorCopies[i]);
-        }
+        // 使用setItemStackToSlot API清空目标槽位（这是Forge推荐的方式）
+        player.setItemStackToSlot(targetSlot, ItemStack.EMPTY);
 
         // 验证盔甲状态
         Adversity.LOGGER.info("[SealToken] === 设置后盔甲状态 ===");
         for (int i = 0; i < 4; i++) {
-            ItemStack a = player.inventory.armorInventory.get(i);
-            Adversity.LOGGER.info("[SealToken] armorInventory[{}] = '{}' (empty={})",
-                i, a.getDisplayName(), a.isEmpty());
+            ItemStack a = player.getItemStackFromSlot(armorSlots[i]);
+            Adversity.LOGGER.info("[SealToken] slot[{}] ({}) = '{}' (empty={})",
+                i, armorSlots[i].getName(), a.getDisplayName(), a.isEmpty());
         }
 
         // 添加令牌到背包
@@ -169,10 +172,9 @@ public class ShackleAffix extends AbstractAffix {
             Adversity.LOGGER.info("[SealToken] 令牌添加到背包");
         }
 
-        // 强制同步物品栏
-        player.inventory.markDirty();
+        // 使用detectAndSendChanges同步（不用sendContainerToPlayer）
         if (player instanceof net.minecraft.entity.player.EntityPlayerMP) {
-            ((net.minecraft.entity.player.EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
+            player.inventoryContainer.detectAndSendChanges();
         }
 
         // 播放效果
