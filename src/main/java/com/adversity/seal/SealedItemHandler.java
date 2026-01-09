@@ -10,6 +10,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -56,6 +57,16 @@ public class SealedItemHandler {
         // DEBUG: 每60秒输出一次检查状态
         if (player.ticksExisted % 1200 == 0) {
             Adversity.LOGGER.info("[SealDebug] Checking seals for player {}, worldTime={}", player.getName(), currentTime);
+            // 打印所有盔甲栏内容
+            for (int i = 0; i < player.inventory.armorInventory.size(); i++) {
+                ItemStack stack = player.inventory.armorInventory.get(i);
+                if (!stack.isEmpty()) {
+                    NBTTagCompound nbt = stack.getTagCompound();
+                    Adversity.LOGGER.info("[SealDebug] ArmorSlot[{}]: '{}', hasNBT={}, isSealed={}, nbt={}",
+                        i, stack.getDisplayName(), nbt != null, SealedItemManager.isSealed(stack),
+                        nbt != null ? nbt.toString() : "null");
+                }
+            }
         }
 
         // 检查盔甲栏（armorInventory: 0=boots, 1=legs, 2=chest, 3=head）
