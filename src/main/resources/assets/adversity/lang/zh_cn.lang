@@ -42,6 +42,25 @@ adversity.affix.haste=迅捷
 adversity.affix.blinding=致盲
 adversity.affix.gravity=引力
 adversity.affix.horror=恐惧
+adversity.affix.reaper=死神
+adversity.affix.blunt=钝击
+adversity.affix.giant_slayer=巨人杀手
+adversity.affix.shield_breaker=破盾
+adversity.affix.bloodthirst=渴血
+adversity.affix.avarice=强欲
+adversity.affix.hero=英雄
+adversity.affix.divine=神明
+adversity.affix.outer_god=外神
+adversity.affix.tetanus=破伤风
+adversity.affix.reversal=反转
+adversity.affix.oblivion=遗忘
+adversity.affix.unclean=不洁
+adversity.affix.ascension=飞升
+adversity.affix.purifier=净化者
+adversity.affix.disenchant=解咒
+adversity.affix.shackle=枷锁
+adversity.affix.divest=褫夺
+adversity.affix.annihilate=湮灭
 
 # Tier Names (10级系统)
 adversity.tier.1=精英

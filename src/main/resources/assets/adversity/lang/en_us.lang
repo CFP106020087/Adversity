@@ -42,6 +42,25 @@ adversity.affix.haste=Haste
 adversity.affix.blinding=Blinding
 adversity.affix.gravity=Gravity
 adversity.affix.horror=Horror
+adversity.affix.reaper=Reaper
+adversity.affix.blunt=Blunt
+adversity.affix.giant_slayer=Giant Slayer
+adversity.affix.shield_breaker=Shield Breaker
+adversity.affix.bloodthirst=Bloodthirst
+adversity.affix.avarice=Avarice
+adversity.affix.hero=Hero
+adversity.affix.divine=Divine
+adversity.affix.outer_god=Outer God
+adversity.affix.tetanus=Tetanus
+adversity.affix.reversal=Reversal
+adversity.affix.oblivion=Oblivion
+adversity.affix.unclean=Unclean
+adversity.affix.ascension=Ascension
+adversity.affix.purifier=Purifier
+adversity.affix.disenchant=Disenchant
+adversity.affix.shackle=Shackle
+adversity.affix.divest=Divest
+adversity.affix.annihilate=Annihilate
 
 # Tier Names (10-tier system)
 adversity.tier.1=Elite
