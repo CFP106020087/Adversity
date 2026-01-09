@@ -162,8 +162,13 @@ public class ShackleAffix extends AbstractAffix {
             Adversity.LOGGER.info("[SealToken] 令牌添加到背包");
         }
 
-        // 只标记脏，让MC自己同步，不强制调用sendContainerToPlayer
+        // 强制同步到客户端
         player.inventory.markDirty();
+        if (player instanceof net.minecraft.entity.player.EntityPlayerMP) {
+            net.minecraft.entity.player.EntityPlayerMP mp = (net.minecraft.entity.player.EntityPlayerMP) player;
+            // 使用detectAndSendChanges而不是sendContainerToPlayer
+            mp.inventoryContainer.detectAndSendChanges();
+        }
 
         // 播放效果
         playSealEffects(player, attacker);
