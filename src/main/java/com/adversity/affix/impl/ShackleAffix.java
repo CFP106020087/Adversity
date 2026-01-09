@@ -162,12 +162,27 @@ public class ShackleAffix extends AbstractAffix {
             Adversity.LOGGER.info("[SealToken] 令牌添加到背包");
         }
 
-        // 强制同步到客户端
+        // 直接发送槽位更新包到客户端
         player.inventory.markDirty();
         if (player instanceof net.minecraft.entity.player.EntityPlayerMP) {
             net.minecraft.entity.player.EntityPlayerMP mp = (net.minecraft.entity.player.EntityPlayerMP) player;
-            // 使用detectAndSendChanges而不是sendContainerToPlayer
-            mp.inventoryContainer.detectAndSendChanges();
+
+            // ContainerPlayer的盔甲槽位: 5=HEAD, 6=CHEST, 7=LEGS, 8=FEET
+            // armorInventory索引: 0=FEET, 1=LEGS, 2=CHEST, 3=HEAD
+            int[] containerSlots = {8, 7, 6, 5};  // 对应armorInventory的0,1,2,3
+
+            // 发送所有4个盔甲槽位的更新包
+            for (int i = 0; i < 4; i++) {
+                int containerSlot = containerSlots[i];
+                ItemStack armorStack = player.inventory.armorInventory.get(i);
+                mp.connection.sendPacket(new net.minecraft.network.play.server.SPacketSetSlot(
+                    0,  // windowId 0 = 玩家背包
+                    containerSlot,
+                    armorStack
+                ));
+            }
+
+            Adversity.LOGGER.info("[SealToken] 已发送4个盔甲槽位更新包");
         }
 
         // 播放效果
