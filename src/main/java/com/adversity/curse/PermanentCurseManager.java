@@ -111,19 +111,19 @@ public class PermanentCurseManager extends WorldSavedData {
         PlayerCurseData data = getOrCreateData(playerId);
 
         float currentReduction = data.blackSwanReduction;
-        float newReduction = currentReduction + BLACK_SWAN_REDUCTION;
+        float newReduction = currentReduction + getBlackSwanReductionAmount();
 
         // 检查是否达到ban阈值
-        if (newReduction >= 1.0f) {
+        if (newReduction >= getBlackSwanBanThreshold()) {
             // 攻击力归零，应该ban
-            data.blackSwanReduction = 1.0f;
+            data.blackSwanReduction = getBlackSwanBanThreshold();
             data.banned = true;
             data.banReason = "black_swan";
             markDirty();
             return true;
         }
 
-        data.blackSwanReduction = Math.min(newReduction, BLACK_SWAN_MAX_REDUCTION);
+        data.blackSwanReduction = newReduction;
         markDirty();
 
         // 发送警告
@@ -153,12 +153,12 @@ public class PermanentCurseManager extends WorldSavedData {
         PlayerCurseData data = getOrCreateData(playerId);
 
         float currentReduction = data.blackFridayReduction;
-        float newReduction = currentReduction + BLACK_FRIDAY_REDUCTION;
+        float newReduction = currentReduction + getBlackFridayReductionAmount();
 
         // 检查是否达到ban阈值（最大生命归零）
         float baseHealth = 20.0f;  // 原版基础生命
-        if (baseHealth - newReduction <= 0) {
-            data.blackFridayReduction = baseHealth;
+        if (baseHealth - newReduction <= getBlackFridayBanThreshold()) {
+            data.blackFridayReduction = baseHealth - getBlackFridayBanThreshold();
             data.banned = true;
             data.banReason = "black_friday";
             markDirty();
@@ -196,11 +196,12 @@ public class PermanentCurseManager extends WorldSavedData {
         PlayerCurseData data = getOrCreateData(playerId);
 
         int currentSealed = data.blackCoffinSealed;
-        int newSealed = currentSealed + 1;
+        int newSealed = currentSealed + getBlackCoffinSlotsAmount();
+        int banThreshold = getBlackCoffinBanThreshold();
 
         // 检查是否达到ban阈值
-        if (newSealed >= BLACK_COFFIN_MAX_SLOTS) {
-            data.blackCoffinSealed = BLACK_COFFIN_MAX_SLOTS;
+        if (newSealed >= banThreshold) {
+            data.blackCoffinSealed = banThreshold;
             data.banned = true;
             data.banReason = "black_coffin";
             markDirty();
@@ -211,8 +212,8 @@ public class PermanentCurseManager extends WorldSavedData {
         markDirty();
 
         // 发送警告
-        if (newSealed >= BLACK_COFFIN_MAX_SLOTS - 5) {
-            sendWarning(player, "black_coffin", (float) newSealed / BLACK_COFFIN_MAX_SLOTS);
+        if (newSealed >= banThreshold - 5) {
+            sendWarning(player, "black_coffin", (float) newSealed / banThreshold);
         }
 
         return false;

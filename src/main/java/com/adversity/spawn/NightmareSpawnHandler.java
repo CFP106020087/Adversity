@@ -16,6 +16,7 @@ import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -91,7 +92,16 @@ public class NightmareSpawnHandler {
     private static int getDaysWithoutSleep(EntityPlayer player) {
         // Get time since last rest
         // In Minecraft, StatList.TIME_SINCE_REST tracks ticks since last sleep
-        int timeSinceRest = player.getStatFile().readStat(StatList.TIME_SINCE_REST);
+        if (!(player instanceof EntityPlayerMP)) {
+            return 0;  // Client-side or invalid player
+        }
+
+        StatBase timeSinceRestStat = StatList.TIME_SINCE_REST;
+        if (timeSinceRestStat == null) {
+            return 0;  // Stat not available
+        }
+
+        int timeSinceRest = ((EntityPlayerMP) player).getStatFile().readStat(timeSinceRestStat);
         return timeSinceRest / TICKS_PER_DAY;
     }
 

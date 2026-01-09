@@ -95,7 +95,7 @@ public class BlackCoffinAffix extends AbstractAffix {
         Adversity.LOGGER.info("Black Coffin curse applied to player {}. Sealed slots: {}/{}",
             player.getName(),
             manager.getBlackCoffinSealed(player),
-            PermanentCurseManager.BLACK_COFFIN_MAX_SLOTS);
+            PermanentCurseManager.getBlackCoffinBanThreshold());
     }
 
     /**

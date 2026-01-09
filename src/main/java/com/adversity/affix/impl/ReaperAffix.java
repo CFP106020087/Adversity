@@ -12,6 +12,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.ResourceLocation;
 
@@ -82,7 +83,7 @@ public class ReaperAffix extends AbstractAffix {
         int tier = getTier(attacker);
 
         // 获取玩家死亡次数
-        int deathCount = player.getStatFile().readStat(StatList.DEATHS);
+        int deathCount = getPlayerDeathCount(player);
 
         // 计算伤害倍率
         float damageMultiplier = calculateDamageMultiplier(deathCount, tier);
@@ -100,7 +101,7 @@ public class ReaperAffix extends AbstractAffix {
         if (data.getTickCount() % 40 == 0) {
             EntityPlayer nearestPlayer = entity.world.getClosestPlayerToEntity(entity, 16.0);
             if (nearestPlayer != null) {
-                int deathCount = nearestPlayer.getStatFile().readStat(StatList.DEATHS);
+                int deathCount = getPlayerDeathCount(nearestPlayer);
                 updateSpeedModifier(entity, deathCount);
             }
         }
@@ -176,6 +177,16 @@ public class ReaperAffix extends AbstractAffix {
             float ratio = 1.0f - ((float) (deathCount - DEATH_THRESHOLD) / (DEATH_CAP - DEATH_THRESHOLD));
             return MAX_SPEED_BONUS * 0.3 * ratio;
         }
+    }
+
+    /**
+     * 获取玩家死亡次数（服务端）
+     */
+    private int getPlayerDeathCount(EntityPlayer player) {
+        if (player instanceof EntityPlayerMP) {
+            return ((EntityPlayerMP) player).getStatFile().readStat(StatList.DEATHS);
+        }
+        return 0;  // 客户端返回默认值
     }
 
     private int getTier(EntityLiving entity) {
