@@ -3,7 +3,6 @@ package com.adversity.compat;
 import baubles.api.BaublesApi;
 import baubles.api.IBauble;
 import baubles.api.cap.IBaublesItemHandler;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -100,19 +99,12 @@ public class BaublesCompat {
     }
 
     /**
-     * 获取槽位类型名称
+     * 获取槽位类型名称（动态，支持额外饰品栏位模组）
+     * 格式: BAUBLE_<slot_index>
      */
     public static String getSlotTypeName(int slot) {
-        // Baubles标准槽位: 0=AMULET, 1=RING, 2=RING, 3=BELT, 4=HEAD, 5=BODY, 6=CHARM
-        switch (slot) {
-            case 0: return "BAUBLE_AMULET";
-            case 1: return "BAUBLE_RING1";
-            case 2: return "BAUBLE_RING2";
-            case 3: return "BAUBLE_BELT";
-            case 4: return "BAUBLE_HEAD";
-            case 5: return "BAUBLE_BODY";
-            case 6: return "BAUBLE_CHARM";
-            default: return "BAUBLE_" + slot;
-        }
+        // 使用统一格式，不硬编码槽位类型
+        // 支持任意数量的饰品槽位（包括额外饰品栏位模组添加的）
+        return "BAUBLE_" + slot;
     }
 }

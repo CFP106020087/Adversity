@@ -175,18 +175,16 @@ public class ItemSealedToken extends Item {
             case "ARMOR_FEET": return "靴子";
             case "MAINHAND": return "主手";
             case "OFFHAND": return "副手";
-            case "BAUBLE_AMULET": return "项链";
-            case "BAUBLE_RING1": return "戒指1";
-            case "BAUBLE_RING2": return "戒指2";
-            case "BAUBLE_BELT": return "腰带";
-            case "BAUBLE_HEAD": return "头饰";
-            case "BAUBLE_BODY": return "披风";
-            case "BAUBLE_CHARM": return "护符";
-            case "BAUBLE": return "饰品";
             case "INVENTORY": return "背包";
             default:
+                // 动态处理饰品槽位 (BAUBLE_0, BAUBLE_1, ...)
                 if (slotType.startsWith("BAUBLE_")) {
-                    return "饰品";
+                    try {
+                        int slotIndex = Integer.parseInt(slotType.substring(7));
+                        return "饰品槽 " + (slotIndex + 1);
+                    } catch (NumberFormatException e) {
+                        return "饰品";
+                    }
                 }
                 return slotType;
         }
