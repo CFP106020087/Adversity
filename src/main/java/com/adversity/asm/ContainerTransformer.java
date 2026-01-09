@@ -94,7 +94,7 @@ public class ContainerTransformer implements IClassTransformer {
         injection.add(new VarInsnNode(Opcodes.ALOAD, 3));   // clickType (ClickType)
         injection.add(new VarInsnNode(Opcodes.ALOAD, 4));   // player (EntityPlayer)
 
-        // Call our hook method
+        // Call our hook method - use deobfuscated names since FML remaps at runtime
         injection.add(new MethodInsnNode(
             Opcodes.INVOKESTATIC,
             "com/adversity/asm/SlotClickHook",
@@ -103,26 +103,29 @@ public class ContainerTransformer implements IClassTransformer {
             false
         ));
 
-        // Store result
-        injection.add(new VarInsnNode(Opcodes.ASTORE, 5));
+        // Store result in a new local variable
+        // Find the next available local variable slot
+        int resultVar = method.maxLocals;
+        injection.add(new VarInsnNode(Opcodes.ASTORE, resultVar));
 
         // Check if result is not null
-        injection.add(new VarInsnNode(Opcodes.ALOAD, 5));
+        injection.add(new VarInsnNode(Opcodes.ALOAD, resultVar));
         LabelNode continueLabel = new LabelNode();
         injection.add(new JumpInsnNode(Opcodes.IFNULL, continueLabel));
 
         // If not null, return the result
-        injection.add(new VarInsnNode(Opcodes.ALOAD, 5));
+        injection.add(new VarInsnNode(Opcodes.ALOAD, resultVar));
         injection.add(new InsnNode(Opcodes.ARETURN));
 
         // Continue with original method
         injection.add(continueLabel);
-        injection.add(new FrameNode(Opcodes.F_SAME, 0, null, 0, null));
 
         // Insert at the beginning of the method
         method.instructions.insert(injection);
 
-        // Increase max locals if needed
-        method.maxLocals = Math.max(method.maxLocals, 6);
+        // Increase max locals
+        method.maxLocals = resultVar + 1;
+
+        System.out.println("[Adversity ASM] Injected hook into slotClick, maxLocals=" + method.maxLocals);
     }
 }

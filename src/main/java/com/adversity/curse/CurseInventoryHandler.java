@@ -44,9 +44,6 @@ public class CurseInventoryHandler {
 
         // 检查封印槽位是否有物品
         // 先封主背包(9-35)，再封快捷栏(0-8)
-        // 玩家主背包有36个槽位（0-35），热键栏是0-8，主背包是9-35
-        int inventorySize = player.inventory.mainInventory.size();  // 通常是36
-
         boolean ejectedAny = false;
 
         // 检查主背包封印槽位（9-35，最多27个）
@@ -54,7 +51,18 @@ public class CurseInventoryHandler {
         for (int i = 9; i < 9 + mainInvSealed; i++) {
             ItemStack stack = player.inventory.mainInventory.get(i);
             if (!stack.isEmpty()) {
-                ejectedAny |= ejectItem(player, i, stack, sealedCount);
+                // 直接清空槽位并尝试移动物品
+                ItemStack copy = stack.copy();
+                player.inventory.mainInventory.set(i, ItemStack.EMPTY);
+
+                // 找到可用槽位或掉落
+                int targetSlot = findAvailableSlot(player, sealedCount);
+                if (targetSlot >= 0) {
+                    player.inventory.mainInventory.set(targetSlot, copy);
+                } else {
+                    player.dropItem(copy, false);
+                }
+                ejectedAny = true;
             }
         }
 
@@ -64,14 +72,26 @@ public class CurseInventoryHandler {
             for (int i = 0; i < hotbarSealed && i < 9; i++) {
                 ItemStack stack = player.inventory.mainInventory.get(i);
                 if (!stack.isEmpty()) {
-                    ejectedAny |= ejectItem(player, i, stack, sealedCount);
+                    ItemStack copy = stack.copy();
+                    player.inventory.mainInventory.set(i, ItemStack.EMPTY);
+
+                    int targetSlot = findAvailableSlot(player, sealedCount);
+                    if (targetSlot >= 0) {
+                        player.inventory.mainInventory.set(targetSlot, copy);
+                    } else {
+                        player.dropItem(copy, false);
+                    }
+                    ejectedAny = true;
                 }
             }
         }
 
-        // 同步背包
+        // 强制同步背包
         if (ejectedAny) {
             player.inventory.markDirty();
+            if (player instanceof EntityPlayerMP) {
+                ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
+            }
             player.inventoryContainer.detectAndSendChanges();
 
             // 发送提示（限制频率避免刷屏，每5秒最多一次）
@@ -132,28 +152,6 @@ public class CurseInventoryHandler {
             return slotIndex < hotbarSealed;
         }
         return false;
-    }
-
-    /**
-     * 弹出被封印槽位的物品
-     */
-    private static boolean ejectItem(EntityPlayer player, int slotIndex, ItemStack stack, int sealedCount) {
-        // 找到第一个可用槽位（未封印且为空）
-        int targetSlot = findAvailableSlot(player, sealedCount);
-
-        if (targetSlot >= 0) {
-            // 移动到可用槽位
-            player.inventory.mainInventory.set(slotIndex, ItemStack.EMPTY);
-            player.inventory.mainInventory.set(targetSlot, stack);
-            return true;
-        } else {
-            // 没有可用槽位，掉落到地上
-            player.inventory.mainInventory.set(slotIndex, ItemStack.EMPTY);
-            if (!player.world.isRemote) {
-                player.dropItem(stack, false);
-            }
-            return true;
-        }
     }
 
     /**

@@ -14,11 +14,19 @@ import net.minecraft.item.ItemStack;
  */
 public class SlotClickHook {
 
+    private static boolean debugLogged = false;
+
     /**
      * Called at the beginning of Container.slotClick
      * @return ItemStack.EMPTY to cancel the click, null to continue normally
      */
     public static ItemStack onSlotClick(Container container, int slotId, int dragType, ClickType clickType, EntityPlayer player) {
+        // Log first call to verify ASM is working
+        if (!debugLogged) {
+            System.out.println("[Adversity] SlotClickHook.onSlotClick called - ASM injection working!");
+            debugLogged = true;
+        }
+
         // Only process on server side
         if (player.world.isRemote) {
             return null;
@@ -35,12 +43,26 @@ public class SlotClickHook {
         }
 
         Slot slot = container.inventorySlots.get(slotId);
-        if (slot == null || slot.inventory != player.inventory) {
+        if (slot == null) {
+            return null;
+        }
+
+        // Check if this slot belongs to player's main inventory
+        // Need to check if the inventory is the player's InventoryPlayer
+        if (slot.inventory != player.inventory) {
             return null;
         }
 
         // Get the slot index in player's inventory
         int slotIndex = slot.getSlotIndex();
+
+        // Only check main inventory slots (0-35), not armor or offhand
+        // Armor slots also reference player.inventory but have slotIndex 0-3 (armorInventory)
+        // We need to distinguish between hotbar (0-8) and armor (0-3)
+        // Check if this is a main inventory slot by verifying it's in the correct range for mainInventory
+        if (slotIndex < 0 || slotIndex >= 36) {
+            return null;
+        }
 
         // Check if this slot is sealed by Black Coffin
         if (isSlotSealed(player, slotIndex)) {
@@ -52,6 +74,11 @@ public class SlotClickHook {
                 net.minecraft.util.SoundCategory.PLAYERS,
                 0.3f, 0.5f
             );
+
+            // Force sync inventory to client
+            if (player instanceof net.minecraft.entity.player.EntityPlayerMP) {
+                ((net.minecraft.entity.player.EntityPlayerMP) player).sendContainerToPlayer(container);
+            }
 
             // Return EMPTY to cancel the click
             return ItemStack.EMPTY;
