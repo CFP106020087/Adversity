@@ -52,28 +52,53 @@ public class SealedItemHandler {
         long currentTime = player.world.getTotalWorldTime();
         boolean anyUnsealed = false;
 
-        // 检查所有装备槽
-        for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
-            ItemStack stack = player.getItemStackFromSlot(slot);
+        // 检查盔甲栏（armorInventory: 0=boots, 1=legs, 2=chest, 3=head）
+        for (int i = 0; i < player.inventory.armorInventory.size(); i++) {
+            ItemStack stack = player.inventory.armorInventory.get(i);
             if (SealedItemManager.isSealed(stack)) {
-                if (currentTime >= SealedItemManager.getSealEndTime(stack)) {
+                long endTime = SealedItemManager.getSealEndTime(stack);
+                Adversity.LOGGER.debug("Found sealed armor in slot {}, endTime={}, currentTime={}", i, endTime, currentTime);
+                if (currentTime >= endTime) {
                     // 解除封印
                     SealedItemManager.unsealItem(stack);
                     // 重新设置到槽位以触发同步
-                    player.setItemStackToSlot(slot, stack);
+                    player.inventory.armorInventory.set(i, stack);
                     anyUnsealed = true;
-                    Adversity.LOGGER.debug("Unsealed equipment in slot {}", slot);
+                    Adversity.LOGGER.info("Unsealed armor in slot {}", i);
                 }
             }
         }
 
-        // 检查主背包
+        // 检查副手
+        ItemStack offhand = player.inventory.offHandInventory.get(0);
+        if (SealedItemManager.isSealed(offhand)) {
+            if (currentTime >= SealedItemManager.getSealEndTime(offhand)) {
+                SealedItemManager.unsealItem(offhand);
+                player.inventory.offHandInventory.set(0, offhand);
+                anyUnsealed = true;
+                Adversity.LOGGER.info("Unsealed offhand item");
+            }
+        }
+
+        // 检查主手（热键栏当前选中的槽位）
+        int currentSlot = player.inventory.currentItem;
+        ItemStack mainhand = player.inventory.mainInventory.get(currentSlot);
+        if (SealedItemManager.isSealed(mainhand)) {
+            if (currentTime >= SealedItemManager.getSealEndTime(mainhand)) {
+                SealedItemManager.unsealItem(mainhand);
+                player.inventory.mainInventory.set(currentSlot, mainhand);
+                anyUnsealed = true;
+                Adversity.LOGGER.info("Unsealed mainhand item in slot {}", currentSlot);
+            }
+        }
+
+        // 检查主背包其他槽位
         for (int i = 0; i < player.inventory.mainInventory.size(); i++) {
+            if (i == currentSlot) continue;  // 已经检查过主手
             ItemStack stack = player.inventory.mainInventory.get(i);
             if (SealedItemManager.isSealed(stack)) {
                 if (currentTime >= SealedItemManager.getSealEndTime(stack)) {
                     SealedItemManager.unsealItem(stack);
-                    // 重新设置到槽位以触发同步
                     player.inventory.mainInventory.set(i, stack);
                     anyUnsealed = true;
                     Adversity.LOGGER.debug("Unsealed item in inventory slot {}", i);

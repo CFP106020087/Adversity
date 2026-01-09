@@ -24,18 +24,17 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 @Mod.EventBusSubscriber(modid = Adversity.MODID)
 public class CurseInventoryHandler {
 
-    /** 检查间隔（ticks） - 优化性能 */
-    private static final int CHECK_INTERVAL = 10;  // 每0.5秒检查一次
+    /** 检查间隔（ticks） - 每tick检查确保立即响应 */
+    private static final int CHECK_INTERVAL = 1;
 
     /**
-     * 定期检查并强制清空封印槽位
-     * 确保任何方式放入的物品都会被弹出
+     * 每tick检查并强制清空封印槽位
+     * 确保物品无法停留在封印槽位
      */
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
         if (event.player.world.isRemote) return;
-        if (event.player.ticksExisted % CHECK_INTERVAL != 0) return;
 
         EntityPlayer player = event.player;
         PermanentCurseManager manager = PermanentCurseManager.get(player.world);
@@ -83,8 +82,8 @@ public class CurseInventoryHandler {
             player.inventory.markDirty();
             player.inventoryContainer.detectAndSendChanges();
 
-            // 发送提示（限制频率避免刷屏）
-            if (player.ticksExisted % 100 < CHECK_INTERVAL) {
+            // 发送提示（限制频率避免刷屏，每5秒最多一次）
+            if (player.ticksExisted % 100 == 0) {
                 TextComponentTranslation msg = new TextComponentTranslation("adversity.curse.slot_sealed");
                 msg.getStyle().setColor(TextFormatting.DARK_PURPLE);
                 player.sendMessage(msg);
