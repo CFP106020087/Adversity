@@ -8,7 +8,8 @@ import com.adversity.capability.CapabilityHandler;
 import com.adversity.capability.IAdversityCapability;
 import com.adversity.client.visual.VisualEffectHelper;
 import com.adversity.client.visual.VisualEffectType;
-import com.adversity.seal.SealedItemManager;
+import com.adversity.item.ItemRegistry;
+import com.adversity.item.ItemSealedToken;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -77,12 +78,19 @@ public class ShackleAffix extends AbstractAffix {
      * 随机封印一件装备
      */
     private void sealRandomEquipment(EntityPlayer player, EntityLiving attacker, int tier) {
+        // 检查物品是否已注册
+        if (ItemRegistry.SEALED_TOKEN == null) {
+            Adversity.LOGGER.warn("[SealToken] SEALED_TOKEN not registered yet!");
+            return;
+        }
+
         // 收集可封印的装备槽
         List<EntityEquipmentSlot> availableSlots = new ArrayList<>();
 
         for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
             ItemStack stack = player.getItemStackFromSlot(slot);
-            if (!stack.isEmpty() && !SealedItemManager.isSealed(stack)) {
+            // 排除封印令牌本身
+            if (!stack.isEmpty() && !(stack.getItem() instanceof ItemSealedToken)) {
                 availableSlots.add(slot);
             }
         }
@@ -97,28 +105,38 @@ public class ShackleAffix extends AbstractAffix {
 
         // 计算封印时间
         long currentTime = player.world.getTotalWorldTime();
-        long endTime = currentTime + BASE_SEAL_DURATION + (tier * 100);
-        long durationTicks = endTime - currentTime;
+        long duration = BASE_SEAL_DURATION + (tier * 100);
+        long endTime = currentTime + duration;
 
-        Adversity.LOGGER.info("[SealDebug] Sealing '{}' in slot {} for player {}, endTime={}, duration={} ticks ({} sec)",
-            targetItem.getDisplayName(), targetSlot, player.getName(), endTime, durationTicks, durationTicks / 20);
+        Adversity.LOGGER.info("[SealToken] Sealing '{}' in slot {} for player {}, duration={} ticks ({} sec)",
+            targetItem.getDisplayName(), targetSlot, player.getName(), duration, duration / 20);
 
-        // 执行封印
-        ItemStack sealedItem = SealedItemManager.sealItem(targetItem, endTime);
+        // 获取槽位类型字符串
+        String slotType = getSlotTypeString(targetSlot);
+        int slotIndex = targetSlot.getIndex();
 
-        Adversity.LOGGER.info("[SealDebug] Created sealed item, isSealed={}, sealEndTime={}, nbt={}",
-            SealedItemManager.isSealed(sealedItem), SealedItemManager.getSealEndTime(sealedItem),
-            sealedItem.getTagCompound() != null ? sealedItem.getTagCompound().toString() : "null");
+        // 创建封印令牌
+        ItemStack token = ItemSealedToken.createToken(targetItem, slotType, slotIndex, endTime, duration);
 
-        // 直接设置到inventory而不是使用setItemStackToSlot，避免NBT丢失
+        Adversity.LOGGER.info("[SealToken] Created token for '{}', slotType={}, slotIndex={}",
+            targetItem.getDisplayName(), slotType, slotIndex);
+
+        // 从原槽位移除物品
         if (targetSlot.getSlotType() == EntityEquipmentSlot.Type.ARMOR) {
-            int armorIndex = targetSlot.getIndex();
-            player.inventory.armorInventory.set(armorIndex, sealedItem);
-            Adversity.LOGGER.info("[SealDebug] Set armor directly to armorInventory[{}]", armorIndex);
+            player.inventory.armorInventory.set(targetSlot.getIndex(), ItemStack.EMPTY);
         } else if (targetSlot == EntityEquipmentSlot.MAINHAND) {
-            player.inventory.mainInventory.set(player.inventory.currentItem, sealedItem);
+            player.inventory.mainInventory.set(player.inventory.currentItem, ItemStack.EMPTY);
         } else if (targetSlot == EntityEquipmentSlot.OFFHAND) {
-            player.inventory.offHandInventory.set(0, sealedItem);
+            player.inventory.offHandInventory.set(0, ItemStack.EMPTY);
+        }
+
+        // 将令牌放入背包
+        if (!player.inventory.addItemStackToInventory(token)) {
+            // 背包满了，掉落令牌
+            player.dropItem(token, false);
+            Adversity.LOGGER.info("[SealToken] Inventory full, dropped token");
+        } else {
+            Adversity.LOGGER.info("[SealToken] Added token to inventory");
         }
 
         // 强制同步
@@ -127,19 +145,26 @@ public class ShackleAffix extends AbstractAffix {
             ((net.minecraft.entity.player.EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
         }
 
-        // 验证设置后的物品
-        ItemStack verifyItem = player.getItemStackFromSlot(targetSlot);
-        Adversity.LOGGER.info("[SealDebug] After set: slot={}, item='{}', isSealed={}, hasNBT={}, nbt={}",
-            targetSlot, verifyItem.getDisplayName(),
-            SealedItemManager.isSealed(verifyItem),
-            verifyItem.getTagCompound() != null,
-            verifyItem.getTagCompound() != null ? verifyItem.getTagCompound().toString() : "null");
-
         // 播放效果
         playSealEffects(player, attacker);
 
         // 发送视觉效果
         VisualEffectHelper.sendToPlayer(player, VisualEffectType.GRAVITY_DISTORT, 40, 0.5f, attacker.getEntityId());
+    }
+
+    /**
+     * 获取槽位类型字符串
+     */
+    private String getSlotTypeString(EntityEquipmentSlot slot) {
+        switch (slot) {
+            case HEAD: return "ARMOR_HEAD";
+            case CHEST: return "ARMOR_CHEST";
+            case LEGS: return "ARMOR_LEGS";
+            case FEET: return "ARMOR_FEET";
+            case MAINHAND: return "MAINHAND";
+            case OFFHAND: return "OFFHAND";
+            default: return "INVENTORY";
+        }
     }
 
     /**

@@ -44,6 +44,9 @@ public class ItemRegistry {
     @GameRegistry.ObjectHolder(Adversity.MODID + ":redemption_key")
     public static final Item REDEMPTION_KEY = null;
 
+    @GameRegistry.ObjectHolder(Adversity.MODID + ":sealed_token")
+    public static final Item SEALED_TOKEN = null;
+
     /**
      * 物品注册事件 - 在游戏启动时自动调用
      */
@@ -70,7 +73,10 @@ public class ItemRegistry {
             // 赎罪道具 - 用于减少永久诅咒
             new ItemRedemptionTear(),    // 赎罪之泪 - 减少黑天鹅攻击力削减
             new ItemRedemptionHeart(),   // 赎罪之心 - 减少黑色星期五生命削减
-            new ItemRedemptionKey()      // 赎罪之钥 - 解封黑棺封印槽位
+            new ItemRedemptionKey(),     // 赎罪之钥 - 解封黑棺封印槽位
+
+            // 封印令牌 - 装备被封印时生成的物品
+            new ItemSealedToken()
         );
 
         Adversity.LOGGER.info("Adversity items registered");
@@ -90,6 +96,7 @@ public class ItemRegistry {
         registerItemModel(REDEMPTION_TEAR);
         registerItemModel(REDEMPTION_HEART);
         registerItemModel(REDEMPTION_KEY);
+        registerItemModel(SEALED_TOKEN);
     }
 
     @SideOnly(Side.CLIENT)
