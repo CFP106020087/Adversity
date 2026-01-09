@@ -1,6 +1,7 @@
 package com.adversity.curse;
 
 import com.adversity.Adversity;
+import com.adversity.config.AdversityConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,7 +17,8 @@ import java.util.*;
 /**
  * 永久诅咒管理器
  * 管理黑天鹅、黑色星期五、黑棺等永久诅咒效果
- * 包含赎罪机制
+ * 包含赎罪机制（只能预防，不能恢复）
+ * 阈值和减少量可在配置文件中调整
  */
 public class PermanentCurseManager extends WorldSavedData {
 
@@ -33,22 +35,42 @@ public class PermanentCurseManager extends WorldSavedData {
     /** 黑棺 - 背包槽位封印 */
     public static final String CURSE_BLACK_COFFIN = "black_coffin";
 
-    // ==================== 配置常量 ====================
+    // ==================== 配置访问器 ====================
 
-    /** 黑天鹅每次削减百分比 */
-    public static final float BLACK_SWAN_REDUCTION = 0.05f;  // 5%
+    /** 获取黑天鹅每次削减百分比 */
+    public static float getBlackSwanReductionAmount() {
+        return (float) AdversityConfig.curseSettings.blackSwanReductionPerTrigger;
+    }
 
-    /** 黑天鹅最大削减百分比 */
-    public static final float BLACK_SWAN_MAX_REDUCTION = 0.8f;  // 80%
+    /** 获取黑天鹅封禁阈值 */
+    public static float getBlackSwanBanThreshold() {
+        return (float) AdversityConfig.curseSettings.blackSwanBanThreshold;
+    }
 
-    /** 黑色星期五每次削减血量（半心） */
-    public static final float BLACK_FRIDAY_REDUCTION = 1.0f;  // 0.5心
+    /** 获取黑色星期五每次削减血量 */
+    public static float getBlackFridayReductionAmount() {
+        return (float) AdversityConfig.curseSettings.blackFridayReductionPerTrigger;
+    }
 
-    /** 黑色星期五最小血量 */
-    public static final float BLACK_FRIDAY_MIN_HEALTH = 2.0f;  // 1心
+    /** 获取黑色星期五封禁阈值 */
+    public static float getBlackFridayBanThreshold() {
+        return (float) AdversityConfig.curseSettings.blackFridayBanThreshold;
+    }
 
-    /** 黑棺最大封印槽位数 */
-    public static final int BLACK_COFFIN_MAX_SLOTS = 27;  // 背包主区域
+    /** 获取黑棺每次封印槽位数 */
+    public static int getBlackCoffinSlotsAmount() {
+        return AdversityConfig.curseSettings.blackCoffinSlotsPerTrigger;
+    }
+
+    /** 获取黑棺封禁阈值 */
+    public static int getBlackCoffinBanThreshold() {
+        return AdversityConfig.curseSettings.blackCoffinBanThreshold;
+    }
+
+    /** 检查永久诅咒系统是否启用 */
+    public static boolean isEnabled() {
+        return AdversityConfig.curseSettings.enablePermanentCurses;
+    }
 
     // ==================== 数据存储 ====================
 

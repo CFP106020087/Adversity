@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * 难度管理器 - 核心难度计算和应用逻辑
@@ -430,7 +431,31 @@ public class DifficultyManager {
         int affixCount = calculateAffixCount(tier);
         if (affixCount <= 0) return;
 
-        // 获取可用词条（排除禁用的和该实体的黑名单词条）
+        // 首先应用强制词条
+        Set<ResourceLocation> forcedAffixIds = AdversityConfig.getForcedAffixesForEntity(entity);
+        int forcedCount = 0;
+        for (ResourceLocation forcedId : forcedAffixIds) {
+            // 强制词条也可以被禁用
+            if (AdversityConfig.isAffixDisabled(forcedId)) {
+                continue;
+            }
+            IAffix forcedAffix = AffixRegistry.getAffix(forcedId);
+            if (forcedAffix != null && forcedAffix.canApplyTo(entity)) {
+                if (cap.addAffix(forcedAffix)) {
+                    AffixData data = cap.getAffixData(forcedAffix);
+                    if (data != null) {
+                        forcedAffix.onApply(entity, data);
+                    }
+                    forcedCount++;
+                }
+            }
+        }
+
+        // 计算剩余的随机词条数量
+        int remainingCount = Math.max(0, affixCount - forcedCount);
+        if (remainingCount <= 0) return;
+
+        // 获取可用词条（排除禁用的、该实体的黑名单词条、和已应用的强制词条）
         List<IAffix> availableAffixes = new ArrayList<>();
         for (IAffix affix : AffixRegistry.getAllAffixes()) {
             // 检查词条是否被全局禁用
@@ -439,6 +464,10 @@ public class DifficultyManager {
             }
             // 检查词条是否被该实体类型屏蔽
             if (AdversityConfig.isAffixBlockedForEntity(affix.getId(), entity)) {
+                continue;
+            }
+            // 跳过已经应用的强制词条
+            if (forcedAffixIds.contains(affix.getId())) {
                 continue;
             }
             // 检查词条的难度和实体要求
@@ -450,7 +479,7 @@ public class DifficultyManager {
         if (availableAffixes.isEmpty()) return;
 
         // 随机选择词条
-        List<IAffix> selectedAffixes = selectAffixes(availableAffixes, affixCount);
+        List<IAffix> selectedAffixes = selectAffixes(availableAffixes, remainingCount);
 
         // 应用词条
         for (IAffix affix : selectedAffixes) {

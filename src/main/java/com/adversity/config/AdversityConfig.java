@@ -57,6 +57,18 @@ public class AdversityConfig {
     })
     public static final LootSettings lootSettings = new LootSettings();
 
+    @Config.Comment({
+        "Permanent Curse Settings (Black Swan, Black Friday, Black Coffin)",
+        "永久诅咒设置 (黑天鹅、黑色星期五、黑棺)"
+    })
+    public static final PermanentCurseSettings curseSettings = new PermanentCurseSettings();
+
+    @Config.Comment({
+        "Nightmare Spawn Settings",
+        "梦魇生成设置"
+    })
+    public static final NightmareSettings nightmareSettings = new NightmareSettings();
+
     // ==================== 实体过滤 ====================
 
     public static class EntityFilter {
@@ -441,6 +453,134 @@ public class AdversityConfig {
             "adversity:splitting|minecraft:slime",  // 史莱姆不应该分裂（已经会分裂了）
             "adversity:splitting|minecraft:magma_cube"  // 岩浆怪同理
         };
+
+        @Config.Comment({
+            "=== FORCED AFFIXES FOR SPECIFIC ENTITIES ===",
+            "=== 特定实体的强制词条 ===",
+            "",
+            "Force specific affixes to always appear on specific entities (when elite).",
+            "强制特定词条始终出现在特定实体上（当成为精英时）。",
+            "Format: entity_id|affix_id (e.g., minecraft:wither_skeleton|adversity:withering)",
+            "格式: entity_id|affix_id（例如 minecraft:wither_skeleton|adversity:withering）"
+        })
+        public String[] forcedAffixesForEntities = new String[] {
+            "minecraft:wither_skeleton|adversity:withering"
+        };
+    }
+
+    // ==================== 永久诅咒设置 ====================
+
+    public static class PermanentCurseSettings {
+
+        @Config.Comment({
+            "Enable permanent curse system (Black Swan, Black Friday, Black Coffin)",
+            "启用永久诅咒系统（黑天鹅、黑色星期五、黑棺）"
+        })
+        public boolean enablePermanentCurses = true;
+
+        @Config.Comment({
+            "=== BLACK SWAN (Attack Reduction) ===",
+            "=== 黑天鹅（攻击力削减）===",
+            "",
+            "Attack power reduction per curse trigger (percentage)",
+            "每次诅咒触发时削减的攻击力（百分比）"
+        })
+        @Config.RangeDouble(min = 0.01, max = 0.5)
+        public double blackSwanReductionPerTrigger = 0.05;
+
+        @Config.Comment({
+            "Ban threshold for Black Swan (1.0 = 100% reduction = banned)",
+            "黑天鹅的封禁阈值（1.0 = 100%削减 = 封禁）"
+        })
+        @Config.RangeDouble(min = 0.5, max = 1.0)
+        public double blackSwanBanThreshold = 1.0;
+
+        @Config.Comment({
+            "=== BLACK FRIDAY (Health Reduction) ===",
+            "=== 黑色星期五（生命值削减）===",
+            "",
+            "Health reduction per curse trigger (half hearts)",
+            "每次诅咒触发时削减的生命值（半心）"
+        })
+        @Config.RangeDouble(min = 0.5, max = 4.0)
+        public double blackFridayReductionPerTrigger = 1.0;
+
+        @Config.Comment({
+            "Ban threshold for Black Friday (when remaining health <= this)",
+            "黑色星期五的封禁阈值（当剩余生命值 <= 此值时封禁）"
+        })
+        @Config.RangeDouble(min = 0, max = 2.0)
+        public double blackFridayBanThreshold = 0;
+
+        @Config.Comment({
+            "=== BLACK COFFIN (Inventory Sealing) ===",
+            "=== 黑棺（背包封印）===",
+            "",
+            "Slots sealed per curse trigger",
+            "每次诅咒触发时封印的槽位数"
+        })
+        @Config.RangeInt(min = 1, max = 9)
+        public int blackCoffinSlotsPerTrigger = 1;
+
+        @Config.Comment({
+            "Ban threshold for Black Coffin (number of sealed slots to trigger ban)",
+            "黑棺的封禁阈值（封印多少槽位时触发封禁）"
+        })
+        @Config.RangeInt(min = 9, max = 36)
+        public int blackCoffinBanThreshold = 27;
+    }
+
+    // ==================== 梦魇设置 ====================
+
+    public static class NightmareSettings {
+
+        @Config.Comment({
+            "Enable nightmare spawn system",
+            "启用梦魇生成系统"
+        })
+        public boolean enableNightmares = true;
+
+        @Config.Comment({
+            "Days without sleep before nightmares start spawning",
+            "多少天不睡觉后开始生成梦魇"
+        })
+        @Config.RangeInt(min = 1, max = 14)
+        public int daysUntilNightmare = 3;
+
+        @Config.Comment({
+            "Base spawn chance per check (every 5 seconds at night)",
+            "每次检查的基础生成概率（夜间每5秒检查一次）"
+        })
+        @Config.RangeDouble(min = 0.01, max = 0.5)
+        public double baseSpawnChance = 0.05;
+
+        @Config.Comment({
+            "Maximum spawn chance",
+            "最大生成概率"
+        })
+        @Config.RangeDouble(min = 0.1, max = 1.0)
+        public double maxSpawnChance = 0.25;
+
+        @Config.Comment({
+            "Additional spawn chance per day without sleep (after threshold)",
+            "每多一天不睡觉增加的生成概率"
+        })
+        @Config.RangeDouble(min = 0.01, max = 0.2)
+        public double spawnChancePerDay = 0.03;
+
+        @Config.Comment({
+            "Minimum spawn distance from player (blocks)",
+            "距离玩家的最小生成距离（格）"
+        })
+        @Config.RangeInt(min = 4, max = 24)
+        public int minSpawnDistance = 8;
+
+        @Config.Comment({
+            "Maximum spawn distance from player (blocks)",
+            "距离玩家的最大生成距离（格）"
+        })
+        @Config.RangeInt(min = 16, max = 64)
+        public int maxSpawnDistance = 24;
     }
 
     // ==================== 战利品设置 ====================
@@ -532,6 +672,7 @@ public class AdversityConfig {
     private static Set<ResourceLocation> forcedEliteCache = new HashSet<>();
     private static Set<ResourceLocation> eliteBlacklistCache = new HashSet<>();
     private static Map<ResourceLocation, Set<ResourceLocation>> affixEntityBlacklistCache = new java.util.HashMap<>();
+    private static Map<ResourceLocation, Set<ResourceLocation>> forcedAffixesForEntitiesCache = new java.util.HashMap<>();
     private static boolean cacheInitialized = false;
     private static final Map<Class<?>, Boolean> entityClassCache = new WeakHashMap<>();
 
@@ -542,6 +683,7 @@ public class AdversityConfig {
         forcedEliteCache.clear();
         eliteBlacklistCache.clear();
         affixEntityBlacklistCache.clear();
+        forcedAffixesForEntitiesCache.clear();
         entityClassCache.clear();
 
         for (String entry : entityFilter.whitelist) {
@@ -585,6 +727,18 @@ public class AdversityConfig {
                     ResourceLocation affixId = new ResourceLocation(parts[0].trim());
                     ResourceLocation entityId = new ResourceLocation(parts[1].trim());
                     affixEntityBlacklistCache.computeIfAbsent(affixId, k -> new HashSet<>()).add(entityId);
+                }
+            }
+        }
+
+        // 缓存强制词条-实体映射
+        for (String entry : affixSettings.forcedAffixesForEntities) {
+            if (entry != null && !entry.isEmpty() && entry.contains("|")) {
+                String[] parts = entry.split("\\|", 2);
+                if (parts.length == 2) {
+                    ResourceLocation entityId = new ResourceLocation(parts[0].trim());
+                    ResourceLocation affixId = new ResourceLocation(parts[1].trim());
+                    forcedAffixesForEntitiesCache.computeIfAbsent(entityId, k -> new HashSet<>()).add(affixId);
                 }
             }
         }
@@ -686,6 +840,21 @@ public class AdversityConfig {
      */
     public static int getForcedEliteMinTier() {
         return affixSettings.forcedEliteMinTier;
+    }
+
+    /**
+     * 获取特定实体的强制词条列表
+     */
+    public static Set<ResourceLocation> getForcedAffixesForEntity(EntityLiving entity) {
+        if (!cacheInitialized) {
+            refreshCache();
+        }
+        ResourceLocation entityId = EntityList.getKey(entity);
+        if (entityId == null) {
+            return java.util.Collections.emptySet();
+        }
+        Set<ResourceLocation> forced = forcedAffixesForEntitiesCache.get(entityId);
+        return forced != null ? forced : java.util.Collections.emptySet();
     }
 
     // ==================== 配置同步 ====================

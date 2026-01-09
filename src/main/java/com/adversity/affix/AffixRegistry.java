@@ -177,5 +177,6 @@ public class AffixRegistry {
         register(new BlackSwanAffix());       // 黑天鹅 - 永久削减攻击力 (难度8+)
         register(new BlackFridayAffix());     // 黑色星期五 - 永久削减生命值 (难度8+)
         register(new BlackCoffinAffix());     // 黑棺 - 永久封印背包槽位 (难度9+)
+        register(new NightmareAffix());       // 梦魇 - 只由NightmareSpawnHandler生成 (权重0)
     }
 }
