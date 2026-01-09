@@ -70,6 +70,7 @@ public class SlotClickHook {
 
     /**
      * Check if a slot index is sealed by Black Coffin
+     * 先封主背包(9-35)，再封快捷栏(0-8)
      */
     private static boolean isSlotSealed(EntityPlayer player, int slotIndex) {
         try {
@@ -80,12 +81,20 @@ public class SlotClickHook {
                 return false;
             }
 
-            int inventorySize = player.inventory.mainInventory.size();  // 36
-            int startSealedSlot = inventorySize - sealedCount;
-
-            // Sealed slots are from startSealedSlot to 35 (in mainInventory)
-            // Only seal main inventory slots 9-35, not hotbar (0-8)
-            return slotIndex >= 9 && slotIndex >= startSealedSlot && slotIndex < inventorySize;
+            // 主背包有27个槽位(9-35)，快捷栏有9个槽位(0-8)
+            if (slotIndex >= 9 && slotIndex < 36) {
+                // 主背包槽位：先封印
+                // slotIndex 9 对应第1个封印，slotIndex 35 对应第27个封印
+                int sealOrder = slotIndex - 9;  // 0-26
+                return sealOrder < sealedCount;
+            } else if (slotIndex >= 0 && slotIndex < 9) {
+                // 快捷栏槽位：后封印（在主背包全部封印之后）
+                // 需要超过27个封印才开始封快捷栏
+                if (sealedCount <= 27) return false;
+                int hotbarSealed = sealedCount - 27;  // 快捷栏已封印数
+                return slotIndex < hotbarSealed;
+            }
+            return false;
 
         } catch (Exception e) {
             // If there's any error (e.g., manager not available), don't block

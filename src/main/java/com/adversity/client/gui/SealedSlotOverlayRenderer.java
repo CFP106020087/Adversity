@@ -60,20 +60,19 @@ public class SealedSlotOverlayRenderer {
             if (slot.inventory != player.inventory) continue;
 
             int slotIndex = slot.getSlotIndex();
-            if (slotIndex >= 9 && slotIndex < 36) {
-                if (slotIndex >= (36 - sealedCount)) {
-                    // Check if mouse is over this slot
-                    int slotX = guiLeft + slot.xPos;
-                    int slotY = guiTop + slot.yPos;
+            // 检查是否封印：先封主背包(9-35)，再封快捷栏(0-8)
+            if (isSlotSealedByCount(slotIndex, sealedCount)) {
+                // Check if mouse is over this slot
+                int slotX = guiLeft + slot.xPos;
+                int slotY = guiTop + slot.yPos;
 
-                    if (mouseX >= slotX && mouseX < slotX + 16 &&
-                        mouseY >= slotY && mouseY < slotY + 16) {
-                        // Cancel the click
-                        event.setCanceled(true);
-                        // Play deny sound
-                        player.playSound(net.minecraft.init.SoundEvents.BLOCK_NOTE_BASS, 0.5f, 0.5f);
-                        return;
-                    }
+                if (mouseX >= slotX && mouseX < slotX + 16 &&
+                    mouseY >= slotY && mouseY < slotY + 16) {
+                    // Cancel the click
+                    event.setCanceled(true);
+                    // Play deny sound
+                    player.playSound(net.minecraft.init.SoundEvents.BLOCK_NOTE_BASS, 0.5f, 0.5f);
+                    return;
                 }
             }
         }
@@ -101,20 +100,16 @@ public class SealedSlotOverlayRenderer {
         int guiTop = getGuiTop(gui);
 
         // Render overlays on sealed slots
+        // 先封主背包(9-35)，再封快捷栏(0-8)
         Container container = gui.inventorySlots;
         for (Slot slot : container.inventorySlots) {
             // Only check player's main inventory slots
             if (slot.inventory != player.inventory) continue;
 
             int slotIndex = slot.getSlotIndex();
-            // Main inventory is slots 9-35 (after hotbar 0-8)
-            // We seal from the end: slot 35, 34, 33...
-            if (slotIndex >= 9 && slotIndex < 36) {
-                // Check if this slot is sealed (from the end)
-                // Sealed from slot (36 - sealedCount) to slot 35
-                if (slotIndex >= (36 - sealedCount)) {
-                    renderSealedSlot(guiLeft + slot.xPos, guiTop + slot.yPos);
-                }
+            // 检查是否封印
+            if (isSlotSealedByCount(slotIndex, sealedCount)) {
+                renderSealedSlot(guiLeft + slot.xPos, guiTop + slot.yPos);
             }
         }
     }
@@ -164,14 +159,32 @@ public class SealedSlotOverlayRenderer {
 
     /**
      * Check if a slot index is sealed
+     * 先封主背包(9-35)，再封快捷栏(0-8)
      */
     public static boolean isSlotSealed(EntityPlayer player, int slotIndex) {
         int sealedCount = getSealedSlotCount(player);
+        return isSlotSealedByCount(slotIndex, sealedCount);
+    }
+
+    /**
+     * Check if a slot index is sealed given the sealed count
+     * 先封主背包(9-35)，再封快捷栏(0-8)
+     */
+    private static boolean isSlotSealedByCount(int slotIndex, int sealedCount) {
         if (sealedCount <= 0) return false;
 
-        // Main inventory slots 9-35, sealed from end
+        // 主背包有27个槽位(9-35)，快捷栏有9个槽位(0-8)
         if (slotIndex >= 9 && slotIndex < 36) {
-            return slotIndex >= (36 - sealedCount);
+            // 主背包槽位：先封印
+            // slotIndex 9 对应第1个封印，slotIndex 35 对应第27个封印
+            int sealOrder = slotIndex - 9;  // 0-26
+            return sealOrder < sealedCount;
+        } else if (slotIndex >= 0 && slotIndex < 9) {
+            // 快捷栏槽位：后封印（在主背包全部封印之后）
+            // 需要超过27个封印才开始封快捷栏
+            if (sealedCount <= 27) return false;
+            int hotbarSealed = sealedCount - 27;  // 快捷栏已封印数
+            return slotIndex < hotbarSealed;
         }
         return false;
     }
