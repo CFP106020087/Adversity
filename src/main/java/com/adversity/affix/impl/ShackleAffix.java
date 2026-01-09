@@ -138,13 +138,14 @@ public class ShackleAffix extends AbstractAffix {
         // 创建封印令牌
         ItemStack token = ItemSealedToken.createToken(targetItem, slotType, slotIndex, endTime, duration);
 
-        Adversity.LOGGER.info("[SealToken] Created token for '{}', slotType={}, slotIndex={}, tokenNBT={}",
-            targetItem.getDisplayName(), slotType, slotIndex,
+        Adversity.LOGGER.info("[SealToken] Created token: isEmpty={}, item={}, count={}, hasNBT={}",
+            token.isEmpty(), token.getItem(), token.getCount(),
             token.hasTagCompound() ? "valid" : "NULL!");
 
-        // 验证令牌有效性
-        if (!token.hasTagCompound()) {
-            Adversity.LOGGER.error("[SealToken] Token has no NBT! Item will be lost!");
+        // 验证令牌有效性 - 必须非空且有NBT
+        if (token.isEmpty() || !token.hasTagCompound()) {
+            Adversity.LOGGER.error("[SealToken] Token is invalid (empty={}, hasNBT={})! Aborting to prevent item loss!",
+                token.isEmpty(), token.hasTagCompound());
             return;  // 不要继续，避免丢失物品
         }
 
@@ -159,11 +160,18 @@ public class ShackleAffix extends AbstractAffix {
         }
 
         // 将令牌放入背包
-        Adversity.LOGGER.info("[SealToken] Adding token to inventory...");
-        if (!player.inventory.addItemStackToInventory(token)) {
-            // 背包满了，掉落令牌
-            player.dropItem(token, false);
-            Adversity.LOGGER.info("[SealToken] Inventory full, dropped token on ground");
+        Adversity.LOGGER.info("[SealToken] Adding token to inventory (token count before: {})...", token.getCount());
+        boolean added = player.inventory.addItemStackToInventory(token);
+        Adversity.LOGGER.info("[SealToken] addItemStackToInventory returned: {}, token count after: {}", added, token.getCount());
+
+        if (!added || token.getCount() > 0) {
+            // 背包满了或添加失败，掉落令牌
+            if (token.getCount() > 0) {
+                player.dropItem(token, false);
+                Adversity.LOGGER.info("[SealToken] Token not fully added, dropped remaining on ground");
+            } else {
+                Adversity.LOGGER.info("[SealToken] Inventory full, token was dropped");
+            }
         } else {
             Adversity.LOGGER.info("[SealToken] Successfully added token to inventory");
         }
