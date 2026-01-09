@@ -166,7 +166,7 @@ public class AdversityConfig {
             "  LOGARITHMIC - 对数增长，软上限",
             "  SIGMOID - 平滑过渡到最大值"
         })
-        public String healthScalingMode = "COMPOUND";
+        public String healthScalingMode = "LINEAR";
 
         @Config.Comment({
             "Base health multiplier (usually 1.0)",
@@ -224,7 +224,7 @@ public class AdversityConfig {
             "Typically lower than health to keep fights challenging but fair"
         })
         @Config.RangeDouble(min = 0, max = 2)
-        public double damageRate = 0.08;
+        public double damageRate = 0.03;
 
         @Config.Comment("Power exponent for POLYNOMIAL mode")
         @Config.RangeDouble(min = 1, max = 5)
@@ -302,7 +302,7 @@ public class AdversityConfig {
             "0.99 = 接近免疫（仅限极端模组包）"
         })
         @Config.RangeDouble(min = 0, max = 0.99)
-        public double damageReductionMax = 0.75;
+        public double damageReductionMax = 0.5;
 
         @Config.Comment({
             "=== ADVANCED: ARMOR PENETRATION RESISTANCE ===",
