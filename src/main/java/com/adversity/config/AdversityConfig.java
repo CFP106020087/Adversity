@@ -100,8 +100,18 @@ public class AdversityConfig {
     public static class DifficultySource {
 
         @Config.Comment({
-            "Distance (in blocks) per 1 difficulty point",
-            "每增加多少格距离增加 1 点难度"
+            "Safe distance (blocks) - no difficulty within this range from origin",
+            "安全距离（格）- 在此范围内不计算距离难度",
+            "",
+            "For RLCraft with random spawn (±10000), set this to ~15000",
+            "RLCraft随机出生点(±10000)建议设为15000"
+        })
+        @Config.RangeDouble(min = 0, max = 100000)
+        public double safeDistance = 15000;
+
+        @Config.Comment({
+            "Distance (in blocks) per 1 difficulty point (after safe distance)",
+            "超出安全距离后，每增加多少格距离增加 1 点难度"
         })
         @Config.RangeDouble(min = 50, max = 10000)
         public double blocksPerDifficulty = 500;
@@ -139,7 +149,7 @@ public class AdversityConfig {
             "时间难度在最终计算中的权重"
         })
         @Config.RangeDouble(min = 0, max = 10)
-        public double timeWeight = 0.8;
+        public double timeWeight = 1.0;
     }
 
     // ==================== 属性缩放 (核心重构) ====================
