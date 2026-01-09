@@ -8,44 +8,52 @@ import com.adversity.capability.CapabilityHandler;
 import com.adversity.capability.IAdversityCapability;
 import com.adversity.client.visual.VisualEffectHelper;
 import com.adversity.client.visual.VisualEffectType;
-import com.adversity.seal.SealedItemManager;
+import com.adversity.compat.BaublesCompat;
+import com.adversity.config.AdversityConfig;
+import com.adversity.item.ItemRegistry;
+import com.adversity.item.ItemSealedToken;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Loader;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * 褫夺词条 - 封印玩家的饰品槽（Baubles）
  *
  * 机制：
  * 1. 攻击玩家时有概率封印随机一件饰品
- * 2. 封印持续一段时间后自动解除
+ * 2. 饰品转化为令牌，N秒后自动恢复
  * 3. 不会封印不可卸下的饰品（canUnequip = false）
- * 4. 设计理念：针对Baubles饰品流派玩家
- * 5. 如果Baubles未安装，则退化为封印主手/副手
+ * 4. 如果Baubles未安装，则退化为封印主手/副手
  */
 public class DivestAffix extends AbstractAffix {
 
     public static final ResourceLocation ID = new ResourceLocation(Adversity.MODID, "divest");
 
     /** 基础触发概率 */
-    private static final float BASE_CHANCE = 0.25f;  // 25%
+    private static final float BASE_CHANCE = 0.25f;
 
-    /** 封印持续时间（tick） */
+    /** 基础封印持续时间（tick） - 可通过配置覆盖 */
     private static final int BASE_SEAL_DURATION = 400;  // 20秒
+
+    /** 冷却时间（tick） */
+    private static final long SEAL_COOLDOWN = 60;  // 3秒
 
     /** Baubles是否可用 */
     private static Boolean baublesLoaded = null;
+
+    /** 玩家冷却记录 */
+    private static final Map<UUID, Long> playerCooldowns = new HashMap<>();
 
     private static final Random RANDOM = new Random();
 
@@ -75,17 +83,35 @@ public class DivestAffix extends AbstractAffix {
         }
 
         EntityPlayer player = (EntityPlayer) target;
+
+        // 检查冷却
+        long currentTime = player.world.getTotalWorldTime();
+        UUID playerId = player.getUniqueID();
+        Long lastSealTime = playerCooldowns.get(playerId);
+
+        if (lastSealTime != null && (currentTime - lastSealTime) < SEAL_COOLDOWN) {
+            return damage;
+        }
+
         int tier = getTier(attacker);
 
         // 计算触发概率
         float chance = BASE_CHANCE + (tier * 0.03f);
 
         if (RANDOM.nextFloat() < chance) {
+            // 设置冷却
+            playerCooldowns.put(playerId, currentTime);
+
+            boolean success;
             if (isBaublesLoaded()) {
-                sealRandomBauble(player, attacker, tier);
+                success = sealRandomBauble(player, attacker, tier, currentTime);
             } else {
                 // Baubles未加载，退化为封印手持物品
-                sealHeldItem(player, attacker, tier);
+                success = sealHeldItem(player, attacker, tier, currentTime);
+            }
+
+            if (!success) {
+                playerCooldowns.remove(playerId);
             }
         }
 
@@ -93,133 +119,169 @@ public class DivestAffix extends AbstractAffix {
     }
 
     /**
-     * 封印随机一件Baubles饰品
+     * 封印随机一件Baubles饰品（使用令牌系统）
      */
-    private void sealRandomBauble(EntityPlayer player, EntityLiving attacker, int tier) {
-        try {
-            // 使用反射访问Baubles API，以避免硬依赖
-            Class<?> baublesApiClass = Class.forName("baubles.api.BaublesApi");
-            Object handler = baublesApiClass.getMethod("getBaublesHandler", EntityPlayer.class)
-                .invoke(null, player);
-
-            if (handler == null) {
-                sealHeldItem(player, attacker, tier);
-                return;
-            }
-
-            // 获取槽位数量
-            int slots = (int) handler.getClass().getMethod("getSlots").invoke(handler);
-
-            // 收集可封印的槽位
-            List<Integer> availableSlots = new ArrayList<>();
-            for (int i = 0; i < slots; i++) {
-                ItemStack stack = (ItemStack) handler.getClass()
-                    .getMethod("getStackInSlot", int.class).invoke(handler, i);
-
-                if (!stack.isEmpty() && !SealedItemManager.isSealed(stack)) {
-                    // 检查是否可以卸下
-                    if (canUnequipBauble(stack, player)) {
-                        availableSlots.add(i);
-                    }
-                }
-            }
-
-            if (availableSlots.isEmpty()) {
-                return;
-            }
-
-            // 随机选择一个槽位
-            int targetSlot = availableSlots.get(RANDOM.nextInt(availableSlots.size()));
-
-            // 获取物品
-            ItemStack targetItem = (ItemStack) handler.getClass()
-                .getMethod("getStackInSlot", int.class).invoke(handler, targetSlot);
-
-            // 计算封印时间
-            long endTime = player.world.getTotalWorldTime() + BASE_SEAL_DURATION + (tier * 80);
-
-            // 执行封印
-            ItemStack sealedItem = SealedItemManager.sealItem(targetItem, endTime);
-            handler.getClass().getMethod("setStackInSlot", int.class, ItemStack.class)
-                .invoke(handler, targetSlot, sealedItem);
-
-            // 播放效果
-            playSealEffects(player, attacker);
-            VisualEffectHelper.sendToPlayer(player, VisualEffectType.VOID_GAZE, 30, 0.5f, attacker.getEntityId());
-
-            Adversity.LOGGER.debug("Sealed bauble in slot {} for player {}", targetSlot, player.getName());
-
-        } catch (Exception e) {
-            Adversity.LOGGER.debug("Failed to access Baubles API: {}", e.getMessage());
-            sealHeldItem(player, attacker, tier);
-        }
-    }
-
-    /**
-     * 检查Bauble是否可以卸下
-     */
-    private boolean canUnequipBauble(ItemStack stack, EntityPlayer player) {
-        try {
-            Class<?> iBaubleClass = Class.forName("baubles.api.IBauble");
-            if (!iBaubleClass.isInstance(stack.getItem())) {
-                return true;  // 不是IBauble，可以卸下
-            }
-
-            // 调用canUnequip方法
-            Object result = iBaubleClass.getMethod("canUnequip", ItemStack.class, EntityLivingBase.class)
-                .invoke(stack.getItem(), stack, player);
-
-            return (boolean) result;
-        } catch (Exception e) {
-            return true;  // 默认可以卸下
-        }
-    }
-
-    /**
-     * 封印手持物品（Baubles未加载时的退化行为）
-     */
-    private void sealHeldItem(EntityPlayer player, EntityLiving attacker, int tier) {
-        // 尝试封印主手或副手
-        ItemStack mainHand = player.getHeldItemMainhand();
-        ItemStack offHand = player.getHeldItemOffhand();
-
-        ItemStack targetItem = null;
-        boolean isMainHand = false;
-
-        if (!mainHand.isEmpty() && !SealedItemManager.isSealed(mainHand)) {
-            if (!offHand.isEmpty() && !SealedItemManager.isSealed(offHand) && RANDOM.nextBoolean()) {
-                targetItem = offHand;
-            } else {
-                targetItem = mainHand;
-                isMainHand = true;
-            }
-        } else if (!offHand.isEmpty() && !SealedItemManager.isSealed(offHand)) {
-            targetItem = offHand;
+    private boolean sealRandomBauble(EntityPlayer player, EntityLiving attacker, int tier, long currentTime) {
+        if (ItemRegistry.SEALED_TOKEN == null) {
+            Adversity.LOGGER.error("[Divest] SEALED_TOKEN未注册!");
+            return false;
         }
 
-        if (targetItem == null) {
-            return;
+        // 获取可封印的槽位（通过BaublesCompat）
+        List<Integer> availableSlots = getBaubleAvailableSlots(player);
+
+        if (availableSlots.isEmpty()) {
+            Adversity.LOGGER.debug("[Divest] 没有可封印的饰品");
+            return false;
         }
 
-        // 计算封印时间
-        long endTime = player.world.getTotalWorldTime() + BASE_SEAL_DURATION + (tier * 80);
+        // 随机选择一个槽位
+        int targetSlot = availableSlots.get(RANDOM.nextInt(availableSlots.size()));
 
-        // 执行封印
-        ItemStack sealedItem = SealedItemManager.sealItem(targetItem, endTime);
-        if (isMainHand) {
-            player.setHeldItem(net.minecraft.util.EnumHand.MAIN_HAND, sealedItem);
+        // 获取物品（通过BaublesCompat）
+        ItemStack targetItem = getBaubleStackInSlot(player, targetSlot);
+        if (targetItem.isEmpty()) {
+            return false;
+        }
+
+        // 创建快照
+        NBTTagCompound itemNbt = targetItem.serializeNBT();
+        String displayName = targetItem.getDisplayName();
+
+        // 计算封印时间（从配置读取）
+        long duration = AdversityConfig.affixSettings.divestSealDuration +
+                       (tier * AdversityConfig.affixSettings.sealDurationPerTier);
+        long endTime = currentTime + duration;
+
+        // 获取槽位类型名称
+        String slotType = getBaubleSlotTypeName(targetSlot);
+
+        // 创建令牌
+        ItemStack itemFromSnapshot = new ItemStack(itemNbt);
+        ItemStack token = ItemSealedToken.createToken(itemFromSnapshot, slotType, targetSlot, endTime, duration);
+
+        if (token.isEmpty() || !token.hasTagCompound()) {
+            Adversity.LOGGER.error("[Divest] 令牌创建失败!");
+            return false;
+        }
+
+        // 验证目标槽位状态未变
+        ItemStack currentItem = getBaubleStackInSlot(player, targetSlot);
+        if (currentItem.isEmpty() || !currentItem.getDisplayName().equals(displayName)) {
+            Adversity.LOGGER.warn("[Divest] 目标槽位物品已变化，中止操作");
+            return false;
+        }
+
+        // 清空Baubles槽位
+        setBaubleStackInSlot(player, targetSlot, ItemStack.EMPTY);
+
+        // 放置令牌到背包
+        int tokenSlot = player.inventory.getFirstEmptyStack();
+        if (tokenSlot != -1) {
+            player.inventory.mainInventory.set(tokenSlot, token);
+            Adversity.LOGGER.info("[Divest] 令牌放入背包槽 {}", tokenSlot);
         } else {
-            player.setHeldItem(net.minecraft.util.EnumHand.OFF_HAND, sealedItem);
+            player.dropItem(token, false);
+            Adversity.LOGGER.info("[Divest] 背包满，令牌掉落到地上");
         }
 
         // 播放效果
         playSealEffects(player, attacker);
         VisualEffectHelper.sendToPlayer(player, VisualEffectType.VOID_GAZE, 30, 0.5f, attacker.getEntityId());
+
+        Adversity.LOGGER.info("[Divest] 封印饰品成功: slot={}, item='{}'", targetSlot, displayName);
+        return true;
     }
 
     /**
-     * 播放封印效果
+     * 封印手持物品（Baubles未加载时的退化行为）
      */
+    private boolean sealHeldItem(EntityPlayer player, EntityLiving attacker, int tier, long currentTime) {
+        if (ItemRegistry.SEALED_TOKEN == null) {
+            return false;
+        }
+
+        // 尝试封印主手或副手
+        ItemStack mainHand = player.getHeldItemMainhand();
+        ItemStack offHand = player.getHeldItemOffhand();
+
+        ItemStack targetItem = null;
+        String slotType = null;
+        int slotIndex = -1;
+        boolean isMainHand = false;
+
+        if (!mainHand.isEmpty() && !(mainHand.getItem() instanceof ItemSealedToken)) {
+            if (!offHand.isEmpty() && !(offHand.getItem() instanceof ItemSealedToken) && RANDOM.nextBoolean()) {
+                targetItem = offHand.copy();
+                slotType = "OFFHAND";
+            } else {
+                targetItem = mainHand.copy();
+                slotType = "MAINHAND";
+                isMainHand = true;
+            }
+        } else if (!offHand.isEmpty() && !(offHand.getItem() instanceof ItemSealedToken)) {
+            targetItem = offHand.copy();
+            slotType = "OFFHAND";
+        }
+
+        if (targetItem == null) {
+            return false;
+        }
+
+        // 计算封印时间（从配置读取）
+        long duration = AdversityConfig.affixSettings.divestSealDuration +
+                       (tier * AdversityConfig.affixSettings.sealDurationPerTier);
+        long endTime = currentTime + duration;
+
+        // 创建令牌
+        ItemStack token = ItemSealedToken.createToken(targetItem, slotType, slotIndex, endTime, duration);
+
+        if (token.isEmpty()) {
+            return false;
+        }
+
+        // 清空原槽位
+        if (isMainHand) {
+            player.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
+        } else {
+            player.setHeldItem(EnumHand.OFF_HAND, ItemStack.EMPTY);
+        }
+
+        // 放置令牌
+        int tokenSlot = player.inventory.getFirstEmptyStack();
+        if (tokenSlot != -1) {
+            player.inventory.mainInventory.set(tokenSlot, token);
+        } else {
+            player.dropItem(token, false);
+        }
+
+        // 播放效果
+        playSealEffects(player, attacker);
+        VisualEffectHelper.sendToPlayer(player, VisualEffectType.VOID_GAZE, 30, 0.5f, attacker.getEntityId());
+
+        return true;
+    }
+
+    // ========== Baubles延迟加载方法 ==========
+
+    private List<Integer> getBaubleAvailableSlots(EntityPlayer player) {
+        return BaublesCompat.getAvailableSlotsForSeal(player);
+    }
+
+    private ItemStack getBaubleStackInSlot(EntityPlayer player, int slot) {
+        return BaublesCompat.getStackInSlot(player, slot);
+    }
+
+    private void setBaubleStackInSlot(EntityPlayer player, int slot, ItemStack stack) {
+        BaublesCompat.setStackInSlot(player, slot, stack);
+    }
+
+    private String getBaubleSlotTypeName(int slot) {
+        return BaublesCompat.getSlotTypeName(slot);
+    }
+
+    // ========== 效果和工具方法 ==========
+
     private void playSealEffects(EntityPlayer player, EntityLiving attacker) {
         if (player.world.isRemote) return;
 
@@ -257,5 +319,13 @@ public class DivestAffix extends AbstractAffix {
     private int getTier(EntityLiving entity) {
         IAdversityCapability cap = CapabilityHandler.getCapability(entity);
         return cap != null ? cap.getTier() : 1;
+    }
+
+    /**
+     * 清理过期的冷却记录
+     */
+    public static void cleanupCooldowns(long currentTime) {
+        playerCooldowns.entrySet().removeIf(entry ->
+            (currentTime - entry.getValue()) > SEAL_COOLDOWN * 10);
     }
 }

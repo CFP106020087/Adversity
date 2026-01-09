@@ -8,6 +8,7 @@ import com.adversity.capability.CapabilityHandler;
 import com.adversity.capability.IAdversityCapability;
 import com.adversity.client.visual.VisualEffectHelper;
 import com.adversity.client.visual.VisualEffectType;
+import com.adversity.config.AdversityConfig;
 import com.adversity.item.ItemRegistry;
 import com.adversity.item.ItemSealedToken;
 import net.minecraft.entity.EntityLiving;
@@ -145,7 +146,9 @@ public class ShackleAffix extends AbstractAffix {
             return false;
         }
 
-        long duration = BASE_SEAL_DURATION + (tier * 100);
+        // 计算封印时间（从配置读取）
+        long duration = AdversityConfig.affixSettings.shackleSealDuration +
+                       (tier * AdversityConfig.affixSettings.sealDurationPerTier);
         long endTime = currentTime + duration;
         String slotType = getSlotType(targetSlot);
 
