@@ -88,61 +88,60 @@ public class ShackleAffix extends AbstractAffix {
             return;
         }
 
+        // 先记录当前所有装备状态
+        Adversity.LOGGER.info("[SealToken] ====== BEFORE SEAL - Equipment status for {} ======", player.getName());
+        for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
+            ItemStack s = player.getItemStackFromSlot(slot);
+            Adversity.LOGGER.info("[SealToken]   {}: '{}' (empty={})", slot, s.getDisplayName(), s.isEmpty());
+        }
+
         // 收集可封印的装备槽
         List<EntityEquipmentSlot> availableSlots = new ArrayList<>();
-
         for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
             ItemStack stack = player.getItemStackFromSlot(slot);
-            // 排除封印令牌本身
             if (!stack.isEmpty() && !(stack.getItem() instanceof ItemSealedToken)) {
                 availableSlots.add(slot);
             }
         }
 
+        Adversity.LOGGER.info("[SealToken] Available slots: {}", availableSlots);
+
         if (availableSlots.isEmpty()) {
-            return;  // 没有可封印的装备
+            Adversity.LOGGER.info("[SealToken] No available slots to seal!");
+            return;
         }
 
         // 随机选择一个槽位
         EntityEquipmentSlot targetSlot = availableSlots.get(RANDOM.nextInt(availableSlots.size()));
-        ItemStack targetItem = player.getItemStackFromSlot(targetSlot).copy();  // 使用副本避免引用问题
 
-        if (targetItem.isEmpty()) {
-            Adversity.LOGGER.warn("[SealToken] Target item became empty after copy! Slot: {}", targetSlot);
-            return;
-        }
+        // 立即复制物品数据
+        ItemStack originalStack = player.getItemStackFromSlot(targetSlot);
+        ItemStack itemCopy = originalStack.copy();
 
-        Adversity.LOGGER.info("[SealToken] Selected slot {} with item '{}' (count={}, nbt={})",
-            targetSlot, targetItem.getDisplayName(), targetItem.getCount(),
-            targetItem.hasTagCompound() ? targetItem.getTagCompound().toString() : "null");
+        Adversity.LOGGER.info("[SealToken] Selected slot {} with item '{}' for sealing", targetSlot, itemCopy.getDisplayName());
 
         // 计算封印时间
         long currentTime = player.world.getTotalWorldTime();
         long duration = BASE_SEAL_DURATION + (tier * 100);
         long endTime = currentTime + duration;
 
-        Adversity.LOGGER.info("[SealToken] Sealing '{}' in slot {} for player {}, duration={} ticks ({} sec)",
-            targetItem.getDisplayName(), targetSlot, player.getName(), duration, duration / 20);
-
-        // 获取槽位类型字符串
+        // 获取槽位信息
         String slotType = getSlotTypeString(targetSlot);
         int slotIndex = targetSlot.getIndex();
 
-        // 创建封印令牌
-        ItemStack token = ItemSealedToken.createToken(targetItem, slotType, slotIndex, endTime, duration);
+        // 创建令牌
+        ItemStack token = ItemSealedToken.createToken(itemCopy, slotType, slotIndex, endTime, duration);
 
-        Adversity.LOGGER.info("[SealToken] Created token for '{}', slotType={}, slotIndex={}, tokenNBT={}",
-            targetItem.getDisplayName(), slotType, slotIndex,
-            token.hasTagCompound() ? "valid" : "NULL!");
-
-        // 验证令牌有效性
-        if (!token.hasTagCompound()) {
-            Adversity.LOGGER.error("[SealToken] Token has no NBT! Item will be lost!");
-            return;  // 不要继续，避免丢失物品
+        // 验证令牌
+        if (token.isEmpty() || !token.hasTagCompound()) {
+            Adversity.LOGGER.error("[SealToken] Failed to create token! Aborting to prevent item loss!");
+            return;
         }
 
-        // 从原槽位移除物品
-        Adversity.LOGGER.info("[SealToken] Removing item from original slot {}...", targetSlot);
+        Adversity.LOGGER.info("[SealToken] Token created successfully for '{}'", itemCopy.getDisplayName());
+
+        // 只移除选中的那个槽位
+        Adversity.LOGGER.info("[SealToken] Removing ONLY slot {} (index={})", targetSlot, slotIndex);
         if (targetSlot.getSlotType() == EntityEquipmentSlot.Type.ARMOR) {
             player.inventory.armorInventory.set(targetSlot.getIndex(), ItemStack.EMPTY);
         } else if (targetSlot == EntityEquipmentSlot.MAINHAND) {
@@ -151,19 +150,20 @@ public class ShackleAffix extends AbstractAffix {
             player.inventory.offHandInventory.set(0, ItemStack.EMPTY);
         }
 
-        // 将令牌放入背包
-        Adversity.LOGGER.info("[SealToken] Adding token to inventory...");
+        // 添加令牌到背包
         if (!player.inventory.addItemStackToInventory(token)) {
-            // 背包满了，掉落令牌
             player.dropItem(token, false);
-            Adversity.LOGGER.info("[SealToken] Inventory full, dropped token on ground");
+            Adversity.LOGGER.info("[SealToken] Inventory full, dropped token");
         } else {
-            Adversity.LOGGER.info("[SealToken] Successfully added token to inventory");
+            Adversity.LOGGER.info("[SealToken] Token added to inventory");
         }
 
-        // 验证最终状态
-        Adversity.LOGGER.info("[SealToken] Final state - original slot {} is now empty: {}",
-            targetSlot, player.getItemStackFromSlot(targetSlot).isEmpty());
+        // 记录封印后所有装备状态
+        Adversity.LOGGER.info("[SealToken] ====== AFTER SEAL - Equipment status for {} ======", player.getName());
+        for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
+            ItemStack s = player.getItemStackFromSlot(slot);
+            Adversity.LOGGER.info("[SealToken]   {}: '{}' (empty={})", slot, s.getDisplayName(), s.isEmpty());
+        }
 
         // 强制同步
         player.inventory.markDirty();
@@ -173,8 +173,6 @@ public class ShackleAffix extends AbstractAffix {
 
         // 播放效果
         playSealEffects(player, attacker);
-
-        // 发送视觉效果
         VisualEffectHelper.sendToPlayer(player, VisualEffectType.GRAVITY_DISTORT, 40, 0.5f, attacker.getEntityId());
     }
 
