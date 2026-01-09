@@ -14,9 +14,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.EnumParticleTypes;
@@ -109,17 +107,12 @@ public class ShackleAffix extends AbstractAffix {
         // 随机选择一个盔甲槽
         int targetIndex = availableIndices.get(RANDOM.nextInt(availableIndices.size()));
 
-        // 获取目标物品
+        // 获取目标物品并立即复制
         ItemStack armorToSeal = player.inventory.armorInventory.get(targetIndex);
-
-        // 立即序列化为NBT，保存当前状态
-        NBTTagCompound armorNBT = armorToSeal.serializeNBT();
+        ItemStack armorForToken = armorToSeal.copy();  // 简单复制，不用NBT序列化
 
         Adversity.LOGGER.info("[SealToken] 选中槽位: {}, 物品: '{}'",
             targetIndex, armorToSeal.getDisplayName());
-
-        // 从NBT创建完全独立的副本用于令牌（先创建令牌，成功后再清空槽位）
-        ItemStack armorForToken = new ItemStack(armorNBT);
 
         if (armorForToken.isEmpty()) {
             Adversity.LOGGER.error("[SealToken] 物品副本为空!");
@@ -150,17 +143,8 @@ public class ShackleAffix extends AbstractAffix {
 
         Adversity.LOGGER.info("[SealToken] 令牌创建成功，现在清空槽位");
 
-        // 使用EntityEquipmentSlot API清空槽位
-        EntityEquipmentSlot equipSlot;
-        switch (targetIndex) {
-            case 0: equipSlot = EntityEquipmentSlot.FEET; break;
-            case 1: equipSlot = EntityEquipmentSlot.LEGS; break;
-            case 2: equipSlot = EntityEquipmentSlot.CHEST; break;
-            case 3: equipSlot = EntityEquipmentSlot.HEAD; break;
-            default: equipSlot = EntityEquipmentSlot.FEET; break;
-        }
-        // 使用新创建的空ItemStack而非ItemStack.EMPTY单例
-        player.setItemStackToSlot(equipSlot, new ItemStack((net.minecraft.item.Item) null));
+        // 直接用armorInventory.set清空，保持API一致性
+        player.inventory.armorInventory.set(targetIndex, ItemStack.EMPTY);
 
         // 验证盔甲状态
         Adversity.LOGGER.info("[SealToken] === 当前盔甲状态 ===");
