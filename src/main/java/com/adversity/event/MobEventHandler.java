@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import com.adversity.curse.PermanentCurseManager;
 import com.adversity.spawn.NightmareSpawnHandler;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -23,6 +24,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -205,5 +207,17 @@ public class MobEventHandler {
         if (!event.wakeImmediately() && event.updateWorld()) {
             NightmareSpawnHandler.onPlayerSleep(event.getEntityPlayer());
         }
+    }
+
+    /**
+     * 玩家登录时同步诅咒数据
+     */
+    @SubscribeEvent
+    public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
+        if (event.player.world.isRemote) return;
+
+        // 同步诅咒数据到客户端
+        PermanentCurseManager manager = PermanentCurseManager.get(event.player.world);
+        manager.syncToClient(event.player);
     }
 }

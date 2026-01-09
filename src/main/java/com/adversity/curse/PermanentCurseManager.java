@@ -2,6 +2,8 @@ package com.adversity.curse;
 
 import com.adversity.Adversity;
 import com.adversity.config.AdversityConfig;
+import com.adversity.network.PacketHandler;
+import com.adversity.network.PacketSyncCurse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -126,10 +128,8 @@ public class PermanentCurseManager extends WorldSavedData {
         data.blackSwanReduction = newReduction;
         markDirty();
 
-        // 发送警告
-        if (newReduction >= 0.5f) {
-            sendWarning(player, "black_swan", newReduction);
-        }
+        // 发送警告（从第一次触发就开始警告）
+        sendWarning(player, "black_swan", newReduction);
 
         return false;
     }
@@ -168,11 +168,9 @@ public class PermanentCurseManager extends WorldSavedData {
         data.blackFridayReduction = newReduction;
         markDirty();
 
-        // 发送警告
+        // 发送警告（从第一次触发就开始警告）
         float remainingHealth = baseHealth - newReduction;
-        if (remainingHealth <= 6.0f) {  // 3心以下
-            sendWarning(player, "black_friday", newReduction / baseHealth);
-        }
+        sendWarning(player, "black_friday", newReduction / baseHealth);
 
         return false;
     }
@@ -211,10 +209,8 @@ public class PermanentCurseManager extends WorldSavedData {
         data.blackCoffinSealed = newSealed;
         markDirty();
 
-        // 发送警告
-        if (newSealed >= banThreshold - 5) {
-            sendWarning(player, "black_coffin", (float) newSealed / banThreshold);
-        }
+        // 发送警告（从第一次触发就开始警告）
+        sendWarning(player, "black_coffin", (float) newSealed / banThreshold);
 
         return false;
     }
@@ -269,6 +265,10 @@ public class PermanentCurseManager extends WorldSavedData {
         }
 
         markDirty();
+
+        // 同步到客户端
+        syncToClient(player);
+
         return true;
     }
 
@@ -312,6 +312,25 @@ public class PermanentCurseManager extends WorldSavedData {
         );
         warning.getStyle().setColor(severity > 0.7f ? TextFormatting.DARK_RED : TextFormatting.RED);
         player.sendMessage(warning);
+
+        // 同步到客户端
+        syncToClient(player);
+    }
+
+    /**
+     * 同步诅咒数据到客户端
+     */
+    public void syncToClient(EntityPlayer player) {
+        if (player.world.isRemote) return;
+        if (!(player instanceof EntityPlayerMP)) return;
+
+        PlayerCurseData data = playerCurses.get(player.getUniqueID());
+        int sealed = data != null ? data.blackCoffinSealed : 0;
+        float attack = data != null ? data.blackSwanReduction : 0f;
+        float health = data != null ? data.blackFridayReduction : 0f;
+
+        PacketSyncCurse packet = new PacketSyncCurse(sealed, attack, health);
+        PacketHandler.INSTANCE.sendTo(packet, (EntityPlayerMP) player);
     }
 
     // ==================== NBT 序列化 ====================

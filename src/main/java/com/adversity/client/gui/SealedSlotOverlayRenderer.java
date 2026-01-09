@@ -60,7 +60,7 @@ public class SealedSlotOverlayRenderer {
                 // Check if this slot is sealed (from the end)
                 // Sealed from slot (36 - sealedCount) to slot 35
                 if (slotIndex >= (36 - sealedCount)) {
-                    renderSealOverlay(guiLeft + slot.xPos, guiTop + slot.yPos);
+                    renderXMark(guiLeft + slot.xPos, guiTop + slot.yPos);
                 }
             }
         }

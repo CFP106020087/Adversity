@@ -9,6 +9,9 @@ item.adversity.affix_crystal.name=词条水晶
 item.adversity.void_shard.name=虚空碎片
 item.adversity.calm_dust.name=宁静之尘
 item.adversity.difficulty_detector.name=难度探测器
+item.adversity.redemption_tear.name=赎罪之泪
+item.adversity.redemption_heart.name=赎罪之心
+item.adversity.redemption_key.name=赎罪之钥
 
 # Item Tooltips
 item.adversity.affix_essence.tooltip=蕴含词条力量的残留物
@@ -99,3 +102,22 @@ adversity.difficulty.nightmare=噩梦
 
 # GUI
 adversity.gui.difficulty=难度等级
+
+# Redemption Items
+adversity.redemption_tear.desc=用于减轻黑天鹅诅咒
+adversity.redemption_tear.effect=减少 %d%% 攻击力削减
+adversity.redemption_heart.desc=用于减轻黑色星期五诅咒
+adversity.redemption_heart.effect=恢复 %d 点最大生命值
+adversity.redemption_key.desc=用于减轻黑棺诅咒
+adversity.redemption_key.effect=解封 %d 个背包槽位
+adversity.redemption.warning=警告：无法在被封禁后使用！
+adversity.redemption.no_curse=你没有对应的诅咒
+adversity.redemption.banned=你已被永久诅咒，无法赎罪
+adversity.redemption.success.black_swan=黑天鹅诅咒已减轻！当前攻击力削减: %d%%
+adversity.redemption.success.black_friday=黑色星期五诅咒已减轻！当前剩余生命: %d
+adversity.redemption.success.black_coffin=黑棺诅咒已减轻！当前可用槽位: %d
+
+# Seal System
+adversity.seal.expired=你的装备封印已解除
+adversity.seal.equipped_sealed=警告：你装备了被封印的物品，它不会提供任何效果！
+adversity.curse.slot_sealed=你的背包槽位被黑棺封印，物品被弹出
