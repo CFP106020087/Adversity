@@ -82,7 +82,7 @@ public class ShackleAffix extends AbstractAffix {
     /**
      * 随机封印一件盔甲
      *
-     * 通过NBT完全序列化来避免任何共享引用问题
+     * 只操作目标槽位，完全不碰其他槽位
      */
     private void sealRandomEquipment(EntityPlayer player, EntityLiving attacker, int tier) {
         // 检查物品是否已注册
@@ -90,22 +90,16 @@ public class ShackleAffix extends AbstractAffix {
             return;
         }
 
-        // 第一步：通过NBT序列化保存所有盔甲（完全独立的副本）
-        NBTTagCompound[] armorNBTs = new NBTTagCompound[4];
+        // 收集可封印的槽位索引
         List<Integer> availableIndices = new ArrayList<>();
-
         for (int i = 0; i < 4; i++) {
             ItemStack armor = player.inventory.armorInventory.get(i);
-            if (!armor.isEmpty()) {
-                // 序列化为NBT（这是最彻底的复制方式）
-                armorNBTs[i] = armor.serializeNBT();
-                if (!(armor.getItem() instanceof ItemSealedToken)) {
-                    availableIndices.add(i);
-                }
+            if (!armor.isEmpty() && !(armor.getItem() instanceof ItemSealedToken)) {
+                availableIndices.add(i);
             }
         }
 
-        Adversity.LOGGER.info("[SealToken] 可封印槽位: {}, NBT已序列化", availableIndices);
+        Adversity.LOGGER.info("[SealToken] 可封印槽位: {}", availableIndices);
 
         if (availableIndices.isEmpty()) {
             Adversity.LOGGER.info("[SealToken] 没有可封印的盔甲!");
@@ -115,14 +109,20 @@ public class ShackleAffix extends AbstractAffix {
         // 随机选择一个盔甲槽
         int targetIndex = availableIndices.get(RANDOM.nextInt(availableIndices.size()));
 
-        // 从NBT反序列化目标物品（完全独立的新对象）
-        ItemStack armorToSeal = new ItemStack(armorNBTs[targetIndex]);
+        // 获取目标物品
+        ItemStack armorToSeal = player.inventory.armorInventory.get(targetIndex);
+
+        // 立即序列化为NBT，保存当前状态
+        NBTTagCompound armorNBT = armorToSeal.serializeNBT();
 
         Adversity.LOGGER.info("[SealToken] 选中槽位: {}, 物品: '{}'",
             targetIndex, armorToSeal.getDisplayName());
 
-        if (armorToSeal.isEmpty()) {
-            Adversity.LOGGER.error("[SealToken] 目标物品为空!");
+        // 从NBT创建完全独立的副本用于令牌（先创建令牌，成功后再清空槽位）
+        ItemStack armorForToken = new ItemStack(armorNBT);
+
+        if (armorForToken.isEmpty()) {
+            Adversity.LOGGER.error("[SealToken] 物品副本为空!");
             return;
         }
 
@@ -141,29 +141,20 @@ public class ShackleAffix extends AbstractAffix {
             default: slotType = "ARMOR"; break;
         }
 
-        // 创建令牌
-        ItemStack token = ItemSealedToken.createToken(armorToSeal, slotType, targetIndex, endTime, duration);
+        // 先创建令牌（在清空槽位之前）
+        ItemStack token = ItemSealedToken.createToken(armorForToken, slotType, targetIndex, endTime, duration);
         if (token.isEmpty() || !token.hasTagCompound()) {
             Adversity.LOGGER.error("[SealToken] 令牌创建失败!");
             return;
         }
 
-        Adversity.LOGGER.info("[SealToken] 令牌创建成功");
+        Adversity.LOGGER.info("[SealToken] 令牌创建成功，现在清空槽位");
 
-        // 第二步：重建所有盔甲槽（从保存的NBT），目标槽位设为空
-        for (int i = 0; i < 4; i++) {
-            if (i == targetIndex) {
-                // 目标槽位设为空
-                player.inventory.armorInventory.set(i, ItemStack.EMPTY);
-            } else if (armorNBTs[i] != null) {
-                // 其他槽位从NBT重建
-                player.inventory.armorInventory.set(i, new ItemStack(armorNBTs[i]));
-            }
-            // 如果原本就是空的，不需要处理
-        }
+        // 令牌创建成功后，才清空槽位
+        player.inventory.armorInventory.set(targetIndex, ItemStack.EMPTY);
 
         // 验证盔甲状态
-        Adversity.LOGGER.info("[SealToken] === 设置后盔甲状态 ===");
+        Adversity.LOGGER.info("[SealToken] === 当前盔甲状态 ===");
         for (int i = 0; i < 4; i++) {
             ItemStack a = player.inventory.armorInventory.get(i);
             Adversity.LOGGER.info("[SealToken] armorInventory[{}] = '{}' (empty={})",
