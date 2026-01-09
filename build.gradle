@@ -30,10 +30,15 @@ minecraft {
 
 repositories {
     mavenCentral()
+    maven {
+        name = "CurseForge"
+        url = "https://www.cursemaven.com"
+    }
 }
 
 dependencies {
-    // 暂无外部依赖
+    // Baubles API (soft dependency)
+    compileOnly "curse.maven:baubles-227083:2518667"  // Baubles 1.5.2 for 1.12.2
 }
 
 processResources {

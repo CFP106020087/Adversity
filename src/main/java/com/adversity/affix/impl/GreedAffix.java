@@ -9,7 +9,6 @@ import com.adversity.capability.IAdversityCapability;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 
@@ -57,8 +56,8 @@ public class GreedAffix extends AbstractAffix {
         EntityPlayer player = (EntityPlayer) target;
         int tier = getTier(attacker);
 
-        // 计算装备的饰品数量
-        int baubleCount = countEquippedBaubles(player);
+        // 计算装备的饰品数量 (通过兼容层，延迟加载)
+        int baubleCount = countBaubles(player);
 
         if (baubleCount <= 0) {
             return damage;
@@ -90,36 +89,12 @@ public class GreedAffix extends AbstractAffix {
     }
 
     /**
-     * 计算玩家装备的Baubles饰品数量
+     * 通过兼容层计算饰品数量（延迟加载BaublesCompat类）
      */
-    private int countEquippedBaubles(EntityPlayer player) {
-        try {
-            // 使用反射访问Baubles API
-            Class<?> baublesApiClass = Class.forName("baubles.api.BaublesApi");
-            Object handler = baublesApiClass.getMethod("getBaublesHandler", EntityPlayer.class)
-                .invoke(null, player);
-
-            if (handler == null) {
-                return 0;
-            }
-
-            int slots = (int) handler.getClass().getMethod("getSlots").invoke(handler);
-            int count = 0;
-
-            for (int i = 0; i < slots; i++) {
-                ItemStack stack = (ItemStack) handler.getClass()
-                    .getMethod("getStackInSlot", int.class).invoke(handler, i);
-
-                if (!stack.isEmpty()) {
-                    count++;
-                }
-            }
-
-            return count;
-        } catch (Exception e) {
-            Adversity.LOGGER.debug("Failed to count baubles: {}", e.getMessage());
-            return 0;
-        }
+    private static int countBaubles(EntityPlayer player) {
+        // 只有在确认Baubles加载后才加载BaublesCompat类
+        // 这样避免在没有Baubles时类加载失败
+        return com.adversity.compat.BaublesCompat.countEquippedBaubles(player);
     }
 
     private int getTier(EntityLiving entity) {
