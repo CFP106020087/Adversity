@@ -215,14 +215,16 @@ public class AscensionAffix extends AbstractAffix {
                 newEntity.posX, newEntity.posY + 1, newEntity.posZ,
                 1,
                 0, 0, 0,
-                0
+                0,
+                new int[0]
             );
             ((WorldServer) world).spawnParticle(
                 EnumParticleTypes.DRAGON_BREATH,
                 newEntity.posX, newEntity.posY + 1, newEntity.posZ,
                 50,
                 1.0, 1.0, 1.0,
-                0.1
+                0.1,
+                new int[0]
             );
         }
     }
