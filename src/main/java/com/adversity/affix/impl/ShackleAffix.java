@@ -91,15 +91,22 @@ public class ShackleAffix extends AbstractAffix {
         // 收集可封印的装备槽
         List<EntityEquipmentSlot> availableSlots = new ArrayList<>();
 
+        Adversity.LOGGER.info("[SealToken] Checking equipment slots for player {}:", player.getName());
         for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
             ItemStack stack = player.getItemStackFromSlot(slot);
+            boolean isToken = stack.getItem() instanceof ItemSealedToken;
+            Adversity.LOGGER.info("[SealToken]   Slot {}: '{}' (empty={}, isToken={})",
+                slot, stack.getDisplayName(), stack.isEmpty(), isToken);
             // 排除封印令牌本身
-            if (!stack.isEmpty() && !(stack.getItem() instanceof ItemSealedToken)) {
+            if (!stack.isEmpty() && !isToken) {
                 availableSlots.add(slot);
             }
         }
 
+        Adversity.LOGGER.info("[SealToken] Available slots count: {}", availableSlots.size());
+
         if (availableSlots.isEmpty()) {
+            Adversity.LOGGER.info("[SealToken] No available slots to seal!");
             return;  // 没有可封印的装备
         }
 
