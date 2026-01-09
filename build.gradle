@@ -52,7 +52,9 @@ processResources {
 jar {
     manifest {
         attributes(
-            'FMLAT': 'adversity_at.cfg'
+            'FMLAT': 'adversity_at.cfg',
+            'FMLCorePlugin': 'com.adversity.asm.AdversityLoadingPlugin',
+            'FMLCorePluginContainsFMLMod': 'true'
         )
     }
 }
