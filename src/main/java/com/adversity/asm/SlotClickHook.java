@@ -16,11 +16,19 @@ public class SlotClickHook {
 
     private static boolean debugLogged = false;
 
+    /** 设为 true 禁用 SlotClickHook 功能（用于调试） */
+    public static boolean DISABLED = false;
+
     /**
      * Called at the beginning of Container.slotClick
      * @return ItemStack.EMPTY to cancel the click, null to continue normally
      */
     public static ItemStack onSlotClick(Container container, int slotId, int dragType, ClickType clickType, EntityPlayer player) {
+        // 调试开关：禁用时直接返回 null
+        if (DISABLED) {
+            return null;
+        }
+
         // Log first call to verify ASM is working
         if (!debugLogged) {
             System.out.println("[Adversity] SlotClickHook.onSlotClick called - ASM injection working!");

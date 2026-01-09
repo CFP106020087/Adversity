@@ -107,6 +107,19 @@ public class MobEventHandler {
                 // 应用伤害倍率
                 damage *= attackerCap.getDamageMultiplier();
 
+                // 调试：输出所有词条
+                if (event.getEntityLiving() instanceof net.minecraft.entity.player.EntityPlayer) {
+                    StringBuilder affixList = new StringBuilder();
+                    for (AffixData d : attackerCap.getAllAffixData()) {
+                        if (affixList.length() > 0) affixList.append(", ");
+                        affixList.append(d.getAffix().getId().getPath());
+                        affixList.append("(active=").append(d.isActive());
+                        affixList.append(",cd=").append(d.getCooldown()).append(")");
+                    }
+                    com.adversity.Adversity.LOGGER.info("[MobEvent] 攻击玩家 {} 的怪物词条: {}",
+                        event.getEntityLiving().getName(), affixList.toString());
+                }
+
                 // 处理攻击型词条
                 for (AffixData data : attackerCap.getAllAffixData()) {
                     if (data.isActive() && data.getCooldown() <= 0) {

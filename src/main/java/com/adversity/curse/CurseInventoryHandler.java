@@ -27,12 +27,16 @@ public class CurseInventoryHandler {
     /** 检查间隔（ticks） - 每tick检查确保立即响应 */
     private static final int CHECK_INTERVAL = 1;
 
+    /** 设为 true 禁用 CurseInventoryHandler 功能（用于调试） */
+    public static boolean DISABLED = false;
+
     /**
      * 每tick检查并强制清空封印槽位
      * 确保物品无法停留在封印槽位
      */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        if (DISABLED) return;
         if (event.phase != TickEvent.Phase.END) return;
         if (event.player.world.isRemote) return;
 
