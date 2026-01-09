@@ -14,9 +14,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.EnumParticleTypes;
@@ -109,17 +107,12 @@ public class ShackleAffix extends AbstractAffix {
         // 随机选择一个盔甲槽
         int targetIndex = availableIndices.get(RANDOM.nextInt(availableIndices.size()));
 
-        // 获取目标物品
+        // 获取目标物品并立即复制
         ItemStack armorToSeal = player.inventory.armorInventory.get(targetIndex);
-
-        // 立即序列化为NBT，保存当前状态
-        NBTTagCompound armorNBT = armorToSeal.serializeNBT();
+        ItemStack armorForToken = armorToSeal.copy();  // 简单复制，不用NBT序列化
 
         Adversity.LOGGER.info("[SealToken] 选中槽位: {}, 物品: '{}'",
             targetIndex, armorToSeal.getDisplayName());
-
-        // 从NBT创建完全独立的副本用于令牌（先创建令牌，成功后再清空槽位）
-        ItemStack armorForToken = new ItemStack(armorNBT);
 
         if (armorForToken.isEmpty()) {
             Adversity.LOGGER.error("[SealToken] 物品副本为空!");
@@ -150,7 +143,7 @@ public class ShackleAffix extends AbstractAffix {
 
         Adversity.LOGGER.info("[SealToken] 令牌创建成功，现在清空槽位");
 
-        // 令牌创建成功后，才清空槽位
+        // 直接用armorInventory.set清空，保持API一致性
         player.inventory.armorInventory.set(targetIndex, ItemStack.EMPTY);
 
         // 验证盔甲状态
@@ -169,27 +162,32 @@ public class ShackleAffix extends AbstractAffix {
             Adversity.LOGGER.info("[SealToken] 令牌添加到背包");
         }
 
-        // 只标记脏，让MC自己同步，不强制调用sendContainerToPlayer
+        // 直接发送槽位更新包到客户端
         player.inventory.markDirty();
+        if (player instanceof net.minecraft.entity.player.EntityPlayerMP) {
+            net.minecraft.entity.player.EntityPlayerMP mp = (net.minecraft.entity.player.EntityPlayerMP) player;
+
+            // ContainerPlayer的盔甲槽位: 5=HEAD, 6=CHEST, 7=LEGS, 8=FEET
+            // armorInventory索引: 0=FEET, 1=LEGS, 2=CHEST, 3=HEAD
+            int[] containerSlots = {8, 7, 6, 5};  // 对应armorInventory的0,1,2,3
+
+            // 发送所有4个盔甲槽位的更新包
+            for (int i = 0; i < 4; i++) {
+                int containerSlot = containerSlots[i];
+                ItemStack armorStack = player.inventory.armorInventory.get(i);
+                mp.connection.sendPacket(new net.minecraft.network.play.server.SPacketSetSlot(
+                    0,  // windowId 0 = 玩家背包
+                    containerSlot,
+                    armorStack
+                ));
+            }
+
+            Adversity.LOGGER.info("[SealToken] 已发送4个盔甲槽位更新包");
+        }
 
         // 播放效果
         playSealEffects(player, attacker);
         VisualEffectHelper.sendToPlayer(player, VisualEffectType.GRAVITY_DISTORT, 40, 0.5f, attacker.getEntityId());
-    }
-
-    /**
-     * 获取槽位类型字符串
-     */
-    private String getSlotTypeString(EntityEquipmentSlot slot) {
-        switch (slot) {
-            case HEAD: return "ARMOR_HEAD";
-            case CHEST: return "ARMOR_CHEST";
-            case LEGS: return "ARMOR_LEGS";
-            case FEET: return "ARMOR_FEET";
-            case MAINHAND: return "MAINHAND";
-            case OFFHAND: return "OFFHAND";
-            default: return "INVENTORY";
-        }
     }
 
     /**
