@@ -6,6 +6,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.Set;
+
 /**
  * 词条接口 - 定义怪物词条的核心行为
  */
@@ -52,6 +54,13 @@ public interface IAffix {
      * 检查词条是否与另一个词条兼容
      */
     boolean isCompatibleWith(IAffix other);
+
+    /**
+     * 获取此词条所需的前置词条ID列表
+     * 只有当这些词条中的至少一个已被选中时，此词条才可被选择
+     * 返回空集表示没有前置要求
+     */
+    Set<ResourceLocation> getRequiredAffixes();
 
     // ==================== 生命周期 ====================
 

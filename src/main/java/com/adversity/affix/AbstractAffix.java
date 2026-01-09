@@ -9,6 +9,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Collections;
+import java.util.Set;
+
 /**
  * 词条抽象基类 - 提供默认实现，方便创建具体词条
  */
@@ -70,6 +73,12 @@ public abstract class AbstractAffix implements IAffix {
     public boolean isCompatibleWith(IAffix other) {
         // 默认与所有词条兼容
         return true;
+    }
+
+    @Override
+    public Set<ResourceLocation> getRequiredAffixes() {
+        // 默认没有前置要求
+        return Collections.emptySet();
     }
 
     // ==================== 默认空实现 ====================
