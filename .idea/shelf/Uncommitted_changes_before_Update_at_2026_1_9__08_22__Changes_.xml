@@ -1,0 +1,18 @@
+<changelist name="Uncommitted_changes_before_Update_at_2026_1_9_上午_08_22_[Changes]" date="1767918147233" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_08_22_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 2026/1/9 上午 08:22 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value=".gradle/4.9/fileHashes/fileHashes.bin" />
+    <option name="AFTER_PATH" value=".gradle/4.9/fileHashes/fileHashes.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_08_22_[Changes]/fileHashes.bin" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="run/mods/Baubles-1.12-1.5.2.jar" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_08_22_[Changes]/Baubles-1.12-1.5.2.jar" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value=".gradle/4.9/fileHashes/fileHashes.lock" />
+    <option name="AFTER_PATH" value=".gradle/4.9/fileHashes/fileHashes.lock" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_08_22_[Changes]/fileHashes.lock" />
+  </binary>
+</changelist>

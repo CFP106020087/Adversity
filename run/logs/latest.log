@@ -1,0 +1,218 @@
+[06:29:01] [main/INFO] [GradleStart]: Extra: []
+[06:29:01] [main/INFO] [GradleStart]: Running with arguments: [--userProperties, {}, --assetsDir, C:/Users/jason/.gradle/caches/minecraft/assets, --assetIndex, 1.12, --accessToken{REDACTED}, --version, 1.12.2, --tweakClass, net.minecraftforge.fml.common.launcher.FMLTweaker, --tweakClass, net.minecraftforge.gradle.tweakers.CoremodTweaker]
+[06:29:01] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLTweaker
+[06:29:01] [main/INFO] [LaunchWrapper]: Using primary tweak class name net.minecraftforge.fml.common.launcher.FMLTweaker
+[06:29:01] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.CoremodTweaker
+[06:29:01] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLTweaker
+[06:29:01] [main/INFO] [FML]: Forge Mod Loader version 14.23.5.2847 for Minecraft 1.12.2 loading
+[06:29:01] [main/INFO] [FML]: Java is OpenJDK 64-Bit Server VM, version 1.8.0_472, running on Windows 11:amd64:10.0, installed at C:\Program Files\Eclipse Adoptium\jdk-8.0.472.8-hotspot\jre
+[06:29:01] [main/ERROR] [FML]: Apache Maven library folder was not in the format expected. Using default libraries directory.
+[06:29:01] [main/ERROR] [FML]: Full: C:\Users\jason\.gradle\caches\modules-2\files-2.1\org.apache.maven\maven-artifact\3.5.3\7dc72b6d6d8a6dced3d294ed54c2cc3515ade9f4\maven-artifact-3.5.3.jar
+[06:29:01] [main/ERROR] [FML]: Trimmed: c:/users/jason/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-artifact/3.5.3/
+[06:29:01] [main/INFO] [FML]: Managed to load a deobfuscated Minecraft name- we are in a deobfuscated environment. Skipping runtime deobfuscation
+[06:29:01] [main/INFO] [FML]: Detected deobfuscated environment, loading log configs for colored console logs.
+[06:29:01] [main/INFO] [FML]: Ignoring missing certificate for coremod FMLCorePlugin (net.minecraftforge.fml.relauncher.FMLCorePlugin), we are in deobf and it's a forge core plugin
+[06:29:01] [main/INFO] [FML]: Ignoring missing certificate for coremod FMLForgePlugin (net.minecraftforge.classloading.FMLForgePlugin), we are in deobf and it's a forge core plugin
+[06:29:01] [main/INFO] [FML]: Searching C:\Users\jason\OneDrive\Desktop\adversity\run\.\mods for mods
+[06:29:01] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.gradle.tweakers.CoremodTweaker
+[06:29:01] [main/INFO] [GradleStart]: Injecting location in coremod net.minecraftforge.fml.relauncher.FMLCorePlugin
+[06:29:01] [main/INFO] [GradleStart]: Injecting location in coremod net.minecraftforge.classloading.FMLForgePlugin
+[06:29:01] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker
+[06:29:01] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLDeobfTweaker
+[06:29:01] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.AccessTransformerTweaker
+[06:29:01] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker
+[06:29:01] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker
+[06:29:01] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.relauncher.CoreModManager$FMLPluginWrapper
+[06:29:02] [main/ERROR] [FML]: FML appears to be missing any signature data. This is not a good thing
+[06:29:02] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.relauncher.CoreModManager$FMLPluginWrapper
+[06:29:02] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLDeobfTweaker
+[06:29:02] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.gradle.tweakers.AccessTransformerTweaker
+[06:29:02] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.TerminalTweaker
+[06:29:02] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.TerminalTweaker
+[06:29:02] [main/INFO] [LaunchWrapper]: Launching wrapped minecraft {net.minecraft.client.main.Main}
+[06:29:02] [Client thread/INFO] [net.minecraft.client.Minecraft]: Setting user: Player984
+[06:29:03] [Client thread/WARN] [net.minecraft.client.settings.GameSettings]: Skipping bad option: lastServer:
+[06:29:03] [Client thread/INFO] [net.minecraft.client.Minecraft]: LWJGL Version: 2.9.4
+[06:29:03] [Client thread/INFO] [FML]: -- System Details --
+Details:
+	Minecraft Version: 1.12.2
+	Operating System: Windows 11 (amd64) version 10.0
+	Java Version: 1.8.0_472, Temurin
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode), Temurin
+	Memory: 805962072 bytes (768 MB) / 976224256 bytes (931 MB) up to 15176040448 bytes (14473 MB)
+	JVM Flags: 0 total; 
+	IntCache: cache: 0, tcache: 0, allocated: 0, tallocated: 0
+	FML: 
+	Loaded coremods (and transformers): 
+	GL info: ' Vendor: 'NVIDIA Corporation' Version: '4.6.0 NVIDIA 591.44' Renderer: 'NVIDIA GeForce RTX 5070/PCIe/SSE2'
+[06:29:03] [Client thread/INFO] [FML]: MinecraftForge v14.23.5.2847 Initialized
+[06:29:03] [Client thread/INFO] [FML]: Starts to replace vanilla recipe ingredients with ore ingredients.
+[06:29:03] [Client thread/INFO] [FML]: Invalid recipe found with multiple oredict ingredients in the same ingredient...
+[06:29:03] [Client thread/INFO] [FML]: Replaced 1227 ore ingredients
+[06:29:03] [Client thread/INFO] [FML]: Searching C:\Users\jason\OneDrive\Desktop\adversity\run\.\mods for mods
+[06:29:04] [Client thread/INFO] [FML]: Forge Mod Loader has identified 5 mods to load
+[06:29:04] [Client thread/INFO] [FML]: Attempting connection with missing mods [minecraft, mcp, FML, forge, adversity] at CLIENT
+[06:29:04] [Client thread/INFO] [FML]: Attempting connection with missing mods [minecraft, mcp, FML, forge, adversity] at SERVER
+[06:29:04] [Client thread/INFO] [net.minecraft.client.resources.SimpleReloadableResourceManager]: Reloading ResourceManager: Default, FMLFileResourcePack:Forge Mod Loader, FMLFileResourcePack:Minecraft Forge, FMLFileResourcePack:Adversity
+[06:29:04] [Client thread/INFO] [FML]: Processing ObjectHolder annotations
+[06:29:04] [Client thread/INFO] [FML]: Found 1173 ObjectHolder annotations
+[06:29:04] [Client thread/INFO] [FML]: Identifying ItemStackHolder annotations
+[06:29:04] [Client thread/INFO] [FML]: Found 0 ItemStackHolder annotations
+[06:29:04] [Client thread/INFO] [FML]: Configured a dormant chunk cache size of 0
+[06:29:04] [Client thread/INFO] [adversity]: Adversity Pre-Initialization
+[06:29:04] [Forge Version Check/INFO] [forge.VersionCheck]: [forge] Starting version check at http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
+[06:29:04] [Client thread/INFO] [adversity]: Adversity Capabilities registered
+[06:29:04] [Client thread/INFO] [adversity]: Initializing Affix Registry
+[06:29:04] [Client thread/INFO] [adversity]: Affix Registry initialized with 7 affixes
+[06:29:04] [Client thread/INFO] [adversity]: Network packets registered
+[06:29:04] [Client thread/INFO] [adversity]: Capability, Affix Registry and Network initialized
+[06:29:04] [Client thread/INFO] [FML]: Applying holder lookups
+[06:29:04] [Client thread/INFO] [FML]: Holder lookups applied
+[06:29:04] [Client thread/INFO] [adversity]: Registering Adversity items...
+[06:29:04] [Client thread/INFO] [adversity]: Adversity items registered
+[06:29:04] [Client thread/INFO] [FML]: Applying holder lookups
+[06:29:04] [Client thread/INFO] [FML]: Holder lookups applied
+[06:29:04] [Client thread/INFO] [FML]: Applying holder lookups
+[06:29:04] [Client thread/INFO] [FML]: Holder lookups applied
+[06:29:04] [Client thread/INFO] [FML]: Applying holder lookups
+[06:29:04] [Client thread/INFO] [FML]: Holder lookups applied
+[06:29:04] [Client thread/INFO] [FML]: Injecting itemstacks
+[06:29:04] [Client thread/INFO] [FML]: Itemstack injection complete
+[06:29:05] [Sound Library Loader/INFO] [net.minecraft.client.audio.SoundManager]: Starting up SoundSystem...
+[06:29:05] [Forge Version Check/INFO] [forge.VersionCheck]: [forge] Found status: OUTDATED Target: 14.23.5.2859
+[06:29:05] [Thread-5/INFO] [net.minecraft.client.audio.SoundManager]: Initializing LWJGL OpenAL
+[06:29:05] [Thread-5/INFO] [net.minecraft.client.audio.SoundManager]: (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+[06:29:05] [Thread-5/INFO] [net.minecraft.client.audio.SoundManager]: OpenAL initialized.
+[06:29:05] [Thread-3/INFO] [FML]: Using sync timing. 200 frames of Display.update took 168066300 nanos
+[06:29:06] [Sound Library Loader/INFO] [net.minecraft.client.audio.SoundManager]: Sound engine started
+[06:29:07] [Client thread/INFO] [FML]: Max texture size: 16384
+[06:29:07] [Client thread/INFO] [net.minecraft.client.renderer.texture.TextureMap]: Created: 512x512 textures-atlas
+[06:29:07] [Client thread/INFO] [FML]: Applying holder lookups
+[06:29:07] [Client thread/INFO] [FML]: Holder lookups applied
+[06:29:07] [Client thread/INFO] [adversity]: Adversity Initialization
+[06:29:07] [Client thread/INFO] [adversity]: Difficulty Manager initialized with 2 providers
+[06:29:07] [Client thread/INFO] [adversity]: === Adversity Scaling Configuration ===
+[06:29:07] [Client thread/INFO] [adversity]: Health: COMPOUND (rate=0.12, max=0.0)
+[06:29:07] [Client thread/INFO] [adversity]: Damage: COMPOUND (rate=0.08, max=0.0)
+[06:29:07] [Client thread/INFO] [adversity]: Armor: LINEAR (rate=0.5, max=30.0)
+[06:29:07] [Client thread/INFO] [adversity]: DR: SIGMOID (rate=0.05, max=0.75)
+[06:29:07] [Client thread/INFO] [adversity]: --- Sample Values (Difficulty 10, 20, 50) ---
+[06:29:07] [Client thread/INFO] [adversity]: Diff 10: HP=3.1x, DMG=2.2x, Armor=+5.0, DR=29.5%
+[06:29:07] [Client thread/INFO] [adversity]: Diff 20: HP=9.6x, DMG=4.7x, Armor=+10.0, DR=47.4%
+[06:29:07] [Client thread/INFO] [adversity]: Diff 50: HP=289.0x, DMG=46.9x, Armor=+25.0, DR=68.8%
+[06:29:07] [Client thread/INFO] [adversity]: Event handlers registered
+[06:29:07] [Client thread/INFO] [adversity]: Client handlers registered
+[06:29:07] [Client thread/INFO] [FML]: Injecting itemstacks
+[06:29:07] [Client thread/INFO] [FML]: Itemstack injection complete
+[06:29:07] [Client thread/INFO] [adversity]: Adversity Post-Initialization
+[06:29:07] [Client thread/INFO] [adversity]: Adversity loaded successfully
+[06:29:07] [Client thread/INFO] [FML]: Forge Mod Loader has successfully loaded 5 mods
+[06:29:07] [Client thread/WARN] [net.minecraft.client.settings.GameSettings]: Skipping bad option: lastServer:
+[06:29:07] [Client thread/INFO] [com.mojang.text2speech.NarratorWindows]: Narrator library for x64 successfully loaded
+[06:29:08] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FML
+[06:30:26] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Starting integrated minecraft server version 1.12.2
+[06:30:26] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Generating keypair
+[06:30:26] [Server thread/INFO] [FML]: Injecting existing registry data into this server instance
+[06:30:26] [Server thread/INFO] [FML]: Applying holder lookups
+[06:30:26] [Server thread/INFO] [FML]: Holder lookups applied
+[06:30:27] [Server thread/INFO] [FML]: Loading dimension 0 (New World) (net.minecraft.server.integrated.IntegratedServer@2838678b)
+[06:30:27] [Server thread/INFO] [net.minecraft.advancements.AdvancementList]: Loaded 488 advancements
+[06:30:27] [Server thread/INFO] [FML]: Loading dimension -1 (New World) (net.minecraft.server.integrated.IntegratedServer@2838678b)
+[06:30:27] [Server thread/INFO] [FML]: Loading dimension 1 (New World) (net.minecraft.server.integrated.IntegratedServer@2838678b)
+[06:30:27] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Preparing start region for level 0
+[06:30:27] [Server thread/INFO] [adversity]: Config cache refreshed: 0 whitelist, 2 blacklist
+[06:30:27] [Server thread/INFO] [adversity]: Adversity commands registered
+[06:30:27] [Server thread/INFO] [FML]: Unloading dimension -1
+[06:30:27] [Server thread/INFO] [FML]: Unloading dimension 1
+[06:30:27] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Changing view distance to 12, from 10
+[06:30:28] [Netty Local Client IO #0/INFO] [FML]: Server protocol version 2
+[06:30:28] [Netty Server IO #1/INFO] [FML]: Client protocol version 2
+[06:30:28] [Netty Server IO #1/INFO] [FML]: Client attempting to join with 5 mods : minecraft@1.12.2,adversity@1.0.0,FML@8.0.99.99,forge@14.23.5.2847,mcp@9.42
+[06:30:28] [Netty Local Client IO #0/INFO] [FML]: [Netty Local Client IO #0] Client side modded connection established
+[06:30:28] [Server thread/INFO] [FML]: [Server thread] Server side modded connection established
+[06:30:28] [Server thread/INFO] [net.minecraft.server.management.PlayerList]: Player984[local:E:22d9c1c4] logged in with entity id 113 at (949.0786511584627, 65.02442408821369, 1047.0027292691805)
+[06:30:28] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Player984村?
+[06:30:29] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[06:30:29] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level 'New World'/overworld
+[06:30:40] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Player984眔?[┣?]
+[06:30:40] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] Player984眔?[┣?]
+[06:30:40] [Client thread/INFO] [net.minecraft.advancements.AdvancementList]: Loaded 10 advancements
+[06:31:14] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] === Adversity Difficulty Report ===
+[06:31:14] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] Difficulty: 4.63
+[06:31:14] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] Expected Tier: Rare (T2)
+[06:31:14] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] Elite Chance: 24.3%
+[06:31:14] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] Elite Stats: 1.7x HP, 1.4x DMG, +2.3 Armor, 16% DR
+[06:31:14] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] Scaling: COMPOUND/COMPOUND
+[06:31:14] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] Status: Normal
+[06:31:14] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] Distance from spawn: 1068 blocks
+[06:31:17] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[06:31:17] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level 'New World'/overworld
+[06:31:25] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] === Adversity Difficulty Report ===
+[06:31:25] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] Difficulty: 4.59
+[06:31:25] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] Expected Tier: Rare (T2)
+[06:31:25] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] Elite Chance: 24.2%
+[06:31:25] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] Elite Stats: 1.7x HP, 1.4x DMG, +2.3 Armor, 15% DR
+[06:31:25] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] Scaling: COMPOUND/COMPOUND
+[06:31:25] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] Status: Normal
+[06:31:25] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] Distance from spawn: 1058 blocks
+[06:32:18] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] /gamemode, /gamerule, /give
+[06:32:19] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] 'S'ぃ琌?Τ?
+[06:32:22] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: [Player984: 眤村?家Α砆?竚?ネ家Α ]
+[06:32:22] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] 村?家Α砆穝?ネ家Α
+[06:32:25] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Player984砆圾?
+[06:32:25] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] Player984砆圾?
+[06:32:28] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[06:32:28] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level 'New World'/overworld
+[06:34:23] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] /gamemode, /gamerule, /give
+[06:34:23] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: [Player984: 眤村?家Α砆?竚??硑家Α ]
+[06:34:23] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] 村?家Α砆穝??硑家Α
+[06:34:31] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: [Player984: ?Player984?癳 1000000.5100.0100000.5]
+[06:34:31] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] ?Player984?癳 1000000.5100.0100000.5
+[06:35:02] [Client thread/INFO] [net.minecraft.advancements.AdvancementList]: Loaded 10 advancements
+[06:35:23] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[06:35:23] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level 'New World'/overworld
+[06:36:24] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[06:36:24] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level 'New World'/overworld
+[06:37:25] [Client thread/INFO] [net.minecraft.advancements.AdvancementList]: Loaded 17 advancements
+[06:37:27] [Client thread/INFO] [net.minecraft.advancements.AdvancementList]: Loaded 17 advancements
+[06:37:29] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[06:37:29] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level 'New World'/overworld
+[06:37:31] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[06:37:31] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level 'New World'/overworld
+[06:37:36] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[06:37:36] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level 'New World'/overworld
+[06:37:47] [Client thread/INFO] [net.minecraft.client.resources.SimpleReloadableResourceManager]: Reloading ResourceManager: Default, FMLFileResourcePack:Forge Mod Loader, FMLFileResourcePack:Minecraft Forge, FMLFileResourcePack:Adversity
+[06:37:47] [Server thread/INFO] [net.minecraft.advancements.AdvancementList]: Loaded 488 advancements
+[06:37:49] [Client thread/INFO] [net.minecraft.client.audio.SoundManager]: SoundSystem shutting down...
+[06:37:49] [Client thread/WARN] [net.minecraft.client.audio.SoundManager]: Author: Paul Lamb, www.paulscode.com
+[06:37:49] [Sound Library Loader/INFO] [net.minecraft.client.audio.SoundManager]: Starting up SoundSystem...
+[06:37:49] [Thread-12/INFO] [net.minecraft.client.audio.SoundManager]: Initializing LWJGL OpenAL
+[06:37:49] [Thread-12/INFO] [net.minecraft.client.audio.SoundManager]: (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+[06:37:49] [Thread-12/INFO] [net.minecraft.client.audio.SoundManager]: OpenAL initialized.
+[06:37:49] [Sound Library Loader/INFO] [net.minecraft.client.audio.SoundManager]: Sound engine started
+[06:37:50] [Client thread/INFO] [FML]: Max texture size: 16384
+[06:37:50] [Client thread/INFO] [net.minecraft.client.renderer.texture.TextureMap]: Created: 512x512 textures-atlas
+[06:37:53] [Client thread/INFO] [net.minecraft.advancements.AdvancementList]: Loaded 17 advancements
+[06:38:07] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[06:38:07] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level 'New World'/overworld
+[06:43:43] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[06:43:43] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level 'New World'/overworld
+[06:47:22] [Client thread/INFO] [net.minecraft.advancements.AdvancementList]: Loaded 36 advancements
+[06:47:48] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[06:47:48] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level 'New World'/overworld
+[06:49:22] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[06:49:22] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level 'New World'/overworld
+[06:49:56] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[06:49:56] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level 'New World'/overworld
+[06:49:57] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[06:49:57] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level 'New World'/overworld
+[06:52:30] [Client thread/INFO] [net.minecraft.client.Minecraft]: Stopping!
+[06:52:30] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Stopping server
+[06:52:30] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving players
+[06:52:30] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving worlds
+[06:52:30] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level 'New World'/overworld
+[06:52:30] [Server thread/INFO] [FML]: Unloading dimension 0
+[06:52:30] [Server thread/INFO] [FML]: Applying holder lookups
+[06:52:30] [Server thread/INFO] [FML]: Holder lookups applied
+[06:52:30] [Client thread/INFO] [net.minecraft.client.audio.SoundManager]: SoundSystem shutting down...
+[06:52:30] [Client thread/WARN] [net.minecraft.client.audio.SoundManager]: Author: Paul Lamb, www.paulscode.com
