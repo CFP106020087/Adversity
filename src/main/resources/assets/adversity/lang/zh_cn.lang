@@ -68,6 +68,7 @@ adversity.affix.black_swan=黑天鹅
 adversity.affix.black_friday=黑色星期五
 adversity.affix.black_coffin=黑棺
 adversity.affix.nightmare=梦魇
+adversity.affix.greed=贪婪
 
 # Permanent Curse Messages
 adversity.curse.black_swan.applied=你的攻击力被永久削弱了...

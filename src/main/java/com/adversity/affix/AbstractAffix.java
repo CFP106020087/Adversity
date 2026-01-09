@@ -21,12 +21,20 @@ public abstract class AbstractAffix implements IAffix {
     protected final AffixType type;
     protected final int weight;
     protected final float minDifficulty;
+    protected final int minTier;
+    protected final int maxTier;
 
     public AbstractAffix(ResourceLocation id, AffixType type, int weight, float minDifficulty) {
+        this(id, type, weight, minDifficulty, 0, 0);
+    }
+
+    public AbstractAffix(ResourceLocation id, AffixType type, int weight, float minDifficulty, int minTier, int maxTier) {
         this.id = id;
         this.type = type;
         this.weight = weight;
         this.minDifficulty = minDifficulty;
+        this.minTier = minTier;
+        this.maxTier = maxTier;
     }
 
     @Override
@@ -61,6 +69,16 @@ public abstract class AbstractAffix implements IAffix {
     @Override
     public float getMinDifficulty() {
         return minDifficulty;
+    }
+
+    @Override
+    public int getMinTier() {
+        return minTier;
+    }
+
+    @Override
+    public int getMaxTier() {
+        return maxTier;
     }
 
     @Override

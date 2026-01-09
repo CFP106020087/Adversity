@@ -46,6 +46,18 @@ public interface IAffix {
     float getMinDifficulty();
 
     /**
+     * 获取词条的最低Tier要求 (1-10, 0表示无限制)
+     * 只有当实体Tier >= 此值时，词条才可能出现
+     */
+    int getMinTier();
+
+    /**
+     * 获取词条的最高Tier限制 (1-10, 0表示无限制)
+     * 只有当实体Tier <= 此值时，词条才可能出现
+     */
+    int getMaxTier();
+
+    /**
      * 检查词条是否可以应用到指定实体
      */
     boolean canApplyTo(EntityLiving entity);
