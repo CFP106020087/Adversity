@@ -156,7 +156,7 @@ public class PurifierAffix extends AbstractAffix {
         player.world.playSound(
             null,
             player.posX, player.posY, player.posZ,
-            SoundEvents.ENTITY_EVOCATION_ILLAGER_CAST_SPELL,
+            SoundEvents.EVOCATION_ILLAGER_CAST_SPELL,
             SoundCategory.HOSTILE,
             1.0f,
             0.8f

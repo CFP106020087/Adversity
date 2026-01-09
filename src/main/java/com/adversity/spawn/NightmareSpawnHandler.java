@@ -16,8 +16,7 @@ import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.stats.StatBase;
-import net.minecraft.stats.StatList;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -86,23 +85,56 @@ public class NightmareSpawnHandler {
         }
     }
 
+    private static final String LAST_SLEEP_KEY = "adversity:last_sleep_time";
+
     /**
      * Get the number of days the player hasn't slept
+     * Uses custom NBT tracking since TIME_SINCE_REST doesn't exist in 1.12.2
      */
     private static int getDaysWithoutSleep(EntityPlayer player) {
-        // Get time since last rest
-        // In Minecraft, StatList.TIME_SINCE_REST tracks ticks since last sleep
-        if (!(player instanceof EntityPlayerMP)) {
-            return 0;  // Client-side or invalid player
+        if (player.world.isRemote) {
+            return 0;  // Client-side
         }
 
-        StatBase timeSinceRestStat = StatList.TIME_SINCE_REST;
-        if (timeSinceRestStat == null) {
-            return 0;  // Stat not available
+        NBTTagCompound persistentData = player.getEntityData();
+        NBTTagCompound modData = getOrCreateModData(persistentData);
+
+        long lastSleepTime = modData.getLong(LAST_SLEEP_KEY);
+        if (lastSleepTime == 0) {
+            // First time tracking - set to current time
+            lastSleepTime = player.world.getTotalWorldTime();
+            modData.setLong(LAST_SLEEP_KEY, lastSleepTime);
+            return 0;
         }
 
-        int timeSinceRest = ((EntityPlayerMP) player).getStatFile().readStat(timeSinceRestStat);
-        return timeSinceRest / TICKS_PER_DAY;
+        long timeSinceRest = player.world.getTotalWorldTime() - lastSleepTime;
+        return (int) (timeSinceRest / TICKS_PER_DAY);
+    }
+
+    /**
+     * Update sleep time when player wakes up (called externally)
+     */
+    public static void onPlayerSleep(EntityPlayer player) {
+        if (player.world.isRemote) return;
+
+        NBTTagCompound persistentData = player.getEntityData();
+        NBTTagCompound modData = getOrCreateModData(persistentData);
+        modData.setLong(LAST_SLEEP_KEY, player.world.getTotalWorldTime());
+    }
+
+    private static NBTTagCompound getOrCreateModData(NBTTagCompound playerData) {
+        final String FORGE_DATA_KEY = "ForgeData";
+        final String MOD_DATA_KEY = Adversity.MODID;
+
+        if (!playerData.hasKey(FORGE_DATA_KEY)) {
+            playerData.setTag(FORGE_DATA_KEY, new NBTTagCompound());
+        }
+        NBTTagCompound forgeData = playerData.getCompoundTag(FORGE_DATA_KEY);
+
+        if (!forgeData.hasKey(MOD_DATA_KEY)) {
+            forgeData.setTag(MOD_DATA_KEY, new NBTTagCompound());
+        }
+        return forgeData.getCompoundTag(MOD_DATA_KEY);
     }
 
     /**
@@ -280,11 +312,11 @@ public class NightmareSpawnHandler {
      * Play spawn effects
      */
     private static void playSpawnEffects(World world, EntityPlayer player, BlockPos pos) {
-        // Eerie sound only player can hear
+        // Eerie sound only player can hear (using VEX_AMBIENT as eerie substitute for phantom)
         world.playSound(
             null,
             player.posX, player.posY, player.posZ,
-            SoundEvents.ENTITY_PHANTOM_FLAP,
+            SoundEvents.ENTITY_VEX_AMBIENT,
             SoundCategory.HOSTILE,
             0.5f,
             0.3f
