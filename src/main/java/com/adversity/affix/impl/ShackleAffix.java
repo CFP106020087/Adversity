@@ -111,6 +111,21 @@ public class ShackleAffix extends AbstractAffix {
 
         player.setItemStackToSlot(targetSlot, sealedItem);
 
+        // 验证设置后的物品
+        ItemStack verifyItem = player.getItemStackFromSlot(targetSlot);
+        Adversity.LOGGER.info("[SealDebug] After setItemStackToSlot: slot={}, item='{}', isSealed={}, sealEndTime={}",
+            targetSlot, verifyItem.getDisplayName(),
+            SealedItemManager.isSealed(verifyItem), SealedItemManager.getSealEndTime(verifyItem));
+
+        // 也检查armorInventory
+        if (targetSlot.getSlotType() == EntityEquipmentSlot.Type.ARMOR) {
+            int armorIndex = targetSlot.getIndex();
+            ItemStack armorSlotItem = player.inventory.armorInventory.get(armorIndex);
+            Adversity.LOGGER.info("[SealDebug] ArmorInventory[{}]: item='{}', isSealed={}, sameInstance={}",
+                armorIndex, armorSlotItem.getDisplayName(),
+                SealedItemManager.isSealed(armorSlotItem), armorSlotItem == verifyItem);
+        }
+
         // 播放效果
         playSealEffects(player, attacker);
 
