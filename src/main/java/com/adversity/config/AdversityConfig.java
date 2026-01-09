@@ -69,6 +69,12 @@ public class AdversityConfig {
     })
     public static final NightmareSettings nightmareSettings = new NightmareSettings();
 
+    @Config.Comment({
+        "Client Display Settings",
+        "客户端显示设置"
+    })
+    public static final ClientSettings clientSettings = new ClientSettings();
+
     // ==================== 实体过滤 ====================
 
     public static class EntityFilter {
@@ -615,6 +621,35 @@ public class AdversityConfig {
         })
         @Config.RangeInt(min = 16, max = 64)
         public int maxSpawnDistance = 24;
+    }
+
+    // ==================== 客户端显示设置 ====================
+
+    public static class ClientSettings {
+
+        @Config.Comment({
+            "Enable difficulty HUD display in screen corner",
+            "在屏幕角落启用难度HUD显示"
+        })
+        public boolean enableDifficultyHUD = true;
+
+        @Config.Comment({
+            "Enable mob tier display above elite mobs",
+            "在精英怪物头顶显示等级"
+        })
+        public boolean enableMobTierDisplay = true;
+
+        @Config.Comment({
+            "Enable affix icons on elite mobs",
+            "在精英怪物上显示词条图标"
+        })
+        public boolean enableAffixIcons = true;
+
+        @Config.Comment({
+            "HUD position: TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT",
+            "HUD位置: TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT"
+        })
+        public String hudPosition = "TOP_LEFT";
     }
 
     // ==================== 战利品设置 ====================
