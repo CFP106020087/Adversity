@@ -65,6 +65,7 @@ adversity.affix.black_swan=Black Swan
 adversity.affix.black_friday=Black Friday
 adversity.affix.black_coffin=Black Coffin
 adversity.affix.nightmare=Nightmare
+adversity.affix.greed=Greed
 
 # Permanent Curse Messages
 adversity.curse.black_swan.applied=Your attack power has been permanently weakened...

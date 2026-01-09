@@ -312,8 +312,8 @@ public class DifficultyManager {
         // 检查是否在精英黑名单中
         boolean eliteBlacklisted = AdversityConfig.isEliteBlacklisted(entity);
 
-        // 检查是否强制精英
-        boolean forcedElite = AdversityConfig.isForcedElite(entity);
+        // 检查是否有强制等级
+        int forcedTier = AdversityConfig.getForcedTier(entity);
 
         // 计算精英概率
         double eliteChance = Math.min(
@@ -327,9 +327,9 @@ public class DifficultyManager {
         if (eliteBlacklisted) {
             // 在黑名单中，永远不会成为精英
             tier = 0;
-        } else if (forcedElite) {
-            // 强制成为精英
-            tier = Math.max(calculateTier(difficulty), AdversityConfig.getForcedEliteMinTier());
+        } else if (forcedTier > 0) {
+            // 强制指定等级
+            tier = forcedTier;
         } else {
             // 正常随机检查
             double minDiff = AdversityConfig.eliteSettings.minDifficultyForElite;
@@ -469,6 +469,15 @@ public class DifficultyManager {
             // 跳过已经应用的强制词条
             if (forcedAffixIds.contains(affix.getId())) {
                 continue;
+            }
+            // 检查词条的Tier限制
+            int minTier = affix.getMinTier();
+            int maxTier = affix.getMaxTier();
+            if (minTier > 0 && tier < minTier) {
+                continue; // Tier太低，跳过高级词条
+            }
+            if (maxTier > 0 && tier > maxTier) {
+                continue; // Tier太高，跳过低级词条
             }
             // 检查词条的难度和实体要求
             if (affix.getMinDifficulty() <= difficulty && affix.canApplyTo(entity)) {
