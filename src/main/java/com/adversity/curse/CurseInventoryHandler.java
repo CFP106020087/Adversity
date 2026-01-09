@@ -3,11 +3,15 @@ package com.adversity.curse;
 import com.adversity.Adversity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.ClickType;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -21,11 +25,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 public class CurseInventoryHandler {
 
     /** 检查间隔（ticks） - 优化性能 */
-    private static final int CHECK_INTERVAL = 20;  // 每秒检查一次
+    private static final int CHECK_INTERVAL = 10;  // 每0.5秒检查一次
 
     /**
      * 定期检查并强制清空封印槽位
-     * 这是最可靠的方法来确保封印槽位不能使用
+     * 确保任何方式放入的物品都会被弹出
      */
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
@@ -41,27 +45,49 @@ public class CurseInventoryHandler {
 
         // 检查封印槽位是否有物品
         // 从背包末尾开始封印（槽位35, 34, 33...）
-        // 玩家主背包有36个槽位（0-35），热键栏是0-8
+        // 玩家主背包有36个槽位（0-35），热键栏是0-8，主背包是9-35
         int inventorySize = player.inventory.mainInventory.size();  // 通常是36
         int startSealedSlot = inventorySize - sealedCount;
 
+        boolean ejectedAny = false;
         for (int i = startSealedSlot; i < inventorySize; i++) {
             ItemStack stack = player.inventory.mainInventory.get(i);
             if (!stack.isEmpty()) {
-                // 将物品弹出到世界
-                EntityItem entityItem = player.dropItem(stack.copy(), false);
-                if (entityItem != null) {
-                    entityItem.setNoPickupDelay();
-                    entityItem.setOwner(player.getName());
+                // 尝试放入背包其他位置
+                boolean moved = false;
+                for (int j = 0; j < startSealedSlot; j++) {
+                    if (player.inventory.mainInventory.get(j).isEmpty()) {
+                        player.inventory.mainInventory.set(j, stack.copy());
+                        player.inventory.mainInventory.set(i, ItemStack.EMPTY);
+                        moved = true;
+                        ejectedAny = true;
+                        break;
+                    }
                 }
-                player.inventory.mainInventory.set(i, ItemStack.EMPTY);
 
-                // 发送提示（限制频率避免刷屏）
-                if (player.ticksExisted % 100 == 0) {
-                    TextComponentTranslation msg = new TextComponentTranslation("adversity.curse.slot_sealed");
-                    msg.getStyle().setColor(TextFormatting.DARK_PURPLE);
-                    player.sendMessage(msg);
+                // 如果背包已满，掉落物品
+                if (!moved) {
+                    EntityItem entityItem = player.dropItem(stack.copy(), false);
+                    if (entityItem != null) {
+                        entityItem.setNoPickupDelay();
+                        entityItem.setOwner(player.getName());
+                    }
+                    player.inventory.mainInventory.set(i, ItemStack.EMPTY);
+                    ejectedAny = true;
                 }
+            }
+        }
+
+        // 同步背包
+        if (ejectedAny) {
+            player.inventory.markDirty();
+            player.inventoryContainer.detectAndSendChanges();
+
+            // 发送提示（限制频率避免刷屏）
+            if (player.ticksExisted % 100 < CHECK_INTERVAL) {
+                TextComponentTranslation msg = new TextComponentTranslation("adversity.curse.slot_sealed");
+                msg.getStyle().setColor(TextFormatting.DARK_PURPLE);
+                player.sendMessage(msg);
             }
         }
     }
@@ -86,6 +112,25 @@ public class CurseInventoryHandler {
         if (availableSlots <= 0) {
             event.setCanceled(true);
         }
+    }
+
+    /**
+     * 检查玩家背包槽位是否被封印
+     * @param player 玩家
+     * @param slotIndex 背包槽位索引（0-35）
+     */
+    public static boolean isSlotSealed(EntityPlayer player, int slotIndex) {
+        if (player.world.isRemote) return false;
+
+        PermanentCurseManager manager = PermanentCurseManager.get(player.world);
+        int sealedCount = manager.getBlackCoffinSealed(player);
+        if (sealedCount <= 0) return false;
+
+        int inventorySize = player.inventory.mainInventory.size();
+        int startSealedSlot = inventorySize - sealedCount;
+
+        // 只封印主背包（槽位9-35），不封印热键栏
+        return slotIndex >= 9 && slotIndex >= startSealedSlot && slotIndex < inventorySize;
     }
 
     /**
