@@ -98,7 +98,7 @@ public class BlindingAffix extends AbstractAffix {
             attacker.world.playSound(
                 null,
                 target.posX, target.posY, target.posZ,
-                SoundEvents.ENTITY_SQUID_SQUIRT,
+                SoundEvents.ENTITY_SQUID_AMBIENT,
                 SoundCategory.HOSTILE,
                 0.6f,
                 0.5f + RANDOM.nextFloat() * 0.3f

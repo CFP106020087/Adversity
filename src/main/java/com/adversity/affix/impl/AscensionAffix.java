@@ -2,6 +2,7 @@ package com.adversity.affix.impl;
 
 import com.adversity.Adversity;
 import com.adversity.affix.AbstractAffix;
+import com.adversity.affix.AffixData;
 import com.adversity.affix.AffixRegistry;
 import com.adversity.affix.AffixType;
 import com.adversity.affix.IAffixData;
@@ -72,8 +73,8 @@ public class AscensionAffix extends AbstractAffix {
         ResourceLocation upgradeFrom = null;
         ResourceLocation upgradeTo = null;
 
-        List<IAffix> affixes = cap.getAffixes();
-        for (IAffix affix : affixes) {
+        for (AffixData affixData : cap.getAllAffixData()) {
+            IAffix affix = affixData.getAffix();
             ResourceLocation affixId = affix.getId();
             if (affixId.equals(HeroAffix.ID)) {
                 upgradeFrom = HeroAffix.ID;
@@ -134,7 +135,8 @@ public class AscensionAffix extends AbstractAffix {
 
         // 复制词条，替换升阶词条
         List<IAffix> newAffixes = new ArrayList<>();
-        for (IAffix affix : originalCap.getAffixes()) {
+        for (AffixData affixData : originalCap.getAllAffixData()) {
+            IAffix affix = affixData.getAffix();
             if (affix.getId().equals(upgradeFrom)) {
                 // 替换为升阶后的词条
                 IAffix upgradedAffix = AffixRegistry.getAffix(upgradeTo);
