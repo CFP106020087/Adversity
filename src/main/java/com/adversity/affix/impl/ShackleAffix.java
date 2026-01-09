@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.EnumParticleTypes;
@@ -81,7 +82,7 @@ public class ShackleAffix extends AbstractAffix {
     /**
      * 随机封印一件盔甲
      *
-     * 使用EntityEquipmentSlot API正确设置盔甲
+     * 通过NBT完全序列化来避免任何共享引用问题
      */
     private void sealRandomEquipment(EntityPlayer player, EntityLiving attacker, int tier) {
         // 检查物品是否已注册
@@ -89,24 +90,22 @@ public class ShackleAffix extends AbstractAffix {
             return;
         }
 
-        // 定义盔甲槽位映射
-        EntityEquipmentSlot[] armorSlots = {
-            EntityEquipmentSlot.FEET,   // index 0
-            EntityEquipmentSlot.LEGS,   // index 1
-            EntityEquipmentSlot.CHEST,  // index 2
-            EntityEquipmentSlot.HEAD    // index 3
-        };
-
-        // 收集可封印的槽位
+        // 第一步：通过NBT序列化保存所有盔甲（完全独立的副本）
+        NBTTagCompound[] armorNBTs = new NBTTagCompound[4];
         List<Integer> availableIndices = new ArrayList<>();
+
         for (int i = 0; i < 4; i++) {
-            ItemStack armor = player.getItemStackFromSlot(armorSlots[i]);
-            if (!armor.isEmpty() && !(armor.getItem() instanceof ItemSealedToken)) {
-                availableIndices.add(i);
+            ItemStack armor = player.inventory.armorInventory.get(i);
+            if (!armor.isEmpty()) {
+                // 序列化为NBT（这是最彻底的复制方式）
+                armorNBTs[i] = armor.serializeNBT();
+                if (!(armor.getItem() instanceof ItemSealedToken)) {
+                    availableIndices.add(i);
+                }
             }
         }
 
-        Adversity.LOGGER.info("[SealToken] 可封印槽位: {}", availableIndices);
+        Adversity.LOGGER.info("[SealToken] 可封印槽位: {}, NBT已序列化", availableIndices);
 
         if (availableIndices.isEmpty()) {
             Adversity.LOGGER.info("[SealToken] 没有可封印的盔甲!");
@@ -115,14 +114,12 @@ public class ShackleAffix extends AbstractAffix {
 
         // 随机选择一个盔甲槽
         int targetIndex = availableIndices.get(RANDOM.nextInt(availableIndices.size()));
-        EntityEquipmentSlot targetSlot = armorSlots[targetIndex];
 
-        // 获取并复制目标盔甲
-        ItemStack originalArmor = player.getItemStackFromSlot(targetSlot);
-        ItemStack armorToSeal = originalArmor.copy();
+        // 从NBT反序列化目标物品（完全独立的新对象）
+        ItemStack armorToSeal = new ItemStack(armorNBTs[targetIndex]);
 
-        Adversity.LOGGER.info("[SealToken] 选中槽位: {} ({}), 物品: '{}'",
-            targetIndex, targetSlot.getName(), armorToSeal.getDisplayName());
+        Adversity.LOGGER.info("[SealToken] 选中槽位: {}, 物品: '{}'",
+            targetIndex, armorToSeal.getDisplayName());
 
         if (armorToSeal.isEmpty()) {
             Adversity.LOGGER.error("[SealToken] 目标物品为空!");
@@ -153,15 +150,24 @@ public class ShackleAffix extends AbstractAffix {
 
         Adversity.LOGGER.info("[SealToken] 令牌创建成功");
 
-        // 使用setItemStackToSlot API清空目标槽位（这是Forge推荐的方式）
-        player.setItemStackToSlot(targetSlot, ItemStack.EMPTY);
+        // 第二步：重建所有盔甲槽（从保存的NBT），目标槽位设为空
+        for (int i = 0; i < 4; i++) {
+            if (i == targetIndex) {
+                // 目标槽位设为空
+                player.inventory.armorInventory.set(i, ItemStack.EMPTY);
+            } else if (armorNBTs[i] != null) {
+                // 其他槽位从NBT重建
+                player.inventory.armorInventory.set(i, new ItemStack(armorNBTs[i]));
+            }
+            // 如果原本就是空的，不需要处理
+        }
 
         // 验证盔甲状态
         Adversity.LOGGER.info("[SealToken] === 设置后盔甲状态 ===");
         for (int i = 0; i < 4; i++) {
-            ItemStack a = player.getItemStackFromSlot(armorSlots[i]);
-            Adversity.LOGGER.info("[SealToken] slot[{}] ({}) = '{}' (empty={})",
-                i, armorSlots[i].getName(), a.getDisplayName(), a.isEmpty());
+            ItemStack a = player.inventory.armorInventory.get(i);
+            Adversity.LOGGER.info("[SealToken] armorInventory[{}] = '{}' (empty={})",
+                i, a.getDisplayName(), a.isEmpty());
         }
 
         // 添加令牌到背包
@@ -172,9 +178,10 @@ public class ShackleAffix extends AbstractAffix {
             Adversity.LOGGER.info("[SealToken] 令牌添加到背包");
         }
 
-        // 使用detectAndSendChanges同步（不用sendContainerToPlayer）
+        // 强制同步物品栏
+        player.inventory.markDirty();
         if (player instanceof net.minecraft.entity.player.EntityPlayerMP) {
-            player.inventoryContainer.detectAndSendChanges();
+            ((net.minecraft.entity.player.EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
         }
 
         // 播放效果
