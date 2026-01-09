@@ -171,21 +171,6 @@ public class ShackleAffix extends AbstractAffix {
     }
 
     /**
-     * 获取槽位类型字符串
-     */
-    private String getSlotTypeString(EntityEquipmentSlot slot) {
-        switch (slot) {
-            case HEAD: return "ARMOR_HEAD";
-            case CHEST: return "ARMOR_CHEST";
-            case LEGS: return "ARMOR_LEGS";
-            case FEET: return "ARMOR_FEET";
-            case MAINHAND: return "MAINHAND";
-            case OFFHAND: return "OFFHAND";
-            default: return "INVENTORY";
-        }
-    }
-
-    /**
      * 播放封印效果
      */
     private void playSealEffects(EntityPlayer player, EntityLiving attacker) {
