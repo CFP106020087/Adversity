@@ -174,5 +174,8 @@ public class AffixRegistry {
         register(new HorrorAffix());          // 恐惧 - 强制后退+恐惧光环 (难度4+)
         register(new AscensionAffix());       // 飞升 - 死亡时升阶词条 (难度6+)
         register(new AnnihilateAffix());      // 湮灭 - 虚空临时删除物品 (难度7+)
+        register(new BlackSwanAffix());       // 黑天鹅 - 永久削减攻击力 (难度8+)
+        register(new BlackFridayAffix());     // 黑色星期五 - 永久削减生命值 (难度8+)
+        register(new BlackCoffinAffix());     // 黑棺 - 永久封印背包槽位 (难度9+)
     }
 }

@@ -61,6 +61,23 @@ adversity.affix.disenchant=解咒
 adversity.affix.shackle=枷锁
 adversity.affix.divest=褫夺
 adversity.affix.annihilate=湮灭
+adversity.affix.black_swan=黑天鹅
+adversity.affix.black_friday=黑色星期五
+adversity.affix.black_coffin=黑棺
+
+# Permanent Curse Messages
+adversity.curse.black_swan.applied=你的攻击力被永久削弱了...
+adversity.curse.black_friday.applied=你的生命力被永久抽取了...
+adversity.curse.black_coffin.applied=你的背包槽位被永久封印了...
+adversity.curse.banned=你已被逆境永久诅咒，无法进入此存档
+adversity.curse.banned.black_swan=你的攻击力已被黑天鹅完全吞噬！此存档已永久封闭。
+adversity.curse.banned.black_friday=你的生命力已被黑色星期五完全夺取！此存档已永久封闭。
+adversity.curse.banned.black_coffin=你的背包已被黑棺完全封印！此存档已永久封闭。
+adversity.curse.banned.default=你已被永久诅咒！此存档已永久封闭。
+adversity.curse.warning.black_swan=[黑天鹅] 你的攻击力已削减 %d%%！使用赎罪物品可以减轻诅咒！
+adversity.curse.warning.black_friday=[黑色星期五] 你的生命值已危险地低！使用赎罪物品可以减轻诅咒！
+adversity.curse.warning.black_coffin=[黑棺] 你的背包已封印 %d%%！使用赎罪物品可以减轻诅咒！
+adversity.curse.redemption=诅咒已部分赎罪
 
 # Tier Names (10级系统)
 adversity.tier.1=精英

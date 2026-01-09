@@ -61,6 +61,23 @@ adversity.affix.disenchant=Disenchant
 adversity.affix.shackle=Shackle
 adversity.affix.divest=Divest
 adversity.affix.annihilate=Annihilate
+adversity.affix.black_swan=Black Swan
+adversity.affix.black_friday=Black Friday
+adversity.affix.black_coffin=Black Coffin
+
+# Permanent Curse Messages
+adversity.curse.black_swan.applied=Your attack power has been permanently weakened...
+adversity.curse.black_friday.applied=Your life force has been permanently drained...
+adversity.curse.black_coffin.applied=Your inventory slot has been permanently sealed...
+adversity.curse.banned=You have been permanently cursed by Adversity and cannot enter this save
+adversity.curse.banned.black_swan=Your attack power has been completely consumed by Black Swan! This save is permanently sealed.
+adversity.curse.banned.black_friday=Your life force has been completely taken by Black Friday! This save is permanently sealed.
+adversity.curse.banned.black_coffin=Your inventory has been completely sealed by Black Coffin! This save is permanently sealed.
+adversity.curse.banned.default=You have been permanently cursed! This save is permanently sealed.
+adversity.curse.warning.black_swan=[Black Swan] Your attack power has been reduced by %d%%! Use a redemption item to mitigate the curse!
+adversity.curse.warning.black_friday=[Black Friday] Your health is dangerously low! Use a redemption item to mitigate the curse!
+adversity.curse.warning.black_coffin=[Black Coffin] Your inventory is %d%% sealed! Use a redemption item to mitigate the curse!
+adversity.curse.redemption=Curse has been partially redeemed
 
 # Tier Names (10-tier system)
 adversity.tier.1=Elite

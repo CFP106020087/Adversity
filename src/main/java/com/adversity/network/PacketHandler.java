@@ -34,6 +34,14 @@ public class PacketHandler {
             Side.CLIENT
         );
 
+        // 同步永久诅咒数据到客户端
+        INSTANCE.registerMessage(
+            PacketSyncCurse.Handler.class,
+            PacketSyncCurse.class,
+            id++,
+            Side.CLIENT
+        );
+
         Adversity.LOGGER.info("Network packets registered");
     }
 }
