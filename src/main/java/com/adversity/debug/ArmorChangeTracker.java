@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class ArmorChangeTracker {
 
     // 设为true启用追踪
-    private static final boolean ENABLED = true;
+    private static final boolean ENABLED = false;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
