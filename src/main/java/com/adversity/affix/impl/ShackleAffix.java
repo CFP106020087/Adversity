@@ -87,30 +87,43 @@ public class ShackleAffix extends AbstractAffix {
             return;
         }
 
-        // 直接检查四个盔甲槽，不使用循环
-        // armorInventory: 0=boots, 1=legs, 2=chest, 3=head
-        int[] armorIndices = {0, 1, 2, 3};
-        List<Integer> availableIndices = new ArrayList<>();
+        // 记录当前盔甲状态
+        Adversity.LOGGER.info("[SealToken] === 盔甲状态 ===");
+        for (int i = 0; i < 4; i++) {
+            ItemStack a = player.inventory.armorInventory.get(i);
+            Adversity.LOGGER.info("[SealToken] armorInventory[{}] = '{}' (empty={})",
+                i, a.getDisplayName(), a.isEmpty());
+        }
 
-        for (int i : armorIndices) {
+        // 收集可封印的盔甲槽
+        List<Integer> availableIndices = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
             ItemStack armor = player.inventory.armorInventory.get(i);
             if (!armor.isEmpty() && !(armor.getItem() instanceof ItemSealedToken)) {
                 availableIndices.add(i);
             }
         }
 
+        Adversity.LOGGER.info("[SealToken] 可封印槽位: {}", availableIndices);
+
         if (availableIndices.isEmpty()) {
+            Adversity.LOGGER.info("[SealToken] 没有可封印的盔甲!");
             return;
         }
 
         // 随机选择一个盔甲槽
         int targetIndex = availableIndices.get(RANDOM.nextInt(availableIndices.size()));
+        Adversity.LOGGER.info("[SealToken] 选中槽位: {}", targetIndex);
 
         // 直接从armorInventory获取并复制
         ItemStack originalArmor = player.inventory.armorInventory.get(targetIndex);
         ItemStack armorCopy = originalArmor.copy();
 
+        Adversity.LOGGER.info("[SealToken] 原物品: '{}', 复制后: '{}'",
+            originalArmor.getDisplayName(), armorCopy.getDisplayName());
+
         if (armorCopy.isEmpty()) {
+            Adversity.LOGGER.error("[SealToken] 复制后物品为空!");
             return;
         }
 
@@ -132,18 +145,30 @@ public class ShackleAffix extends AbstractAffix {
         // 创建令牌
         ItemStack token = ItemSealedToken.createToken(armorCopy, slotType, targetIndex, endTime, duration);
         if (token.isEmpty() || !token.hasTagCompound()) {
-            Adversity.LOGGER.error("[SealToken] Failed to create token!");
+            Adversity.LOGGER.error("[SealToken] 令牌创建失败!");
             return;
         }
 
-        Adversity.LOGGER.info("[SealToken] Sealing '{}' from armor slot {}", armorCopy.getDisplayName(), targetIndex);
+        Adversity.LOGGER.info("[SealToken] 令牌创建成功");
 
-        // 直接设置armorInventory槽位为空
+        // 设置目标槽位为空
+        Adversity.LOGGER.info("[SealToken] 正在清空槽位 {} ...", targetIndex);
         player.inventory.armorInventory.set(targetIndex, ItemStack.EMPTY);
+
+        // 验证只有目标槽位被清空
+        Adversity.LOGGER.info("[SealToken] === 清空后盔甲状态 ===");
+        for (int i = 0; i < 4; i++) {
+            ItemStack a = player.inventory.armorInventory.get(i);
+            Adversity.LOGGER.info("[SealToken] armorInventory[{}] = '{}' (empty={})",
+                i, a.getDisplayName(), a.isEmpty());
+        }
 
         // 添加令牌到背包
         if (!player.inventory.addItemStackToInventory(token)) {
             player.dropItem(token, false);
+            Adversity.LOGGER.info("[SealToken] 背包满，令牌掉落");
+        } else {
+            Adversity.LOGGER.info("[SealToken] 令牌添加到背包");
         }
 
         // 播放效果
