@@ -22,8 +22,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * 飞升词条 - 死亡时有概率升阶为更高级的防御词条
@@ -236,5 +238,15 @@ public class AscensionAffix extends AbstractAffix {
             return false;
         }
         return super.isCompatibleWith(other);
+    }
+
+    @Override
+    public Set<ResourceLocation> getRequiredAffixes() {
+        // 飞升词条需要英雄或神明词条才能生效
+        // 外神是最高级，不需要飞升
+        Set<ResourceLocation> required = new HashSet<>();
+        required.add(HeroAffix.ID);
+        required.add(DivineAffix.ID);
+        return required;
     }
 }

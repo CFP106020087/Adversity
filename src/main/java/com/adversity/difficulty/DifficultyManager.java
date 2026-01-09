@@ -493,11 +493,24 @@ public class DifficultyManager {
     }
 
     /**
-     * 加权随机选择词条
+     * 加权随机选择词条（支持词条依赖）
      */
     private static List<IAffix> selectAffixes(List<IAffix> available, int count) {
         List<IAffix> selected = new ArrayList<>();
-        List<IAffix> pool = new ArrayList<>(available);
+        java.util.Set<ResourceLocation> selectedIds = new java.util.HashSet<>();
+
+        // 分离有前置要求和无前置要求的词条
+        List<IAffix> pool = new ArrayList<>();
+        List<IAffix> dependentAffixes = new ArrayList<>();
+
+        for (IAffix affix : available) {
+            java.util.Set<ResourceLocation> required = affix.getRequiredAffixes();
+            if (required.isEmpty()) {
+                pool.add(affix);
+            } else {
+                dependentAffixes.add(affix);
+            }
+        }
 
         for (int i = 0; i < count && !pool.isEmpty(); i++) {
             int totalWeight = 0;
@@ -521,8 +534,28 @@ public class DifficultyManager {
 
             if (chosen != null) {
                 selected.add(chosen);
+                selectedIds.add(chosen.getId());
                 final IAffix finalChosen = chosen;
                 pool.removeIf(a -> a.equals(finalChosen) || !a.isCompatibleWith(finalChosen));
+
+                // 检查是否有依赖词条现在可以加入池中
+                java.util.Iterator<IAffix> it = dependentAffixes.iterator();
+                while (it.hasNext()) {
+                    IAffix dep = it.next();
+                    java.util.Set<ResourceLocation> required = dep.getRequiredAffixes();
+                    // 检查是否有任何前置词条已被选中
+                    boolean requirementMet = false;
+                    for (ResourceLocation req : required) {
+                        if (selectedIds.contains(req)) {
+                            requirementMet = true;
+                            break;
+                        }
+                    }
+                    if (requirementMet && dep.isCompatibleWith(finalChosen)) {
+                        pool.add(dep);
+                        it.remove();
+                    }
+                }
             }
         }
 

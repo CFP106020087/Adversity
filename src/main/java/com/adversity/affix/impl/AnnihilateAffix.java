@@ -114,59 +114,8 @@ public class AnnihilateAffix extends AbstractAffix {
         Adversity.LOGGER.debug("Annihilated item from slot {} for player {}", targetSlot, player.getName());
     }
 
-    @Override
-    public void onTick(EntityLiving entity, IAffixData data) {
-        // 每2秒检查并返还虚空物品
-        if (data.getTickCount() % 40 != 0) {
-            return;
-        }
-
-        if (entity.world.isRemote) {
-            return;
-        }
-
-        // 获取附近的玩家并检查是否有物品需要返还
-        List<EntityPlayer> nearbyPlayers = entity.world.getEntitiesWithinAABB(
-            EntityPlayer.class,
-            entity.getEntityBoundingBox().grow(64),
-            p -> p != null && p.isEntityAlive()
-        );
-
-        SealedItemManager manager = SealedItemManager.get(entity.world);
-        long currentTime = entity.world.getTotalWorldTime();
-
-        for (EntityPlayer player : nearbyPlayers) {
-            List<SealedItemManager.VoidStoredItem> returnItems = manager.getReturnableItems(player, currentTime);
-
-            for (SealedItemManager.VoidStoredItem item : returnItems) {
-                returnItemToPlayer(player, item);
-            }
-        }
-    }
-
-    /**
-     * 将物品返还给玩家
-     */
-    private void returnItemToPlayer(EntityPlayer player, SealedItemManager.VoidStoredItem item) {
-        // 尝试放回原槽位
-        if (item.slotIndex >= 0 && item.slotIndex < player.inventory.mainInventory.size()) {
-            if (player.inventory.mainInventory.get(item.slotIndex).isEmpty()) {
-                player.inventory.mainInventory.set(item.slotIndex, item.stack);
-                playReturnEffects(player);
-                return;
-            }
-        }
-
-        // 尝试放入背包其他位置
-        if (player.inventory.addItemStackToInventory(item.stack)) {
-            playReturnEffects(player);
-            return;
-        }
-
-        // 背包已满，掉落在地上
-        player.dropItem(item.stack, false);
-        playReturnEffects(player);
-    }
+    // 注意：虚空物品的返还现在由 SealedItemHandler.onPlayerTick 处理
+    // 这样即使怪物死亡，物品也会正确返还给玩家
 
     /**
      * 播放湮灭效果
@@ -204,43 +153,6 @@ public class AnnihilateAffix extends AbstractAffix {
             );
             ((WorldServer) player.world).spawnParticle(
                 EnumParticleTypes.END_ROD,
-                player.posX, player.posY + 1, player.posZ,
-                20,
-                0.3, 0.3, 0.3,
-                0.1
-            );
-        }
-    }
-
-    /**
-     * 播放返还效果
-     */
-    private void playReturnEffects(EntityPlayer player) {
-        if (player.world.isRemote) return;
-
-        // 音效
-        player.world.playSound(
-            null,
-            player.posX, player.posY, player.posZ,
-            SoundEvents.ENTITY_ITEM_PICKUP,
-            SoundCategory.PLAYERS,
-            0.5f,
-            1.0f
-        );
-
-        player.world.playSound(
-            null,
-            player.posX, player.posY, player.posZ,
-            SoundEvents.ENTITY_ENDERMEN_TELEPORT,
-            SoundCategory.PLAYERS,
-            0.3f,
-            1.5f
-        );
-
-        // 粒子效果 - 物品出现
-        if (player.world instanceof WorldServer) {
-            ((WorldServer) player.world).spawnParticle(
-                EnumParticleTypes.PORTAL,
                 player.posX, player.posY + 1, player.posZ,
                 20,
                 0.3, 0.3, 0.3,
