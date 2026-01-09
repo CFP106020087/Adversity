@@ -2,6 +2,8 @@ package com.adversity.curse;
 
 import com.adversity.Adversity;
 import com.adversity.config.AdversityConfig;
+import com.adversity.network.PacketHandler;
+import com.adversity.network.PacketSyncCurse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -263,6 +265,10 @@ public class PermanentCurseManager extends WorldSavedData {
         }
 
         markDirty();
+
+        // 同步到客户端
+        syncToClient(player);
+
         return true;
     }
 
@@ -306,6 +312,25 @@ public class PermanentCurseManager extends WorldSavedData {
         );
         warning.getStyle().setColor(severity > 0.7f ? TextFormatting.DARK_RED : TextFormatting.RED);
         player.sendMessage(warning);
+
+        // 同步到客户端
+        syncToClient(player);
+    }
+
+    /**
+     * 同步诅咒数据到客户端
+     */
+    public void syncToClient(EntityPlayer player) {
+        if (player.world.isRemote) return;
+        if (!(player instanceof EntityPlayerMP)) return;
+
+        PlayerCurseData data = playerCurses.get(player.getUniqueID());
+        int sealed = data != null ? data.blackCoffinSealed : 0;
+        float attack = data != null ? data.blackSwanReduction : 0f;
+        float health = data != null ? data.blackFridayReduction : 0f;
+
+        PacketSyncCurse packet = new PacketSyncCurse(sealed, attack, health);
+        PacketHandler.INSTANCE.sendTo(packet, (EntityPlayerMP) player);
     }
 
     // ==================== NBT 序列化 ====================
