@@ -48,7 +48,6 @@ public class SlotClickHook {
         }
 
         // Check if this slot belongs to player's main inventory
-        // Need to check if the inventory is the player's InventoryPlayer
         if (slot.inventory != player.inventory) {
             return null;
         }
@@ -56,12 +55,36 @@ public class SlotClickHook {
         // Get the slot index in player's inventory
         int slotIndex = slot.getSlotIndex();
 
-        // Only check main inventory slots (0-35), not armor or offhand
-        // Armor slots also reference player.inventory but have slotIndex 0-3 (armorInventory)
-        // We need to distinguish between hotbar (0-8) and armor (0-3)
-        // Check if this is a main inventory slot by verifying it's in the correct range for mainInventory
-        if (slotIndex < 0 || slotIndex >= 36) {
-            return null;
+        // For ContainerPlayer, we need to exclude armor slots
+        // In ContainerPlayer layout:
+        // - Slots 5-8: Armor (slotIndex 0-3 in armorInventory)
+        // - Slots 9-35: Main inventory (slotIndex 9-35)
+        // - Slots 36-44: Hotbar (slotIndex 0-8)
+        // We need to check if this is actually a main inventory slot, not armor
+        if (container instanceof ContainerPlayer) {
+            // In ContainerPlayer, main inventory is at container slots 9-35 and 36-44
+            // Armor is at container slots 5-8
+            if (slotId >= 5 && slotId <= 8) {
+                // This is an armor slot, not main inventory
+                return null;
+            }
+            // Map container slotId to inventory slot index
+            if (slotId >= 9 && slotId <= 35) {
+                // Main inventory (slotIndex matches)
+                slotIndex = slot.getSlotIndex();
+            } else if (slotId >= 36 && slotId <= 44) {
+                // Hotbar (slotIndex 0-8)
+                slotIndex = slot.getSlotIndex();
+            } else {
+                // Not a main inventory slot
+                return null;
+            }
+        } else {
+            // For other containers, use the slot index directly
+            // Only check main inventory slots (0-35)
+            if (slotIndex < 0 || slotIndex >= 36) {
+                return null;
+            }
         }
 
         // Check if this slot is sealed by Black Coffin
