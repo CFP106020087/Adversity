@@ -126,10 +126,8 @@ public class PermanentCurseManager extends WorldSavedData {
         data.blackSwanReduction = newReduction;
         markDirty();
 
-        // 发送警告
-        if (newReduction >= 0.5f) {
-            sendWarning(player, "black_swan", newReduction);
-        }
+        // 发送警告（从第一次触发就开始警告）
+        sendWarning(player, "black_swan", newReduction);
 
         return false;
     }
@@ -168,11 +166,9 @@ public class PermanentCurseManager extends WorldSavedData {
         data.blackFridayReduction = newReduction;
         markDirty();
 
-        // 发送警告
+        // 发送警告（从第一次触发就开始警告）
         float remainingHealth = baseHealth - newReduction;
-        if (remainingHealth <= 6.0f) {  // 3心以下
-            sendWarning(player, "black_friday", newReduction / baseHealth);
-        }
+        sendWarning(player, "black_friday", newReduction / baseHealth);
 
         return false;
     }
@@ -211,10 +207,8 @@ public class PermanentCurseManager extends WorldSavedData {
         data.blackCoffinSealed = newSealed;
         markDirty();
 
-        // 发送警告
-        if (newSealed >= banThreshold - 5) {
-            sendWarning(player, "black_coffin", (float) newSealed / banThreshold);
-        }
+        // 发送警告（从第一次触发就开始警告）
+        sendWarning(player, "black_coffin", (float) newSealed / banThreshold);
 
         return false;
     }

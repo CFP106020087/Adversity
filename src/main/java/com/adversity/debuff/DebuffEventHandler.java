@@ -41,13 +41,20 @@ public class DebuffEventHandler {
         }
     }
 
+    /** Debuff效果应用间隔 - 优化性能 */
+    private static final int DEBUFF_CHECK_INTERVAL = 4;  // 每4tick检查一次 (5次/秒)
+
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
         if (event.player.world.isRemote) return;
+        if (event.player.ticksExisted % DEBUFF_CHECK_INTERVAL != 0) return;  // 优化：不是每tick都运行
 
         EntityPlayer player = event.player;
         Map<DebuffType, PlayerDebuffManager.DebuffData> debuffs = PlayerDebuffManager.getAllDebuffs(player);
+
+        // 如果没有debuff，直接返回
+        if (debuffs.isEmpty()) return;
 
         for (Map.Entry<DebuffType, PlayerDebuffManager.DebuffData> entry : debuffs.entrySet()) {
             DebuffType type = entry.getKey();
