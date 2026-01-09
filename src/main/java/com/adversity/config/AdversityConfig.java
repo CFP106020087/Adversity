@@ -476,6 +476,30 @@ public class AdversityConfig {
         public String[] forcedAffixesForEntities = new String[] {
             "minecraft:wither_skeleton|adversity:withering"
         };
+
+        @Config.Comment({
+            "=== SEAL AFFIX SETTINGS ===",
+            "=== 封印词条设置 ===",
+            "",
+            "Base seal duration for Shackle affix (ticks, 20 = 1 second)",
+            "枷锁词条的基础封印时间（tick，20 = 1秒）"
+        })
+        @Config.RangeInt(min = 100, max = 6000)
+        public int shackleSealDuration = 600;  // 30秒
+
+        @Config.Comment({
+            "Base seal duration for Divest affix (ticks, 20 = 1 second)",
+            "褫夺词条的基础封印时间（tick，20 = 1秒）"
+        })
+        @Config.RangeInt(min = 100, max = 6000)
+        public int divestSealDuration = 400;  // 20秒
+
+        @Config.Comment({
+            "Additional seal duration per tier (ticks)",
+            "每级额外封印时间（tick）"
+        })
+        @Config.RangeInt(min = 0, max = 200)
+        public int sealDurationPerTier = 80;  // 4秒每级
     }
 
     // ==================== 永久诅咒设置 ====================

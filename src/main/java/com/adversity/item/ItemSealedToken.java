@@ -175,9 +175,18 @@ public class ItemSealedToken extends Item {
             case "ARMOR_FEET": return "靴子";
             case "MAINHAND": return "主手";
             case "OFFHAND": return "副手";
-            case "BAUBLE": return "饰品";
             case "INVENTORY": return "背包";
-            default: return slotType;
+            default:
+                // 动态处理饰品槽位 (BAUBLE_0, BAUBLE_1, ...)
+                if (slotType.startsWith("BAUBLE_")) {
+                    try {
+                        int slotIndex = Integer.parseInt(slotType.substring(7));
+                        return "饰品槽 " + (slotIndex + 1);
+                    } catch (NumberFormatException e) {
+                        return "饰品";
+                    }
+                }
+                return slotType;
         }
     }
 
@@ -225,36 +234,37 @@ public class ItemSealedToken extends Item {
         boolean restored = false;
 
         // 根据槽位类型恢复
-        switch (slotType) {
-            case "ARMOR_HEAD":
-                restored = restoreToArmor(player, originalItem, 3);
-                break;
-            case "ARMOR_CHEST":
-                restored = restoreToArmor(player, originalItem, 2);
-                break;
-            case "ARMOR_LEGS":
-                restored = restoreToArmor(player, originalItem, 1);
-                break;
-            case "ARMOR_FEET":
-                restored = restoreToArmor(player, originalItem, 0);
-                break;
-            case "MAINHAND":
-            case "INVENTORY":
-                restored = restoreToInventory(player, originalItem, slotIndex);
-                break;
-            case "OFFHAND":
-                restored = restoreToOffhand(player, originalItem);
-                break;
-            case "BAUBLE":
-                restored = restoreToBauble(player, originalItem, slotIndex);
-                break;
-            default:
-                // 尝试放入背包
-                restored = player.inventory.addItemStackToInventory(originalItem);
-                if (!restored) {
-                    player.dropItem(originalItem, false);
-                    restored = true;
-                }
+        if (slotType.startsWith("BAUBLE")) {
+            restored = restoreToBauble(player, originalItem, slotIndex);
+        } else {
+            switch (slotType) {
+                case "ARMOR_HEAD":
+                    restored = restoreToArmor(player, originalItem, 3);
+                    break;
+                case "ARMOR_CHEST":
+                    restored = restoreToArmor(player, originalItem, 2);
+                    break;
+                case "ARMOR_LEGS":
+                    restored = restoreToArmor(player, originalItem, 1);
+                    break;
+                case "ARMOR_FEET":
+                    restored = restoreToArmor(player, originalItem, 0);
+                    break;
+                case "MAINHAND":
+                case "INVENTORY":
+                    restored = restoreToInventory(player, originalItem, slotIndex);
+                    break;
+                case "OFFHAND":
+                    restored = restoreToOffhand(player, originalItem);
+                    break;
+                default:
+                    // 尝试放入背包
+                    restored = player.inventory.addItemStackToInventory(originalItem);
+                    if (!restored) {
+                        player.dropItem(originalItem, false);
+                        restored = true;
+                    }
+            }
         }
 
         // 移除令牌
@@ -311,26 +321,33 @@ public class ItemSealedToken extends Item {
     }
 
     private static boolean restoreToBauble(EntityPlayer player, ItemStack item, int slotIndex) {
-        try {
-            Class<?> baublesApiClass = Class.forName("baubles.api.BaublesApi");
-            Object handler = baublesApiClass.getMethod("getBaublesHandler", EntityPlayer.class)
-                .invoke(null, player);
-
-            if (handler != null) {
-                ItemStack current = (ItemStack) handler.getClass()
-                    .getMethod("getStackInSlot", int.class).invoke(handler, slotIndex);
-
-                if (current.isEmpty()) {
-                    handler.getClass().getMethod("setStackInSlot", int.class, ItemStack.class)
-                        .invoke(handler, slotIndex, item);
-                    return true;
-                }
+        // 检查Baubles是否加载
+        if (!net.minecraftforge.fml.common.Loader.isModLoaded("baubles")) {
+            // Baubles未加载，放入背包
+            if (player.inventory.addItemStackToInventory(item)) {
+                return true;
             }
-        } catch (Exception e) {
-            Adversity.LOGGER.debug("Failed to restore to Baubles: {}", e.getMessage());
+            player.dropItem(item, false);
+            return true;
         }
 
-        // Baubles槽位被占用或不可用，放入背包
+        // 使用BaublesCompat恢复
+        return restoreToBaubleInternal(player, item, slotIndex);
+    }
+
+    /**
+     * 内部方法 - 使用BaublesCompat恢复饰品
+     * 延迟加载，只在Baubles存在时调用
+     */
+    private static boolean restoreToBaubleInternal(EntityPlayer player, ItemStack item, int slotIndex) {
+        ItemStack current = com.adversity.compat.BaublesCompat.getStackInSlot(player, slotIndex);
+
+        if (current.isEmpty()) {
+            com.adversity.compat.BaublesCompat.setStackInSlot(player, slotIndex, item);
+            return true;
+        }
+
+        // Baubles槽位被占用，放入背包
         if (player.inventory.addItemStackToInventory(item)) {
             return true;
         }
