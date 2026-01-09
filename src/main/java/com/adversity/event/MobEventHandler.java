@@ -98,6 +98,18 @@ public class MobEventHandler {
         DamageSource source = event.getSource();
         float damage = event.getAmount();
 
+        // 调试：检查玩家盔甲状态（事件开始时）
+        String armorBefore = null;
+        if (event.getEntityLiving() instanceof net.minecraft.entity.player.EntityPlayer) {
+            net.minecraft.entity.player.EntityPlayer p = (net.minecraft.entity.player.EntityPlayer) event.getEntityLiving();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 4; i++) {
+                if (sb.length() > 0) sb.append(",");
+                sb.append(p.inventory.armorInventory.get(i).isEmpty() ? "空" : p.inventory.armorInventory.get(i).getDisplayName());
+            }
+            armorBefore = sb.toString();
+        }
+
         // 检查攻击者是否有词条
         if (source.getTrueSource() instanceof EntityLiving) {
             EntityLiving attacker = (EntityLiving) source.getTrueSource();
@@ -118,12 +130,27 @@ public class MobEventHandler {
                     }
                     com.adversity.Adversity.LOGGER.info("[MobEvent] 攻击玩家 {} 的怪物词条: {}",
                         event.getEntityLiving().getName(), affixList.toString());
+                    com.adversity.Adversity.LOGGER.info("[MobEvent] 事件开始时盔甲: [{}]", armorBefore);
                 }
 
                 // 处理攻击型词条
                 for (AffixData data : attackerCap.getAllAffixData()) {
                     if (data.isActive() && data.getCooldown() <= 0) {
                         damage = data.getAffix().onAttack(attacker, event.getEntityLiving(), damage, data);
+                    }
+                }
+
+                // 调试：检查玩家盔甲状态（词条处理后）
+                if (event.getEntityLiving() instanceof net.minecraft.entity.player.EntityPlayer) {
+                    net.minecraft.entity.player.EntityPlayer p = (net.minecraft.entity.player.EntityPlayer) event.getEntityLiving();
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < 4; i++) {
+                        if (sb.length() > 0) sb.append(",");
+                        sb.append(p.inventory.armorInventory.get(i).isEmpty() ? "空" : p.inventory.armorInventory.get(i).getDisplayName());
+                    }
+                    String armorAfter = sb.toString();
+                    if (!armorAfter.equals(armorBefore)) {
+                        com.adversity.Adversity.LOGGER.warn("[MobEvent] !!! 盔甲变化 !!! 之前: [{}], 之后: [{}]", armorBefore, armorAfter);
                     }
                 }
             }
