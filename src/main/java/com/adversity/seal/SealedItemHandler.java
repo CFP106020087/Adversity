@@ -4,6 +4,7 @@ import com.adversity.Adversity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -59,10 +60,9 @@ public class SealedItemHandler {
                 long endTime = SealedItemManager.getSealEndTime(stack);
                 Adversity.LOGGER.debug("Found sealed armor in slot {}, endTime={}, currentTime={}", i, endTime, currentTime);
                 if (currentTime >= endTime) {
-                    // 解除封印
-                    SealedItemManager.unsealItem(stack);
-                    // 重新设置到槽位以触发同步
-                    player.inventory.armorInventory.set(i, stack);
+                    // 解除封印 - 创建新的ItemStack确保同步
+                    ItemStack unsealed = SealedItemManager.unsealItem(stack.copy());
+                    player.inventory.armorInventory.set(i, unsealed);
                     anyUnsealed = true;
                     Adversity.LOGGER.info("Unsealed armor in slot {}", i);
                 }
@@ -73,8 +73,8 @@ public class SealedItemHandler {
         ItemStack offhand = player.inventory.offHandInventory.get(0);
         if (SealedItemManager.isSealed(offhand)) {
             if (currentTime >= SealedItemManager.getSealEndTime(offhand)) {
-                SealedItemManager.unsealItem(offhand);
-                player.inventory.offHandInventory.set(0, offhand);
+                ItemStack unsealed = SealedItemManager.unsealItem(offhand.copy());
+                player.inventory.offHandInventory.set(0, unsealed);
                 anyUnsealed = true;
                 Adversity.LOGGER.info("Unsealed offhand item");
             }
@@ -85,8 +85,8 @@ public class SealedItemHandler {
         ItemStack mainhand = player.inventory.mainInventory.get(currentSlot);
         if (SealedItemManager.isSealed(mainhand)) {
             if (currentTime >= SealedItemManager.getSealEndTime(mainhand)) {
-                SealedItemManager.unsealItem(mainhand);
-                player.inventory.mainInventory.set(currentSlot, mainhand);
+                ItemStack unsealed = SealedItemManager.unsealItem(mainhand.copy());
+                player.inventory.mainInventory.set(currentSlot, unsealed);
                 anyUnsealed = true;
                 Adversity.LOGGER.info("Unsealed mainhand item in slot {}", currentSlot);
             }
@@ -98,18 +98,12 @@ public class SealedItemHandler {
             ItemStack stack = player.inventory.mainInventory.get(i);
             if (SealedItemManager.isSealed(stack)) {
                 if (currentTime >= SealedItemManager.getSealEndTime(stack)) {
-                    SealedItemManager.unsealItem(stack);
-                    player.inventory.mainInventory.set(i, stack);
+                    ItemStack unsealed = SealedItemManager.unsealItem(stack.copy());
+                    player.inventory.mainInventory.set(i, unsealed);
                     anyUnsealed = true;
                     Adversity.LOGGER.debug("Unsealed item in inventory slot {}", i);
                 }
             }
-        }
-
-        // 强制同步物品栏到客户端
-        if (anyUnsealed) {
-            player.inventory.markDirty();
-            player.inventoryContainer.detectAndSendChanges();
         }
 
         // 检查Baubles饰品栏
@@ -119,6 +113,16 @@ public class SealedItemHandler {
 
         // 检查并返还虚空存储的物品（湮灭词条）
         boolean anyReturned = checkVoidStorage(player, currentTime);
+
+        // 强制同步物品栏到客户端
+        if (anyUnsealed || anyReturned) {
+            player.inventory.markDirty();
+            if (player instanceof EntityPlayerMP) {
+                // 使用sendContainerToPlayer强制完整同步
+                ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
+            }
+            player.inventoryContainer.detectAndSendChanges();
+        }
 
         // 通知玩家
         if (anyUnsealed) {
@@ -133,7 +137,8 @@ public class SealedItemHandler {
      * 检查并返还虚空存储中的物品
      */
     private static boolean checkVoidStorage(EntityPlayer player, long currentTime) {
-        SealedItemManager manager = SealedItemManager.get(player.world);
+        // 使用主世界的存储以避免跨维度问题
+        SealedItemManager manager = SealedItemManager.get(player.getServer().getWorld(0));
         java.util.List<SealedItemManager.VoidStoredItem> returnItems = manager.getReturnableItems(player, currentTime);
 
         if (returnItems.isEmpty()) {
@@ -142,13 +147,9 @@ public class SealedItemHandler {
 
         for (SealedItemManager.VoidStoredItem item : returnItems) {
             returnItemToPlayer(player, item);
-            Adversity.LOGGER.debug("Returned void item {} to player {}",
+            Adversity.LOGGER.info("Returned void item {} to player {}",
                 item.stack.getDisplayName(), player.getName());
         }
-
-        // 强制同步物品栏到客户端
-        player.inventory.markDirty();
-        player.inventoryContainer.detectAndSendChanges();
 
         return true;
     }

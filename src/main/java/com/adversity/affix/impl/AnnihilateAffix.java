@@ -98,8 +98,8 @@ public class AnnihilateAffix extends AbstractAffix {
         // 计算返还时间
         long returnTime = player.world.getTotalWorldTime() + BASE_RETURN_TIME + (tier * 200);
 
-        // 存入虚空
-        SealedItemManager manager = SealedItemManager.get(player.world);
+        // 存入虚空 - 使用主世界存储以避免跨维度问题
+        SealedItemManager manager = SealedItemManager.get(player.getServer().getWorld(0));
         manager.storeInVoid(player, targetItem, returnTime, targetSlot);
 
         // 从背包移除
