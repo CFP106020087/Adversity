@@ -88,9 +88,13 @@ public class ShackleAffix extends AbstractAffix {
             return;
         }
 
-        // 收集可封印的装备槽
+        // 收集可封印的装备槽（排除主手）
         List<EntityEquipmentSlot> availableSlots = new ArrayList<>();
         for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
+            // 排除主手 - 主手操作可能导致物品栏同步问题
+            if (slot == EntityEquipmentSlot.MAINHAND) {
+                continue;
+            }
             ItemStack stack = player.getItemStackFromSlot(slot);
             if (!stack.isEmpty() && !(stack.getItem() instanceof ItemSealedToken)) {
                 availableSlots.add(slot);
