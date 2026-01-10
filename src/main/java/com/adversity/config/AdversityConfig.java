@@ -640,10 +640,16 @@ public class AdversityConfig {
         public boolean enableMobTierDisplay = true;
 
         @Config.Comment({
-            "Enable affix icons on elite mobs",
-            "在精英怪物上显示词条图标"
+            "Enable health bar display above elite mobs",
+            "在精英怪物头顶显示血条"
         })
-        public boolean enableAffixIcons = true;
+        public boolean enableHealthBar = true;
+
+        @Config.Comment({
+            "Enable affix names display above elite mobs",
+            "在精英怪物头顶显示词条名称"
+        })
+        public boolean enableAffixDisplay = true;
 
         @Config.Comment({
             "HUD position: TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT",
