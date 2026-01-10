@@ -21,7 +21,7 @@ public class ItemAffixEssence extends Item {
 
     public ItemAffixEssence() {
         setRegistryName(Adversity.MODID, "affix_essence");
-        setTranslationKey(Adversity.MODID + ".affix_essence");
+        setUnlocalizedName(Adversity.MODID + ".affix_essence");
         setCreativeTab(AdversityTab.INSTANCE);
         setMaxStackSize(64);
     }

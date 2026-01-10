@@ -35,7 +35,7 @@ public class ItemRedemptionTear extends Item {
 
     public ItemRedemptionTear() {
         setRegistryName(Adversity.MODID, "redemption_tear");
-        setTranslationKey(Adversity.MODID + ".redemption_tear");
+        setUnlocalizedName(Adversity.MODID + ".redemption_tear");
         setCreativeTab(AdversityTab.INSTANCE);
         setMaxStackSize(16);
     }

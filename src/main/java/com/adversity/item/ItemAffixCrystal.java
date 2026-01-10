@@ -22,7 +22,7 @@ public class ItemAffixCrystal extends Item {
 
     public ItemAffixCrystal() {
         setRegistryName(Adversity.MODID, "affix_crystal");
-        setTranslationKey(Adversity.MODID + ".affix_crystal");
+        setUnlocalizedName(Adversity.MODID + ".affix_crystal");
         setCreativeTab(AdversityTab.INSTANCE);
         setMaxStackSize(64);
     }

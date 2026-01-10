@@ -22,7 +22,7 @@ public class ItemVoidShard extends Item {
 
     public ItemVoidShard() {
         setRegistryName(Adversity.MODID, "void_shard");
-        setTranslationKey(Adversity.MODID + ".void_shard");
+        setUnlocalizedName(Adversity.MODID + ".void_shard");
         setCreativeTab(AdversityTab.INSTANCE);
         setMaxStackSize(64);
     }

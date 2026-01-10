@@ -33,7 +33,7 @@ public class ItemSealedToken extends Item {
 
     public ItemSealedToken() {
         setRegistryName(Adversity.MODID, "sealed_token");
-        setTranslationKey(Adversity.MODID + ".sealed_token");
+        setUnlocalizedName(Adversity.MODID + ".sealed_token");
         setMaxStackSize(1);
         setMaxDamage(100);  // 用于显示耐久条
         setCreativeTab(CreativeTabs.MISC);

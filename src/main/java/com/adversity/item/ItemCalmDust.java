@@ -35,7 +35,7 @@ public class ItemCalmDust extends Item {
 
     public ItemCalmDust() {
         setRegistryName(Adversity.MODID, "calm_dust");
-        setTranslationKey(Adversity.MODID + ".calm_dust");
+        setUnlocalizedName(Adversity.MODID + ".calm_dust");
         setCreativeTab(AdversityTab.INSTANCE);
         setMaxStackSize(16);
     }

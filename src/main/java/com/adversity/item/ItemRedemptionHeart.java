@@ -35,7 +35,7 @@ public class ItemRedemptionHeart extends Item {
 
     public ItemRedemptionHeart() {
         setRegistryName(Adversity.MODID, "redemption_heart");
-        setTranslationKey(Adversity.MODID + ".redemption_heart");
+        setUnlocalizedName(Adversity.MODID + ".redemption_heart");
         setCreativeTab(AdversityTab.INSTANCE);
         setMaxStackSize(16);
     }
