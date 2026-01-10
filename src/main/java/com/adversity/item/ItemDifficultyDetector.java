@@ -53,7 +53,7 @@ public class ItemDifficultyDetector extends Item {
 
     public ItemDifficultyDetector() {
         setRegistryName(Adversity.MODID, "difficulty_detector");
-        setUnlocalizedName(Adversity.MODID + ".difficulty_detector");
+        setTranslationKey(Adversity.MODID + ".difficulty_detector");
         setCreativeTab(AdversityTab.INSTANCE);
         setMaxStackSize(1);
         setMaxDamage(0); // 无耐久消耗

@@ -35,7 +35,7 @@ public class ItemRedemptionKey extends Item {
 
     public ItemRedemptionKey() {
         setRegistryName(Adversity.MODID, "redemption_key");
-        setUnlocalizedName(Adversity.MODID + ".redemption_key");
+        setTranslationKey(Adversity.MODID + ".redemption_key");
         setCreativeTab(AdversityTab.INSTANCE);
         setMaxStackSize(16);
     }
