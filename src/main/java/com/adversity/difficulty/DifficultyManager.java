@@ -178,11 +178,31 @@ public class DifficultyManager {
     // ==================== 属性缩放计算 ====================
 
     /**
-     * 计算生命值倍率
+     * 计算生命值倍率（使用服务器配置）
      */
     public static double calculateHealthMultiplier(float difficulty) {
+        return calculateHealthMultiplier(difficulty, null);
+    }
+
+    /**
+     * 计算生命值倍率（支持玩家个人设置）
+     */
+    public static double calculateHealthMultiplier(float difficulty, @Nullable EntityPlayer player) {
+        ScalingFormula.ScalingMode mode = healthMode;
+
+        // 检查玩家是否有自定义缩放模式
+        if (player != null) {
+            IPlayerDifficulty playerDiff = CapabilityHandler.getPlayerDifficulty(player);
+            if (playerDiff != null) {
+                IPlayerDifficulty.ScalingMode playerMode = playerDiff.getHealthScalingMode();
+                if (playerMode != IPlayerDifficulty.ScalingMode.DEFAULT) {
+                    mode = convertScalingMode(playerMode);
+                }
+            }
+        }
+
         return ScalingFormula.calculate(
-            healthMode,
+            mode,
             AdversityConfig.statScaling.healthBase,
             difficulty,
             AdversityConfig.statScaling.healthRate,
@@ -192,17 +212,59 @@ public class DifficultyManager {
     }
 
     /**
-     * 计算攻击力倍率
+     * 计算攻击力倍率（使用服务器配置）
      */
     public static double calculateDamageMultiplier(float difficulty) {
+        return calculateDamageMultiplier(difficulty, null);
+    }
+
+    /**
+     * 计算攻击力倍率（支持玩家个人设置）
+     */
+    public static double calculateDamageMultiplier(float difficulty, @Nullable EntityPlayer player) {
+        ScalingFormula.ScalingMode mode = damageMode;
+
+        // 检查玩家是否有自定义缩放模式
+        if (player != null) {
+            IPlayerDifficulty playerDiff = CapabilityHandler.getPlayerDifficulty(player);
+            if (playerDiff != null) {
+                IPlayerDifficulty.ScalingMode playerMode = playerDiff.getDamageScalingMode();
+                if (playerMode != IPlayerDifficulty.ScalingMode.DEFAULT) {
+                    mode = convertScalingMode(playerMode);
+                }
+            }
+        }
+
         return ScalingFormula.calculate(
-            damageMode,
+            mode,
             AdversityConfig.statScaling.damageBase,
             difficulty,
             AdversityConfig.statScaling.damageRate,
             AdversityConfig.statScaling.damagePower,
             AdversityConfig.statScaling.damageMax
         );
+    }
+
+    /**
+     * 将玩家缩放模式转换为公式缩放模式
+     */
+    private static ScalingFormula.ScalingMode convertScalingMode(IPlayerDifficulty.ScalingMode playerMode) {
+        switch (playerMode) {
+            case LINEAR:
+                return ScalingFormula.ScalingMode.LINEAR;
+            case EXPONENTIAL:
+                return ScalingFormula.ScalingMode.EXPONENTIAL;
+            case COMPOUND:
+                return ScalingFormula.ScalingMode.COMPOUND;
+            case POLYNOMIAL:
+                return ScalingFormula.ScalingMode.POLYNOMIAL;
+            case LOGARITHMIC:
+                return ScalingFormula.ScalingMode.LOGARITHMIC;
+            case SIGMOID:
+                return ScalingFormula.ScalingMode.SIGMOID;
+            default:
+                return healthMode; // 默认回退到服务器配置
+        }
     }
 
     /**
@@ -345,7 +407,7 @@ public class DifficultyManager {
 
         // 只有精英才应用属性修正和词条
         if (tier > 0) {
-            applyStatModifiers(entity, cap, difficulty);
+            applyStatModifiers(entity, cap, difficulty, nearestPlayer);
             applyAffixes(entity, cap, difficulty, tier);
         }
 
@@ -377,10 +439,11 @@ public class DifficultyManager {
     /**
      * 应用属性修正
      */
-    private static void applyStatModifiers(EntityLiving entity, IAdversityCapability cap, float difficulty) {
-        // 计算各项属性
-        double healthMult = calculateHealthMultiplier(difficulty);
-        double damageMult = calculateDamageMultiplier(difficulty);
+    private static void applyStatModifiers(EntityLiving entity, IAdversityCapability cap, float difficulty,
+                                          @Nullable EntityPlayer nearestPlayer) {
+        // 计算各项属性（使用玩家的个人缩放设置）
+        double healthMult = calculateHealthMultiplier(difficulty, nearestPlayer);
+        double damageMult = calculateDamageMultiplier(difficulty, nearestPlayer);
         double armorBonus = calculateArmorBonus(difficulty);
 
         cap.setHealthMultiplier((float) healthMult);
