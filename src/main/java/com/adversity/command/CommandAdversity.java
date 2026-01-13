@@ -24,7 +24,7 @@ import java.util.Locale;
  *
  * 用法 (玩家调整自己，无需权限):
  *   /adversity                                    - 查看自己的难度状态
- *   /adversity set <0.0-2.0>                     - 设置自己的难度倍率
+ *   /adversity set <0.0-6.0>                     - 设置自己的难度倍率
  *   /adversity preset <预设>                     - 使用预设
  *   /adversity disable                           - 禁用自己的难度系统
  *   /adversity enable                            - 启用自己的难度系统
@@ -33,7 +33,7 @@ import java.util.Locale;
  *   /adversity damage <模式>                     - 设置伤害增长模式
  *
  * 用法 (OP调整他人):
- *   /adversity <玩家名> set <0.0-2.0>            - 设置指定玩家的难度倍率
+ *   /adversity <玩家名> set <0.0-6.0>            - 设置指定玩家的难度倍率
  *   /adversity <玩家名> preset <预设>            - 为指定玩家使用预设
  *   /adversity <玩家名> disable                  - 为指定玩家禁用难度
  *   /adversity <玩家名> enable                   - 为指定玩家启用难度
@@ -150,9 +150,9 @@ public class CommandAdversity extends CommandBase {
         switch (subcommand) {
             case "set":
                 if (args.length <= valueIndex) {
-                    throw new CommandException("Usage: /adversity " + (isAdmin ? "<player> " : "") + "set <0.0-2.0>");
+                    throw new CommandException("Usage: /adversity " + (isAdmin ? "<player> " : "") + "set <0.0-6.0>");
                 }
-                float multiplier = (float) parseDouble(args[valueIndex], 0.0, 2.0);
+                float multiplier = (float) parseDouble(args[valueIndex], 0.0, 6.0);
                 cap.setDifficultyMultiplier(multiplier);
                 notifySuccess(sender, target, "难度倍率设为 " + formatMultiplier(multiplier), isAdmin);
                 break;
