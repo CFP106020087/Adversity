@@ -20,7 +20,7 @@ public class PlayerDifficulty implements IPlayerDifficulty {
 
     @Override
     public void setDifficultyMultiplier(float multiplier) {
-        this.difficultyMultiplier = Math.max(0.0f, Math.min(2.0f, multiplier));
+        this.difficultyMultiplier = Math.max(0.0f, Math.min(6.0f, multiplier));
     }
 
     @Override

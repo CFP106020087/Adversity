@@ -196,6 +196,7 @@ public class ItemSealedToken extends Item {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public double getDurabilityForDisplay(ItemStack stack) {
         // 返回已消耗的比例 (0.0 = 满, 1.0 = 空)
         World world = net.minecraft.client.Minecraft.getMinecraft().world;
@@ -206,6 +207,7 @@ public class ItemSealedToken extends Item {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public int getRGBDurabilityForDisplay(ItemStack stack) {
         // 紫色耐久条
         return 0x8B00FF;
