@@ -78,6 +78,15 @@ public class FieryAffix extends AbstractAffix {
     }
 
     @Override
+    public float onHurt(EntityLiving entity, net.minecraft.util.DamageSource source, float damage, IAffixData data) {
+        // 烈焰词条的怪物免疫火焰伤害
+        if (source.isFireDamage()) {
+            return 0;
+        }
+        return damage;
+    }
+
+    @Override
     public float onAttack(EntityLiving attacker, EntityLivingBase target, float damage, IAffixData data) {
         if (!(target instanceof EntityPlayer)) {
             // 对非玩家目标：只点燃

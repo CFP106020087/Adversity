@@ -20,9 +20,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class DifficultyHUD {
 
-    // HUD位置偏移
-    private static final int MARGIN_X = 5;
-    private static final int MARGIN_Y = 5;
+    // HUD位置枚举
+    public enum HudPosition {
+        TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
+    }
 
     // 缓存的难度值（避免每帧重新计算）
     private static float cachedDifficulty = 0;
@@ -83,6 +84,18 @@ public class DifficultyHUD {
     }
 
     /**
+     * 解析HUD位置配置
+     */
+    private HudPosition parseHudPosition() {
+        String pos = AdversityConfig.clientSettings.hudPosition.toUpperCase();
+        try {
+            return HudPosition.valueOf(pos);
+        } catch (IllegalArgumentException e) {
+            return HudPosition.TOP_LEFT;
+        }
+    }
+
+    /**
      * 渲染难度HUD
      */
     private void renderDifficultyHUD(Minecraft mc, ScaledResolution resolution) {
@@ -100,13 +113,41 @@ public class DifficultyHUD {
             diffLabel
         );
 
-        // 计算位置（左上角）
-        int x = MARGIN_X;
-        int y = MARGIN_Y;
+        // 获取配置
+        HudPosition position = parseHudPosition();
+        int offsetX = AdversityConfig.clientSettings.hudOffsetX;
+        int offsetY = AdversityConfig.clientSettings.hudOffsetY;
 
-        // 渲染背景
+        // 计算HUD尺寸
         int bgWidth = Math.max(font.getStringWidth(line1), font.getStringWidth(line2)) + 8;
         int bgHeight = 22;
+
+        // 根据位置配置计算坐标
+        int screenWidth = resolution.getScaledWidth();
+        int screenHeight = resolution.getScaledHeight();
+        int x, y;
+
+        switch (position) {
+            case TOP_RIGHT:
+                x = screenWidth - bgWidth - offsetX;
+                y = offsetY;
+                break;
+            case BOTTOM_LEFT:
+                x = offsetX;
+                y = screenHeight - bgHeight - offsetY;
+                break;
+            case BOTTOM_RIGHT:
+                x = screenWidth - bgWidth - offsetX;
+                y = screenHeight - bgHeight - offsetY;
+                break;
+            case TOP_LEFT:
+            default:
+                x = offsetX;
+                y = offsetY;
+                break;
+        }
+
+        // 渲染背景
         drawRect(x - 2, y - 2, x + bgWidth, y + bgHeight, 0x80000000);
 
         // 渲染难度条

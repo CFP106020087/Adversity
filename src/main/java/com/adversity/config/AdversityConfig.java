@@ -656,6 +656,20 @@ public class AdversityConfig {
             "HUD位置: TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT"
         })
         public String hudPosition = "TOP_LEFT";
+
+        @Config.Comment({
+            "HUD X offset from the edge (positive = towards center)",
+            "HUD距离边缘的X偏移量（正值 = 向中心移动）"
+        })
+        @Config.RangeInt(min = 0, max = 500)
+        public int hudOffsetX = 5;
+
+        @Config.Comment({
+            "HUD Y offset from the edge (positive = towards center)",
+            "HUD距离边缘的Y偏移量（正值 = 向中心移动）"
+        })
+        @Config.RangeInt(min = 0, max = 500)
+        public int hudOffsetY = 5;
     }
 
     // ==================== 战利品设置 ====================
