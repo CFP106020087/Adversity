@@ -185,6 +185,9 @@ public class PermanentCurseManager extends WorldSavedData {
 
     // ==================== 黑棺 (背包封印) ====================
 
+    /** 快捷栏封印ban阈值：必须封印完所有36个槽位（包括快捷栏）才会ban */
+    private static final int HOTBAR_BAN_THRESHOLD = 36;
+
     /**
      * 增加黑棺诅咒（封印背包槽位）
      * @return 是否应该ban玩家
@@ -195,11 +198,11 @@ public class PermanentCurseManager extends WorldSavedData {
 
         int currentSealed = data.blackCoffinSealed;
         int newSealed = currentSealed + getBlackCoffinSlotsAmount();
-        int banThreshold = getBlackCoffinBanThreshold();
+        int warningThreshold = getBlackCoffinBanThreshold();
 
-        // 检查是否达到ban阈值
-        if (newSealed >= banThreshold) {
-            data.blackCoffinSealed = banThreshold;
+        // 检查是否达到ban阈值（必须封印完快捷栏，即全部36个槽位）
+        if (newSealed >= HOTBAR_BAN_THRESHOLD) {
+            data.blackCoffinSealed = HOTBAR_BAN_THRESHOLD;
             data.banned = true;
             data.banReason = "black_coffin";
             markDirty();
@@ -209,8 +212,8 @@ public class PermanentCurseManager extends WorldSavedData {
         data.blackCoffinSealed = newSealed;
         markDirty();
 
-        // 发送警告（从第一次触发就开始警告）
-        sendWarning(player, "black_coffin", (float) newSealed / banThreshold);
+        // 发送警告（从第一次触发就开始警告，使用配置的阈值计算百分比）
+        sendWarning(player, "black_coffin", (float) newSealed / HOTBAR_BAN_THRESHOLD);
 
         return false;
     }

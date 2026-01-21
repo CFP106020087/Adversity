@@ -563,11 +563,13 @@ public class AdversityConfig {
         public int blackCoffinSlotsPerTrigger = 1;
 
         @Config.Comment({
-            "Ban threshold for Black Coffin (number of sealed slots to trigger ban)",
-            "黑棺的封禁阈值（封印多少槽位时触发封禁）"
+            "[Deprecated] Black Coffin now bans only when all 36 slots (including hotbar) are sealed",
+            "[已弃用] 黑棺现在仅在全部36个槽位（包括快捷栏）都被封印时才会封禁玩家",
+            "This config is kept for backward compatibility but has no effect",
+            "此配置保留用于向后兼容，但不再生效"
         })
         @Config.RangeInt(min = 9, max = 36)
-        public int blackCoffinBanThreshold = 27;
+        public int blackCoffinBanThreshold = 36;
     }
 
     // ==================== 梦魇设置 ====================
