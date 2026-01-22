@@ -153,14 +153,14 @@ public class PlayerDebuffManager {
                 DebuffData data = entry.getValue();
                 data.remainingTicks--;
 
-                // 层数随时间自然衰减
+                // 层数随时间自然衰减 - 独立于remainingTicks
+                // 只要距离上次被命中超过衰减间隔，就减少层数
                 DebuffType type = entry.getKey();
-                if (type.getDecayInterval() > 0 && data.remainingTicks > 0) {
+                if (type.getDecayInterval() > 0) {
+                    data.ticksSinceLastHit++;
                     if (data.ticksSinceLastHit >= type.getDecayInterval()) {
                         data.stacks = Math.max(0, data.stacks - 1);
-                        data.ticksSinceLastHit = 0;
-                    } else {
-                        data.ticksSinceLastHit++;
+                        data.ticksSinceLastHit = 0; // 重置计时器，准备下一次衰减
                     }
                 }
 

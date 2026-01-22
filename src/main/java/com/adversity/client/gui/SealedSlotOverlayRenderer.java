@@ -115,45 +115,27 @@ public class SealedSlotOverlayRenderer {
     }
 
     /**
-     * Render a sealed slot with gray background and red X
+     * Render a sealed slot using texture
      */
     private static void renderSealedSlot(int x, int y) {
+        Minecraft mc = Minecraft.getMinecraft();
+
         GlStateManager.pushMatrix();
-        GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
         GlStateManager.disableDepth();
         GlStateManager.disableLighting();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        // Draw dark gray background (makes slot look disabled)
-        Gui.drawRect(x, y, x + 16, y + 16, 0xCC333333);
+        // Bind and render the sealed slot texture
+        mc.getTextureManager().bindTexture(SEAL_OVERLAY);
 
-        // Draw red X with thicker lines
-        int redColor = 0xFFDD2222;
-
-        // Draw X using thick diagonal lines
-        for (int i = 0; i < 14; i++) {
-            int thickness = 2;
-            // Top-left to bottom-right diagonal
-            Gui.drawRect(x + 1 + i, y + 1 + i, x + 1 + i + thickness, y + 1 + i + thickness, redColor);
-            // Top-right to bottom-left diagonal
-            Gui.drawRect(x + 15 - i - thickness, y + 1 + i, x + 15 - i, y + 1 + i + thickness, redColor);
-        }
-
-        // Draw border to make it more visible
-        int borderColor = 0xFF880000;
-        // Top border
-        Gui.drawRect(x, y, x + 16, y + 1, borderColor);
-        // Bottom border
-        Gui.drawRect(x, y + 15, x + 16, y + 16, borderColor);
-        // Left border
-        Gui.drawRect(x, y, x + 1, y + 16, borderColor);
-        // Right border
-        Gui.drawRect(x + 15, y, x + 16, y + 16, borderColor);
+        // Draw the texture (16x16 to match slot size)
+        Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, 16, 16, 16, 16);
 
         GlStateManager.enableLighting();
         GlStateManager.enableDepth();
         GlStateManager.disableBlend();
-        GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();
     }
 

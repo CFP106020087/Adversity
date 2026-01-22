@@ -43,6 +43,41 @@ public interface IPlayerDifficulty {
      */
     void resetKillCount();
 
+    // ==================== 玩家个人缩放设置 ====================
+
+    /**
+     * 缩放模式枚举
+     */
+    enum ScalingMode {
+        DEFAULT,      // 使用服务器配置
+        LINEAR,       // 线性增长
+        EXPONENTIAL,  // 指数增长
+        COMPOUND,     // 复合增长
+        POLYNOMIAL,   // 多项式增长
+        LOGARITHMIC,  // 对数增长
+        SIGMOID       // S型曲线
+    }
+
+    /**
+     * 获取生命值缩放模式
+     */
+    ScalingMode getHealthScalingMode();
+
+    /**
+     * 设置生命值缩放模式
+     */
+    void setHealthScalingMode(ScalingMode mode);
+
+    /**
+     * 获取伤害缩放模式
+     */
+    ScalingMode getDamageScalingMode();
+
+    /**
+     * 设置伤害缩放模式
+     */
+    void setDamageScalingMode(ScalingMode mode);
+
     /**
      * 序列化
      */

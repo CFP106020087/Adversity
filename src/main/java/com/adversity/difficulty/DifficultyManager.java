@@ -162,7 +162,7 @@ public class DifficultyManager {
     /**
      * 应用玩家的难度倍率
      */
-    private static float applyPlayerMultiplier(float baseDifficulty, @Nullable EntityPlayer player) {
+    public static float applyPlayerMultiplier(float baseDifficulty, @Nullable EntityPlayer player) {
         if (player == null) {
             return baseDifficulty;
         }

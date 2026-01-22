@@ -41,17 +41,38 @@ public class DebuffEventHandler {
         }
     }
 
+    /** Debuff效果应用间隔 - 优化性能 */
+    private static final int DEBUFF_CHECK_INTERVAL = 4;  // 每4tick检查一次 (5次/秒)
+
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
         if (event.player.world.isRemote) return;
+        if (event.player.ticksExisted % DEBUFF_CHECK_INTERVAL != 0) return;  // 优化：不是每tick都运行
 
         EntityPlayer player = event.player;
         Map<DebuffType, PlayerDebuffManager.DebuffData> debuffs = PlayerDebuffManager.getAllDebuffs(player);
 
+        // 如果没有debuff，直接返回
+        if (debuffs.isEmpty()) return;
+
+        // 离开怪物后debuff自动清除的距离阈值
+        final double MAX_SOURCE_DISTANCE = 30.0;
+
         for (Map.Entry<DebuffType, PlayerDebuffManager.DebuffData> entry : debuffs.entrySet()) {
             DebuffType type = entry.getKey();
             PlayerDebuffManager.DebuffData data = entry.getValue();
+
+            // 检查来源实体是否还存在且在范围内
+            net.minecraft.entity.Entity source = player.world.getEntityByID(data.sourceEntityId);
+            if (source == null || !source.isEntityAlive() || player.getDistance(source) > MAX_SOURCE_DISTANCE) {
+                // 来源不存在、已死亡或太远 - 加速衰减（每次减少2层）
+                data.stacks = Math.max(0, data.stacks - 2);
+                if (data.stacks <= 0) {
+                    PlayerDebuffManager.removeDebuff(player, type);
+                    continue;
+                }
+            }
 
             // 应用debuff效果
             applyDebuffEffect(player, type, data);

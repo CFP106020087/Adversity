@@ -32,11 +32,15 @@ public class DistanceDifficultyProvider implements IDifficultyProvider {
         double distance = Math.sqrt(dx * dx + dz * dz);
 
         // 从配置读取参数
+        double safeDistance = AdversityConfig.difficultySource.safeDistance;
         double blocksPerDifficulty = AdversityConfig.difficultySource.blocksPerDifficulty;
         double maxDifficulty = AdversityConfig.difficultySource.maxDistanceDifficulty;
 
+        // 减去安全距离
+        double effectiveDistance = Math.max(0, distance - safeDistance);
+
         // 计算难度
-        float difficulty = (float) (distance / blocksPerDifficulty);
+        float difficulty = (float) (effectiveDistance / blocksPerDifficulty);
 
         // 应用上限（0 表示无上限）
         if (maxDifficulty > 0) {
@@ -47,7 +51,7 @@ public class DistanceDifficultyProvider implements IDifficultyProvider {
 
     @Override
     public boolean isApplicable(World world, BlockPos pos, @Nullable EntityPlayer player) {
-        // 在主世界生效
-        return world.provider.getDimension() == 0;
+        // 在所有维度生效（包括模组维度）
+        return true;
     }
 }

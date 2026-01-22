@@ -102,6 +102,25 @@ public class AdversityConfig {
     }
 
     // ==================== 难度来源 ====================
+    //
+    // === 难度计算公式 / DIFFICULTY CALCULATION FORMULA ===
+    //
+    // 最终难度 = (距离难度 × 距离权重) + (时间难度 × 时间权重)
+    // Final Difficulty = (Distance Difficulty × distanceWeight) + (Time Difficulty
+    // × timeWeight)
+    //
+    // 距离难度 = max(0, (distance - safeDistance) / blocksPerDifficulty)
+    // Distance Difficulty = max(0, (distance_from_origin - safeDistance) /
+    // blocksPerDifficulty)
+    //
+    // 时间难度 = worldTime / (daysPerDifficulty × 24000)
+    // Time Difficulty = worldTimeInTicks / (daysPerDifficulty × 24000)
+    //
+    // 示例 / Example:
+    // 距离2000格, 安全距离500, blocksPerDifficulty=500 → 距离难度 = (2000-500)/500 = 3
+    // 游戏第4天, daysPerDifficulty=2 → 时间难度 = 4/2 = 2
+    // 最终难度 = 3×1.0 + 2×1.0 = 5
+    //
 
     public static class DifficultySource {
 
@@ -134,7 +153,7 @@ public class AdversityConfig {
             "每过多少天增加 1 点难度"
         })
         @Config.RangeDouble(min = 0.5, max = 100)
-        public double daysPerDifficulty = 5;
+        public double daysPerDifficulty = 2; // 更快的时间增长 (原值: 5)
 
         @Config.Comment({
             "Maximum difficulty from time (0 = no limit)",

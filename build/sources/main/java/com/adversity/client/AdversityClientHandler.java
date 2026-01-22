@@ -2,6 +2,7 @@ package com.adversity.client;
 
 import com.adversity.affix.AffixRegistry;
 import com.adversity.affix.IAffix;
+import com.adversity.config.AdversityConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
@@ -18,7 +19,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -116,7 +116,6 @@ public class AdversityClientHandler {
     private Entity rayTraceEntities(Minecraft mc, Vec3d start, Vec3d end) {
         Entity result = null;
         double closestDistance = Double.MAX_VALUE;
-        Vec3d direction = end.subtract(start).normalize();
 
         for (Entity entity : mc.world.loadedEntityList) {
             if (!(entity instanceof EntityLiving)) continue;
@@ -276,18 +275,31 @@ public class AdversityClientHandler {
      */
     private void renderAffixInfo(EntityLiving entity, ClientAdversityCache.CachedEntityData data,
                                   double x, double y, double z) {
+        // 检查是否启用显示
+        if (!AdversityConfig.clientSettings.enableMobTierDisplay) {
+            return;
+        }
+
         Minecraft mc = Minecraft.getMinecraft();
         FontRenderer fontRenderer = mc.fontRenderer;
 
-        // 计算渲染位置（在实体上方）
-        float height = entity.height + 0.5f;
+        // 检查各项显示开关
+        boolean showHealthBar = AdversityConfig.clientSettings.enableHealthBar;
+        boolean showAffixes = AdversityConfig.clientSettings.enableAffixDisplay;
+
+        // 计算渲染位置（在实体头顶上方，避免遮挡脸部）
+        // 基础高度 = 实体高度 + 额外偏移
+        float heightOffset = entity.height + 0.5f;
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y + height + 0.3, z);
+        GlStateManager.translate(x, y + heightOffset, z);
         GlStateManager.glNormal3f(0.0f, 1.0f, 0.0f);
         GlStateManager.rotate(-mc.getRenderManager().playerViewY, 0.0f, 1.0f, 0.0f);
         GlStateManager.rotate((mc.gameSettings.thirdPersonView == 2 ? -1 : 1) * mc.getRenderManager().playerViewX, 1.0f, 0.0f, 0.0f);
-        GlStateManager.scale(-0.025f, -0.025f, 0.025f);
+
+        // 使用较小的缩放，避免UI过大
+        GlStateManager.scale(-0.02f, -0.02f, 0.02f);
+
         GlStateManager.disableLighting();
         GlStateManager.depthMask(false);
         GlStateManager.disableDepth();
@@ -298,36 +310,45 @@ public class AdversityClientHandler {
             GlStateManager.SourceFactor.ONE,
             GlStateManager.DestFactor.ZERO
         );
-        GlStateManager.disableTexture2D();
 
-        // 渲染血条
-        renderHealthBar(entity, data);
+        // 计算Y位置（从上到下排列）
+        // 血条在最上面，然后是等级名，最后是词条
+        int currentY = 0;
 
-        GlStateManager.enableTexture2D();
+        // 渲染血条（如果启用）
+        if (showHealthBar) {
+            GlStateManager.disableTexture2D();
+            renderHealthBar(entity, data, currentY);
+            GlStateManager.enableTexture2D();
+            currentY += 8; // 血条高度 + 间距
+        }
 
-        // 构建显示文本 - 等级名称（如 Elite, Rare, Epic, Boss）
+        // 构建显示文本 - 等级名称
         TextFormatting tierColor = getTierColor(data.tier);
         String tierName = getTierName(data.tier);
         String tierStr = tierColor + "★ " + tierName + " ★";
 
         // 绘制等级文本
         int tierWidth = fontRenderer.getStringWidth(tierStr);
-        fontRenderer.drawString(tierStr, -tierWidth / 2, -12, 0xFFFFFF);
+        fontRenderer.drawString(tierStr, -tierWidth / 2, currentY, 0xFFFFFF);
+        currentY += 10; // 文字高度 + 间距
 
-        // 绘制词条名称
-        List<ResourceLocation> affixIds = data.affixIds;
-        if (!affixIds.isEmpty()) {
-            StringBuilder affixText = new StringBuilder();
-            for (int i = 0; i < affixIds.size(); i++) {
-                IAffix affix = AffixRegistry.getAffix(affixIds.get(i));
-                if (affix != null) {
-                    if (i > 0) affixText.append(" ");
-                    affixText.append(getAffixColor(affix)).append(affix.getDisplayName());
+        // 绘制词条名称（如果启用）
+        if (showAffixes) {
+            List<ResourceLocation> affixIds = data.affixIds;
+            if (!affixIds.isEmpty()) {
+                StringBuilder affixText = new StringBuilder();
+                for (int i = 0; i < affixIds.size(); i++) {
+                    IAffix affix = AffixRegistry.getAffix(affixIds.get(i));
+                    if (affix != null) {
+                        if (i > 0) affixText.append(" ");
+                        affixText.append(getAffixColor(affix)).append(affix.getDisplayName());
+                    }
                 }
+                String affixStr = affixText.toString();
+                int affixWidth = fontRenderer.getStringWidth(affixStr);
+                fontRenderer.drawString(affixStr, -affixWidth / 2, currentY, 0xFFFFFF);
             }
-            String affixStr = affixText.toString();
-            int affixWidth = fontRenderer.getStringWidth(affixStr);
-            fontRenderer.drawString(affixStr, -affixWidth / 2, 0, 0xFFFFFF);
         }
 
         GlStateManager.enableDepth();
@@ -340,13 +361,13 @@ public class AdversityClientHandler {
 
     /**
      * 渲染血条
+     * @param yOffset Y偏移量
      */
-    private void renderHealthBar(EntityLiving entity, ClientAdversityCache.CachedEntityData data) {
+    private void renderHealthBar(EntityLiving entity, ClientAdversityCache.CachedEntityData data, int yOffset) {
         float healthPercent = entity.getHealth() / entity.getMaxHealth();
         healthPercent = Math.max(0, Math.min(1, healthPercent));
 
         float halfWidth = HEALTH_BAR_WIDTH / 2;
-        float yOffset = -20;
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();

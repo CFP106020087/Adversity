@@ -1,6 +1,7 @@
 package com.adversity;
 
 import com.adversity.command.CommandAdversity;
+import com.adversity.command.CommandSummonElite;
 import com.adversity.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -56,6 +57,7 @@ public class Adversity {
     public void serverStarting(FMLServerStartingEvent event) {
         // 注册指令
         event.registerServerCommand(new CommandAdversity());
+        event.registerServerCommand(new CommandSummonElite());
         LOGGER.info("Adversity commands registered");
     }
 }

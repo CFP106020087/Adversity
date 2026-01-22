@@ -47,6 +47,9 @@ public class ItemRegistry {
     @GameRegistry.ObjectHolder(Adversity.MODID + ":sealed_token")
     public static final Item SEALED_TOKEN = null;
 
+    @GameRegistry.ObjectHolder(Adversity.MODID + ":affix_guide")
+    public static final Item AFFIX_GUIDE = null;
+
     /**
      * 物品注册事件 - 在游戏启动时自动调用
      */
@@ -76,7 +79,10 @@ public class ItemRegistry {
             new ItemRedemptionKey(),     // 赎罪之钥 - 解封黑棺封印槽位
 
             // 封印令牌 - 装备被封印时生成的物品
-            new ItemSealedToken()
+                new ItemSealedToken(),
+
+                // 词条指南 - 模组手册
+                new ItemAffixGuide()
         );
 
         Adversity.LOGGER.info("Adversity items registered");
@@ -97,6 +103,7 @@ public class ItemRegistry {
         registerItemModel(REDEMPTION_HEART);
         registerItemModel(REDEMPTION_KEY);
         registerItemModel(SEALED_TOKEN);
+        registerItemModel(AFFIX_GUIDE);
     }
 
     @SideOnly(Side.CLIENT)

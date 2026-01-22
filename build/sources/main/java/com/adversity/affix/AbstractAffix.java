@@ -9,6 +9,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Collections;
+import java.util.Set;
+
 /**
  * 词条抽象基类 - 提供默认实现，方便创建具体词条
  */
@@ -18,12 +21,20 @@ public abstract class AbstractAffix implements IAffix {
     protected final AffixType type;
     protected final int weight;
     protected final float minDifficulty;
+    protected final int minTier;
+    protected final int maxTier;
 
     public AbstractAffix(ResourceLocation id, AffixType type, int weight, float minDifficulty) {
+        this(id, type, weight, minDifficulty, 0, 0);
+    }
+
+    public AbstractAffix(ResourceLocation id, AffixType type, int weight, float minDifficulty, int minTier, int maxTier) {
         this.id = id;
         this.type = type;
         this.weight = weight;
         this.minDifficulty = minDifficulty;
+        this.minTier = minTier;
+        this.maxTier = maxTier;
     }
 
     @Override
@@ -61,6 +72,16 @@ public abstract class AbstractAffix implements IAffix {
     }
 
     @Override
+    public int getMinTier() {
+        return minTier;
+    }
+
+    @Override
+    public int getMaxTier() {
+        return maxTier;
+    }
+
+    @Override
     public boolean canApplyTo(EntityLiving entity) {
         // 默认可以应用到所有 EntityLiving
         return true;
@@ -70,6 +91,12 @@ public abstract class AbstractAffix implements IAffix {
     public boolean isCompatibleWith(IAffix other) {
         // 默认与所有词条兼容
         return true;
+    }
+
+    @Override
+    public Set<ResourceLocation> getRequiredAffixes() {
+        // 默认没有前置要求
+        return Collections.emptySet();
     }
 
     // ==================== 默认空实现 ====================

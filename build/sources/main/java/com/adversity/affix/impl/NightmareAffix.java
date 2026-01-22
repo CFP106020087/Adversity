@@ -130,7 +130,7 @@ public class NightmareAffix extends AbstractAffix {
         player.world.playSound(
             null,
             player.posX, player.posY, player.posZ,
-            SoundEvents.ENTITY_PHANTOM_AMBIENT,
+            SoundEvents.ENTITY_ENDERMEN_STARE,
             SoundCategory.HOSTILE,
             1.0f,
             0.5f

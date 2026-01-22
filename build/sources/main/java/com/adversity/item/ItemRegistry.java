@@ -35,6 +35,21 @@ public class ItemRegistry {
     @GameRegistry.ObjectHolder(Adversity.MODID + ":void_shard")
     public static final Item VOID_SHARD = null;
 
+    @GameRegistry.ObjectHolder(Adversity.MODID + ":redemption_tear")
+    public static final Item REDEMPTION_TEAR = null;
+
+    @GameRegistry.ObjectHolder(Adversity.MODID + ":redemption_heart")
+    public static final Item REDEMPTION_HEART = null;
+
+    @GameRegistry.ObjectHolder(Adversity.MODID + ":redemption_key")
+    public static final Item REDEMPTION_KEY = null;
+
+    @GameRegistry.ObjectHolder(Adversity.MODID + ":sealed_token")
+    public static final Item SEALED_TOKEN = null;
+
+    @GameRegistry.ObjectHolder(Adversity.MODID + ":affix_guide")
+    public static final Item AFFIX_GUIDE = null;
+
     /**
      * 物品注册事件 - 在游戏启动时自动调用
      */
@@ -56,7 +71,18 @@ public class ItemRegistry {
             new ItemCalmDust(),
 
             // 工具 - 难度探测器 (显示区域难度信息)
-            new ItemDifficultyDetector()
+            new ItemDifficultyDetector(),
+
+            // 赎罪道具 - 用于减少永久诅咒
+            new ItemRedemptionTear(),    // 赎罪之泪 - 减少黑天鹅攻击力削减
+            new ItemRedemptionHeart(),   // 赎罪之心 - 减少黑色星期五生命削减
+            new ItemRedemptionKey(),     // 赎罪之钥 - 解封黑棺封印槽位
+
+            // 封印令牌 - 装备被封印时生成的物品
+                new ItemSealedToken(),
+
+                // 词条指南 - 模组手册
+                new ItemAffixGuide()
         );
 
         Adversity.LOGGER.info("Adversity items registered");
@@ -73,6 +99,11 @@ public class ItemRegistry {
         registerItemModel(VOID_SHARD);
         registerItemModel(CALM_DUST);
         registerItemModel(DIFFICULTY_DETECTOR);
+        registerItemModel(REDEMPTION_TEAR);
+        registerItemModel(REDEMPTION_HEART);
+        registerItemModel(REDEMPTION_KEY);
+        registerItemModel(SEALED_TOKEN);
+        registerItemModel(AFFIX_GUIDE);
     }
 
     @SideOnly(Side.CLIENT)

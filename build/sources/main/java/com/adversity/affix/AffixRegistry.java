@@ -146,6 +146,7 @@ public class AffixRegistry {
         register(new ShieldBreakerAffix());   // 破盾 - 吸收值越高伤害越高 (难度4+)
         register(new BloodthirstAffix());     // 渴血 - 玩家血越低伤害越高 (难度2+)
         register(new AvariceAffix());         // 强欲 - 背包物品越多伤害越高 (难度2+)
+        register(new GreedAffix());           // 贪婪 - 饰品越多受伤越高 (难度3+)
         register(new TetanusAffix());         // 破伤风 - 5次命中扣半血 (难度3+)
         register(new UncleanAffix());         // 不洁 - 随机负面效果 (难度2+)
 

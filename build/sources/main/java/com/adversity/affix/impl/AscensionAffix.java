@@ -2,6 +2,7 @@ package com.adversity.affix.impl;
 
 import com.adversity.Adversity;
 import com.adversity.affix.AbstractAffix;
+import com.adversity.affix.AffixData;
 import com.adversity.affix.AffixRegistry;
 import com.adversity.affix.AffixType;
 import com.adversity.affix.IAffixData;
@@ -21,8 +22,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * 飞升词条 - 死亡时有概率升阶为更高级的防御词条
@@ -72,8 +75,8 @@ public class AscensionAffix extends AbstractAffix {
         ResourceLocation upgradeFrom = null;
         ResourceLocation upgradeTo = null;
 
-        List<IAffix> affixes = cap.getAffixes();
-        for (IAffix affix : affixes) {
+        for (AffixData affixData : cap.getAllAffixData()) {
+            IAffix affix = affixData.getAffix();
             ResourceLocation affixId = affix.getId();
             if (affixId.equals(HeroAffix.ID)) {
                 upgradeFrom = HeroAffix.ID;
@@ -134,7 +137,8 @@ public class AscensionAffix extends AbstractAffix {
 
         // 复制词条，替换升阶词条
         List<IAffix> newAffixes = new ArrayList<>();
-        for (IAffix affix : originalCap.getAffixes()) {
+        for (AffixData affixData : originalCap.getAllAffixData()) {
+            IAffix affix = affixData.getAffix();
             if (affix.getId().equals(upgradeFrom)) {
                 // 替换为升阶后的词条
                 IAffix upgradedAffix = AffixRegistry.getAffix(upgradeTo);
@@ -213,14 +217,16 @@ public class AscensionAffix extends AbstractAffix {
                 newEntity.posX, newEntity.posY + 1, newEntity.posZ,
                 1,
                 0, 0, 0,
-                0
+                0,
+                new int[0]
             );
             ((WorldServer) world).spawnParticle(
                 EnumParticleTypes.DRAGON_BREATH,
                 newEntity.posX, newEntity.posY + 1, newEntity.posZ,
                 50,
                 1.0, 1.0, 1.0,
-                0.1
+                0.1,
+                new int[0]
             );
         }
     }
@@ -232,5 +238,15 @@ public class AscensionAffix extends AbstractAffix {
             return false;
         }
         return super.isCompatibleWith(other);
+    }
+
+    @Override
+    public Set<ResourceLocation> getRequiredAffixes() {
+        // 飞升词条需要英雄或神明词条才能生效
+        // 外神是最高级，不需要飞升
+        Set<ResourceLocation> required = new HashSet<>();
+        required.add(HeroAffix.ID);
+        required.add(DivineAffix.ID);
+        return required;
     }
 }

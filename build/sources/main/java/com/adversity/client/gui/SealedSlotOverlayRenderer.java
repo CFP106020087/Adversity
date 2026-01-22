@@ -13,9 +13,11 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Mouse;
 
 /**
  * Sealed Slot Overlay Renderer
@@ -28,10 +30,59 @@ public class SealedSlotOverlayRenderer {
     private static final ResourceLocation SEAL_OVERLAY = new ResourceLocation(Adversity.MODID, "textures/gui/sealed_slot.png");
 
     /**
-     * Render sealed slot overlays after GUI background
+     * Prevent mouse clicks on sealed slots
      */
-    @SubscribeEvent
-    public static void onGuiDrawBackground(GuiScreenEvent.BackgroundDrawnEvent event) {
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void onMouseClick(GuiScreenEvent.MouseInputEvent.Pre event) {
+        if (!(event.getGui() instanceof GuiContainer)) return;
+        if (!Mouse.getEventButtonState()) return;  // Only handle button press, not release
+
+        GuiContainer gui = (GuiContainer) event.getGui();
+        Minecraft mc = Minecraft.getMinecraft();
+        EntityPlayer player = mc.player;
+
+        if (player == null) return;
+
+        int sealedCount = ClientCurseCache.getSealedSlots();
+        if (sealedCount <= 0) return;
+
+        // Get GUI position
+        int guiLeft = getGuiLeft(gui);
+        int guiTop = getGuiTop(gui);
+
+        // Get mouse position relative to GUI
+        int mouseX = Mouse.getEventX() * gui.width / mc.displayWidth;
+        int mouseY = gui.height - Mouse.getEventY() * gui.height / mc.displayHeight - 1;
+
+        // Check if mouse is over a sealed slot
+        Container container = gui.inventorySlots;
+        for (Slot slot : container.inventorySlots) {
+            if (slot.inventory != player.inventory) continue;
+
+            int slotIndex = slot.getSlotIndex();
+            // 检查是否封印：先封主背包(9-35)，再封快捷栏(0-8)
+            if (isSlotSealedByCount(slotIndex, sealedCount)) {
+                // Check if mouse is over this slot
+                int slotX = guiLeft + slot.xPos;
+                int slotY = guiTop + slot.yPos;
+
+                if (mouseX >= slotX && mouseX < slotX + 16 &&
+                    mouseY >= slotY && mouseY < slotY + 16) {
+                    // Cancel the click
+                    event.setCanceled(true);
+                    // Play deny sound
+                    player.playSound(net.minecraft.init.SoundEvents.BLOCK_NOTE_BASS, 0.5f, 0.5f);
+                    return;
+                }
+            }
+        }
+    }
+
+    /**
+     * Render sealed slot overlays on top of GUI (foreground)
+     */
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void onGuiDrawForeground(GuiScreenEvent.DrawScreenEvent.Post event) {
         if (!(event.getGui() instanceof GuiContainer)) return;
 
         GuiContainer gui = (GuiContainer) event.getGui();
@@ -49,70 +100,75 @@ public class SealedSlotOverlayRenderer {
         int guiTop = getGuiTop(gui);
 
         // Render overlays on sealed slots
+        // 先封主背包(9-35)，再封快捷栏(0-8)
         Container container = gui.inventorySlots;
         for (Slot slot : container.inventorySlots) {
-            // Only check player's main inventory slots (9-35)
+            // Only check player's main inventory slots
             if (slot.inventory != player.inventory) continue;
 
             int slotIndex = slot.getSlotIndex();
-            // Main inventory is slots 9-35 (after hotbar)
-            if (slotIndex >= 9 && slotIndex < 36) {
-                // Check if this slot is sealed (from the end)
-                // Sealed from slot (36 - sealedCount) to slot 35
-                if (slotIndex >= (36 - sealedCount)) {
-                    renderSealOverlay(guiLeft + slot.xPos, guiTop + slot.yPos);
-                }
+            // 检查是否封印
+            if (isSlotSealedByCount(slotIndex, sealedCount)) {
+                renderSealedSlot(guiLeft + slot.xPos, guiTop + slot.yPos);
             }
         }
     }
 
     /**
-     * Render seal overlay at slot position
+     * Render a sealed slot using texture
      */
-    private static void renderSealOverlay(int x, int y) {
+    private static void renderSealedSlot(int x, int y) {
         Minecraft mc = Minecraft.getMinecraft();
 
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
         GlStateManager.disableDepth();
-        GlStateManager.color(1.0f, 1.0f, 1.0f, 0.9f);
+        GlStateManager.disableLighting();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
+        // Bind and render the sealed slot texture
         mc.getTextureManager().bindTexture(SEAL_OVERLAY);
+
+        // Draw the texture (16x16 to match slot size)
         Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, 16, 16, 16, 16);
 
+        GlStateManager.enableLighting();
         GlStateManager.enableDepth();
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
     }
 
     /**
-     * Render X mark directly without texture
+     * Check if a slot index is sealed
+     * 先封主背包(9-35)，再封快捷栏(0-8)
      */
-    private static void renderXMark(int x, int y) {
-        GlStateManager.pushMatrix();
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.disableDepth();
+    public static boolean isSlotSealed(EntityPlayer player, int slotIndex) {
+        int sealedCount = getSealedSlotCount(player);
+        return isSlotSealedByCount(slotIndex, sealedCount);
+    }
 
-        // Draw semi-transparent dark background
-        Gui.drawRect(x, y, x + 16, y + 16, 0xAA000000);
+    /**
+     * Check if a slot index is sealed given the sealed count
+     * 先封主背包(9-35)，再封快捷栏(0-8)
+     */
+    private static boolean isSlotSealedByCount(int slotIndex, int sealedCount) {
+        if (sealedCount <= 0) return false;
 
-        // Draw red X
-        int color = 0xFFCC0000;
-        int lineWidth = 2;
-
-        // Draw X using rectangles (diagonal lines approximation)
-        for (int i = 0; i < 16; i++) {
-            // Top-left to bottom-right diagonal
-            Gui.drawRect(x + i, y + i, x + i + lineWidth, y + i + lineWidth, color);
-            // Top-right to bottom-left diagonal
-            Gui.drawRect(x + 16 - i - lineWidth, y + i, x + 16 - i, y + i + lineWidth, color);
+        // 主背包有27个槽位(9-35)，快捷栏有9个槽位(0-8)
+        if (slotIndex >= 9 && slotIndex < 36) {
+            // 主背包槽位：先封印
+            // slotIndex 9 对应第1个封印，slotIndex 35 对应第27个封印
+            int sealOrder = slotIndex - 9;  // 0-26
+            return sealOrder < sealedCount;
+        } else if (slotIndex >= 0 && slotIndex < 9) {
+            // 快捷栏槽位：后封印（在主背包全部封印之后）
+            // 需要超过27个封印才开始封快捷栏
+            if (sealedCount <= 27) return false;
+            int hotbarSealed = sealedCount - 27;  // 快捷栏已封印数
+            return slotIndex < hotbarSealed;
         }
-
-        GlStateManager.enableDepth();
-        GlStateManager.disableBlend();
-        GlStateManager.enableTexture2D();
-        GlStateManager.popMatrix();
+        return false;
     }
 
     /**
@@ -121,7 +177,6 @@ public class SealedSlotOverlayRenderer {
      */
     private static int getSealedSlotCount(EntityPlayer player) {
         // On client, we need to get this from synced capability
-        // For now, use direct world access (will be synced via packets later)
         if (player.world.isRemote) {
             return ClientCurseCache.getSealedSlots();
         }

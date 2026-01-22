@@ -1,11 +1,13 @@
 package com.adversity.client.visual;
 
+import com.adversity.Adversity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -24,6 +26,10 @@ import java.util.Random;
 public class VisualOverlayRenderer {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
+
+    // 细雪霜凍覆蓋材質 (類似 Minecraft 1.17+ powder_snow_outline)
+    private static final ResourceLocation FROST_OVERLAY_TEXTURE = new ResourceLocation(Adversity.MODID,
+            "textures/gui/frost_overlay.png");
 
     // 冰霜效果的持久化数据（用于蔓延动画）
     private static float[] frostCrawlProgress = new float[32];
@@ -128,35 +134,60 @@ public class VisualOverlayRenderer {
         GlStateManager.popMatrix();
     }
 
-    // ==================== 冰冻效果 - 极寒 ====================
+    // ==================== 冰冻效果 - 细雪风格 ====================
 
     /**
-     * 冰冻效果 - 高品质冰霜覆盖
-     * 多层渲染：边缘冰霜 + 冰晶纹理 + 屏幕色调 + 呼吸雾气
+     * 冰冻效果 - 使用细雪材质覆盖 (类似 Minecraft 1.17+ Powder Snow)
+     * 渲染材质叠加在屏幕边缘
      */
     private void renderFrozenEffect(int width, int height, VisualEffectManager.EffectData data, float partialTicks) {
         float intensity = data.getDisplayIntensity();
         long tick = VisualEffectManager.getGlobalTick();
 
-        // 第1层：全屏冷色调（非常轻微）
-        renderFrostTint(width, height, intensity);
+        // 启用材质渲染
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
-        // 第2层：边缘冰霜蔓延效果
-        renderFrostEdgeCrawl(width, height, intensity, tick);
+        // 绑定霜冻材质
+        mc.getTextureManager().bindTexture(FROST_OVERLAY_TEXTURE);
 
-        // 第3层：冰晶图案
-        renderIceCrystals(width, height, intensity, tick);
+        // 脉冲动画效果
+        float pulse = (float) (Math.sin(tick * 0.08) * 0.1 + 0.9);
+        float alpha = intensity * pulse * 0.9f;
 
-        // 第4层：细腻的冰霜颗粒
-        renderFrostParticles(width, height, intensity, tick);
+        // 渲染材质覆盖
+        renderTextureOverlay(width, height, alpha);
 
-        // 第5层：呼吸雾气效果（屏幕边缘的白雾）
-        renderBreathFog(width, height, intensity, tick);
+        // 第2层：轻微冷色调覆盖
+        GlStateManager.disableTexture2D();
+        renderFrostTint(width, height, intensity * 0.5f);
+        GlStateManager.enableTexture2D();
 
-        // 第6层：冰裂纹
-        if (intensity > 0.5f) {
-            renderIceCracks(width, height, intensity, tick);
+        // 第3层：边缘白雾（增强效果）
+        if (intensity > 0.3f) {
+            GlStateManager.disableTexture2D();
+            renderBreathFog(width, height, intensity, tick);
+            GlStateManager.enableTexture2D();
         }
+    }
+
+    /**
+     * 渲染材质覆盖层
+     */
+    private void renderTextureOverlay(int width, int height, float alpha) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+
+        // 完整屏幕四边形
+        buffer.pos(0, 0, 0).tex(0, 0).color(1f, 1f, 1f, alpha).endVertex();
+        buffer.pos(0, height, 0).tex(0, 1).color(1f, 1f, 1f, alpha).endVertex();
+        buffer.pos(width, height, 0).tex(1, 1).color(1f, 1f, 1f, alpha).endVertex();
+        buffer.pos(width, 0, 0).tex(1, 0).color(1f, 1f, 1f, alpha).endVertex();
+
+        tessellator.draw();
     }
 
     /**

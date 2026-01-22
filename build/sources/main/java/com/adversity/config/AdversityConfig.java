@@ -69,6 +69,12 @@ public class AdversityConfig {
     })
     public static final NightmareSettings nightmareSettings = new NightmareSettings();
 
+    @Config.Comment({
+        "Client Display Settings",
+        "客户端显示设置"
+    })
+    public static final ClientSettings clientSettings = new ClientSettings();
+
     // ==================== 实体过滤 ====================
 
     public static class EntityFilter {
@@ -96,12 +102,41 @@ public class AdversityConfig {
     }
 
     // ==================== 难度来源 ====================
+    //
+    // === 难度计算公式 / DIFFICULTY CALCULATION FORMULA ===
+    //
+    // 最终难度 = (距离难度 × 距离权重) + (时间难度 × 时间权重)
+    // Final Difficulty = (Distance Difficulty × distanceWeight) + (Time Difficulty
+    // × timeWeight)
+    //
+    // 距离难度 = max(0, (distance - safeDistance) / blocksPerDifficulty)
+    // Distance Difficulty = max(0, (distance_from_origin - safeDistance) /
+    // blocksPerDifficulty)
+    //
+    // 时间难度 = worldTime / (daysPerDifficulty × 24000)
+    // Time Difficulty = worldTimeInTicks / (daysPerDifficulty × 24000)
+    //
+    // 示例 / Example:
+    // 距离2000格, 安全距离500, blocksPerDifficulty=500 → 距离难度 = (2000-500)/500 = 3
+    // 游戏第4天, daysPerDifficulty=2 → 时间难度 = 4/2 = 2
+    // 最终难度 = 3×1.0 + 2×1.0 = 5
+    //
 
     public static class DifficultySource {
 
         @Config.Comment({
-            "Distance (in blocks) per 1 difficulty point",
-            "每增加多少格距离增加 1 点难度"
+            "Safe distance (blocks) - no difficulty within this range from origin",
+            "安全距离（格）- 在此范围内不计算距离难度",
+            "",
+            "For RLCraft with random spawn (±10000), set this to ~15000",
+            "RLCraft随机出生点(±10000)建议设为15000"
+        })
+        @Config.RangeDouble(min = 0, max = 100000)
+        public double safeDistance = 15000;
+
+        @Config.Comment({
+            "Distance (in blocks) per 1 difficulty point (after safe distance)",
+            "超出安全距离后，每增加多少格距离增加 1 点难度"
         })
         @Config.RangeDouble(min = 50, max = 10000)
         public double blocksPerDifficulty = 500;
@@ -118,7 +153,7 @@ public class AdversityConfig {
             "每过多少天增加 1 点难度"
         })
         @Config.RangeDouble(min = 0.5, max = 100)
-        public double daysPerDifficulty = 5;
+        public double daysPerDifficulty = 2; // 更快的时间增长 (原值: 5)
 
         @Config.Comment({
             "Maximum difficulty from time (0 = no limit)",
@@ -139,7 +174,7 @@ public class AdversityConfig {
             "时间难度在最终计算中的权重"
         })
         @Config.RangeDouble(min = 0, max = 10)
-        public double timeWeight = 0.8;
+        public double timeWeight = 1.0;
     }
 
     // ==================== 属性缩放 (核心重构) ====================
@@ -166,7 +201,7 @@ public class AdversityConfig {
             "  LOGARITHMIC - 对数增长，软上限",
             "  SIGMOID - 平滑过渡到最大值"
         })
-        public String healthScalingMode = "COMPOUND";
+        public String healthScalingMode = "LINEAR";
 
         @Config.Comment({
             "Base health multiplier (usually 1.0)",
@@ -211,7 +246,7 @@ public class AdversityConfig {
             "",
             "Scaling mode for damage"
         })
-        public String damageScalingMode = "COMPOUND";
+        public String damageScalingMode = "LINEAR";
 
         @Config.Comment("Base damage multiplier")
         @Config.RangeDouble(min = 0.1, max = 10)
@@ -224,7 +259,7 @@ public class AdversityConfig {
             "Typically lower than health to keep fights challenging but fair"
         })
         @Config.RangeDouble(min = 0, max = 2)
-        public double damageRate = 0.08;
+        public double damageRate = 0.03;
 
         @Config.Comment("Power exponent for POLYNOMIAL mode")
         @Config.RangeDouble(min = 1, max = 5)
@@ -302,7 +337,7 @@ public class AdversityConfig {
             "0.99 = 接近免疫（仅限极端模组包）"
         })
         @Config.RangeDouble(min = 0, max = 0.99)
-        public double damageReductionMax = 0.75;
+        public double damageReductionMax = 0.5;
 
         @Config.Comment({
             "=== ADVANCED: ARMOR PENETRATION RESISTANCE ===",
@@ -412,22 +447,22 @@ public class AdversityConfig {
         public String[] disabledAffixes = new String[] {};
 
         @Config.Comment({
-            "=== FORCED ELITE ENTITIES ===",
-            "=== 强制精英实体 ===",
+            "=== FORCED TIER ENTITIES ===",
+            "=== 强制等级实体 ===",
             "",
-            "Entities in this list will ALWAYS become elite with affixes.",
-            "此列表中的实体将始终成为带词条的精英。",
-            "Format: modid:entity_name",
-            "格式: modid:entity_name"
+            "Force specific entities to always be a specific tier.",
+            "强制特定实体始终为指定等级。",
+            "",
+            "Format: entity_id|tier (e.g., lycanites:rahovart|10 for Terminus)",
+            "格式: entity_id|tier（例如 lycanites:rahovart|10 表示终焉）",
+            "",
+            "Tier names: T1=Elite, T5=Legendary, T10=Terminus",
+            "等级名称: T1=精英, T5=传奇, T10=终焉"
         })
-        public String[] forcedEliteEntities = new String[] {};
-
-        @Config.Comment({
-            "Minimum tier for forced elite entities (1-10)",
-            "强制精英实体的最低等级（1-10）"
-        })
-        @Config.RangeInt(min = 1, max = 10)
-        public int forcedEliteMinTier = 1;
+        public String[] forcedTierEntities = new String[] {
+            // "lycanites:rahovart|10",  // Example: Rahovart is always Terminus
+            // "iceandfire:ice_dragon|8"  // Example: Ice Dragon is always T8
+        };
 
         @Config.Comment({
             "=== ELITE BLACKLIST ===",
@@ -466,6 +501,30 @@ public class AdversityConfig {
         public String[] forcedAffixesForEntities = new String[] {
             "minecraft:wither_skeleton|adversity:withering"
         };
+
+        @Config.Comment({
+            "=== SEAL AFFIX SETTINGS ===",
+            "=== 封印词条设置 ===",
+            "",
+            "Base seal duration for Shackle affix (ticks, 20 = 1 second)",
+            "枷锁词条的基础封印时间（tick，20 = 1秒）"
+        })
+        @Config.RangeInt(min = 100, max = 6000)
+        public int shackleSealDuration = 600;  // 30秒
+
+        @Config.Comment({
+            "Base seal duration for Divest affix (ticks, 20 = 1 second)",
+            "褫夺词条的基础封印时间（tick，20 = 1秒）"
+        })
+        @Config.RangeInt(min = 100, max = 6000)
+        public int divestSealDuration = 400;  // 20秒
+
+        @Config.Comment({
+            "Additional seal duration per tier (ticks)",
+            "每级额外封印时间（tick）"
+        })
+        @Config.RangeInt(min = 0, max = 200)
+        public int sealDurationPerTier = 80;  // 4秒每级
     }
 
     // ==================== 永久诅咒设置 ====================
@@ -523,11 +582,13 @@ public class AdversityConfig {
         public int blackCoffinSlotsPerTrigger = 1;
 
         @Config.Comment({
-            "Ban threshold for Black Coffin (number of sealed slots to trigger ban)",
-            "黑棺的封禁阈值（封印多少槽位时触发封禁）"
+            "[Deprecated] Black Coffin now bans only when all 36 slots (including hotbar) are sealed",
+            "[已弃用] 黑棺现在仅在全部36个槽位（包括快捷栏）都被封印时才会封禁玩家",
+            "This config is kept for backward compatibility but has no effect",
+            "此配置保留用于向后兼容，但不再生效"
         })
         @Config.RangeInt(min = 9, max = 36)
-        public int blackCoffinBanThreshold = 27;
+        public int blackCoffinBanThreshold = 36;
     }
 
     // ==================== 梦魇设置 ====================
@@ -583,15 +644,64 @@ public class AdversityConfig {
         public int maxSpawnDistance = 24;
     }
 
+    // ==================== 客户端显示设置 ====================
+
+    public static class ClientSettings {
+
+        @Config.Comment({
+            "Enable difficulty HUD display in screen corner",
+            "在屏幕角落启用难度HUD显示"
+        })
+        public boolean enableDifficultyHUD = true;
+
+        @Config.Comment({
+            "Enable mob tier display above elite mobs",
+            "在精英怪物头顶显示等级"
+        })
+        public boolean enableMobTierDisplay = true;
+
+        @Config.Comment({
+            "Enable health bar display above elite mobs",
+            "在精英怪物头顶显示血条"
+        })
+        public boolean enableHealthBar = true;
+
+        @Config.Comment({
+            "Enable affix names display above elite mobs",
+            "在精英怪物头顶显示词条名称"
+        })
+        public boolean enableAffixDisplay = true;
+
+        @Config.Comment({
+            "HUD position: TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT",
+            "HUD位置: TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT"
+        })
+        public String hudPosition = "TOP_LEFT";
+
+        @Config.Comment({
+            "HUD X offset from the edge (positive = towards center)",
+            "HUD距离边缘的X偏移量（正值 = 向中心移动）"
+        })
+        @Config.RangeInt(min = 0, max = 500)
+        public int hudOffsetX = 5;
+
+        @Config.Comment({
+            "HUD Y offset from the edge (positive = towards center)",
+            "HUD距离边缘的Y偏移量（正值 = 向中心移动）"
+        })
+        @Config.RangeInt(min = 0, max = 500)
+        public int hudOffsetY = 5;
+    }
+
     // ==================== 战利品设置 ====================
 
     public static class LootSettings {
 
         @Config.Comment({
-            "Enable mod item drops from elite mobs",
-            "启用精英怪物的模组物品掉落"
+            "Enable mod item drops from elite mobs (disable if using LootTweaker)",
+            "启用精英怪物的模组物品掉落（使用LootTweaker时建议禁用）"
         })
-        public boolean enableModItemDrops = true;
+        public boolean enableModItemDrops = false;
 
         @Config.Comment({
             "Base XP multiplier for elite mobs (multiplied by tier)",
@@ -629,39 +739,13 @@ public class AdversityConfig {
             "Enable bonus XP orbs for elite kills",
             "启用精英击杀的额外经验球"
         })
-        public boolean enableBonusXp = true;
+        public boolean enableBonusXp = false;
 
         @Config.Comment({
             "Enable extra vanilla loot drops for elite kills",
             "启用精英击杀的额外原版战利品"
         })
-        public boolean enableExtraLoot = true;
-    }
-
-    // ==================== 兼容性配置（为旧系统保留） ====================
-
-    /**
-     * @deprecated Use statScaling and difficultySource instead
-     */
-    @Deprecated
-    public static final DifficultySettings difficulty = new DifficultySettings();
-
-    @Deprecated
-    public static class DifficultySettings {
-        // 保留旧字段以兼容，但实际使用新配置
-        public double blocksPerDifficulty = 500;
-        public double daysPerDifficulty = 5;
-        public double healthMultiplierPerDifficulty = 0.15;
-        public double damageMultiplierPerDifficulty = 0.08;
-        public double armorPerDifficulty = 0.5;
-        public double maxArmorBonus = 20;
-        public double maxDistanceDifficulty = 10;
-        public double maxTimeDifficulty = 8;
-        public double eliteChance = 0.15;
-        public double eliteChancePerDifficulty = 0.02;
-        public double maxEliteChance = 0.5;
-        public double damageReductionPerDifficulty = 0.02;
-        public double maxDamageReduction = 0.5;
+        public boolean enableExtraLoot = false;
     }
 
     // ==================== 运行时缓存 ====================
@@ -669,7 +753,7 @@ public class AdversityConfig {
     private static Set<ResourceLocation> whitelistCache = new HashSet<>();
     private static Set<ResourceLocation> blacklistCache = new HashSet<>();
     private static Set<ResourceLocation> disabledAffixCache = new HashSet<>();
-    private static Set<ResourceLocation> forcedEliteCache = new HashSet<>();
+    private static Map<ResourceLocation, Integer> forcedTierCache = new java.util.HashMap<>();
     private static Set<ResourceLocation> eliteBlacklistCache = new HashSet<>();
     private static Map<ResourceLocation, Set<ResourceLocation>> affixEntityBlacklistCache = new java.util.HashMap<>();
     private static Map<ResourceLocation, Set<ResourceLocation>> forcedAffixesForEntitiesCache = new java.util.HashMap<>();
@@ -680,7 +764,7 @@ public class AdversityConfig {
         whitelistCache.clear();
         blacklistCache.clear();
         disabledAffixCache.clear();
-        forcedEliteCache.clear();
+        forcedTierCache.clear();
         eliteBlacklistCache.clear();
         affixEntityBlacklistCache.clear();
         forcedAffixesForEntitiesCache.clear();
@@ -705,10 +789,20 @@ public class AdversityConfig {
             }
         }
 
-        // 缓存强制精英实体
-        for (String entry : affixSettings.forcedEliteEntities) {
-            if (entry != null && !entry.isEmpty()) {
-                forcedEliteCache.add(new ResourceLocation(entry.trim()));
+        // 缓存强制等级实体
+        for (String entry : affixSettings.forcedTierEntities) {
+            if (entry != null && !entry.isEmpty() && entry.contains("|")) {
+                String[] parts = entry.split("\\|", 2);
+                if (parts.length == 2) {
+                    try {
+                        ResourceLocation entityId = new ResourceLocation(parts[0].trim());
+                        int tier = Integer.parseInt(parts[1].trim());
+                        tier = Math.max(1, Math.min(10, tier)); // Clamp 1-10
+                        forcedTierCache.put(entityId, tier);
+                    } catch (NumberFormatException e) {
+                        // Skip invalid entries
+                    }
+                }
             }
         }
 
@@ -744,9 +838,9 @@ public class AdversityConfig {
         }
 
         cacheInitialized = true;
-        Adversity.LOGGER.info("Config cache refreshed: {} whitelist, {} blacklist, {} disabled affixes, {} forced elite, {} elite blacklist",
+        Adversity.LOGGER.info("Config cache refreshed: {} whitelist, {} blacklist, {} disabled affixes, {} forced tier, {} elite blacklist",
             whitelistCache.size(), blacklistCache.size(), disabledAffixCache.size(),
-            forcedEliteCache.size(), eliteBlacklistCache.size());
+            forcedTierCache.size(), eliteBlacklistCache.size());
     }
 
     public static boolean shouldProcess(EntityLiving entity) {
@@ -799,14 +893,17 @@ public class AdversityConfig {
     }
 
     /**
-     * 检查实体是否应该强制成为精英
+     * 获取实体的强制等级，返回-1表示无强制等级
      */
-    public static boolean isForcedElite(EntityLiving entity) {
+    public static int getForcedTier(EntityLiving entity) {
         if (!cacheInitialized) {
             refreshCache();
         }
         ResourceLocation entityId = EntityList.getKey(entity);
-        return entityId != null && forcedEliteCache.contains(entityId);
+        if (entityId == null) {
+            return -1;
+        }
+        return forcedTierCache.getOrDefault(entityId, -1);
     }
 
     /**
@@ -833,13 +930,6 @@ public class AdversityConfig {
         }
         ResourceLocation entityId = EntityList.getKey(entity);
         return entityId != null && blockedEntities.contains(entityId);
-    }
-
-    /**
-     * 获取强制精英的最低等级
-     */
-    public static int getForcedEliteMinTier() {
-        return affixSettings.forcedEliteMinTier;
     }
 
     /**

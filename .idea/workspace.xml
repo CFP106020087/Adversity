@@ -1,4 +1,421 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PropertiesComponent">{}</component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b8fce333-225e-41cf-b2ba-2c86ec790924" name="Changes" comment="aaaa">
+      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.9/fileContent/annotation-processors.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.9/fileContent/annotation-processors.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.9/fileContent/fileContent.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.9/fileContent/fileContent.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.9/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.9/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.9/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.9/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.9/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.9/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.9/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.9/taskHistory/taskHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.9/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.9/taskHistory/taskHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9__05_15__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9__05_16__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9__05_37__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9__05_48__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9__06_28__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9__08_15__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9__08_22__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_05_15_[Changes]/fileHashes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_05_15_[Changes]/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_05_15_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_05_16_[Changes]/fileHashes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_05_16_[Changes]/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_05_16_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_05_37_[Changes]/fileHashes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_05_37_[Changes]/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_05_37_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_05_48_[Changes]/fileHashes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_05_48_[Changes]/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_05_48_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_06_28_[Changes]/fileHashes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_06_28_[Changes]/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_06_28_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_08_15_[Changes]/fileHashes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_08_15_[Changes]/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_08_15_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_08_22_[Changes]/Baubles-1.12-1.5.2.jar" beforeDir="false" afterPath="$PROJECT_DIR$/run/mods/Baubles-1.12-1.5.2.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_08_22_[Changes]/fileHashes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_08_22_[Changes]/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2026_1_9_上午_08_22_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/adversity/Adversity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/adversity/affix/AbstractAffix.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/adversity/affix/AffixData.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/adversity/affix/AffixRegistry$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/adversity/affix/AffixRegistry.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/adversity/affix/AffixType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/adversity/affix/IAffix.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/adversity/affix/IAffixData.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/adversity/affix/impl/AffixEffectHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/adversity/affix/impl/AnnihilateAffix.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/adversity/proxy/CommonProxy.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/adversity/seal/SealedItemManager$VoidStoredItem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/adversity/seal/SealedItemManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/Adversity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/AbstractAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/AffixData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/AffixRegistry.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/AffixType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/IAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/IAffixData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/AffixEffectHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/AnnihilateAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/AscensionAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/AvariceAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/BlackCoffinAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/BlackFridayAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/BlackSwanAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/BlindingAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/BloodthirstAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/BluntAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/DisenchantAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/DivestAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/DivineAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/FieryAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/FrostyAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/GiantSlayerAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/GravityAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/HasteAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/HeroAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/HorrorAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/NightmareAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/OblivionAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/OuterGodAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/PurifierAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/ReaperAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/ReflectiveAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/RegeneratingAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/ReversalAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/ShackleAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/ShieldBreakerAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/SplittingAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/TeleportingAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/TetanusAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/UncleanAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/VampiricAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/affix/impl/WitheringAffix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/capability/AdversityCapability.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/capability/AdversityCapabilityProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/capability/AdversityCapabilityStorage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/capability/CapabilityHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/capability/IAdversityCapability.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/capability/IPlayerDifficulty.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/capability/PlayerDifficulty.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/capability/PlayerDifficultyProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/client/AdversityClientHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/client/ClientAdversityCache.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/client/gui/SealedSlotOverlayRenderer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/client/visual/VisualEffectHelper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/client/visual/VisualEffectManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/client/visual/VisualEffectType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/client/visual/VisualOverlayRenderer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/command/CommandAdversity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/config/AdversityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/curse/CurseEffectHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/curse/PermanentCurseManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/debuff/DebuffEventHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/debuff/DebuffType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/debuff/PlayerDebuffManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/difficulty/DifficultyManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/difficulty/DistanceDifficultyProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/difficulty/IDifficultyProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/difficulty/ScalingFormula.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/difficulty/TimeDifficultyProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/effect/SuppressionManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/event/EliteDropHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/event/MobEventHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/item/AdversityTab.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/item/ItemAffixCrystal.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/item/ItemAffixEssence.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/item/ItemCalmDust.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/item/ItemDifficultyDetector.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/item/ItemRegistry.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/item/ItemVoidShard.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/network/PacketHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/network/PacketSyncAdversity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/network/PacketSyncCurse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/network/PacketVisualEffect.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/proxy/ClientProxy.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/proxy/CommonProxy.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/seal/SealedItemManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sources/main/java/com/adversity/spawn/NightmareSpawnHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/config/adversity.cfg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/config/forge.cfg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/config/forgeChunkLoading.cfg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/config/splash.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/logs/2026-01-09-1.log.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/logs/2026-01-09-2.log.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/logs/2026-01-09-3.log.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/logs/debug-1.log.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/logs/debug-2.log.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/logs/debug-3.log.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/logs/debug.log" beforeDir="false" afterPath="$PROJECT_DIR$/run/logs/debug.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/logs/latest.log" beforeDir="false" afterPath="$PROJECT_DIR$/run/logs/latest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/options.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/DIM-1/data/capabilities.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/DIM-1/data/villages_nether.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/DIM-1/forcedchunks.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/DIM1/data/capabilities.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/DIM1/data/villages_end.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/DIM1/forcedchunks.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/advancements/27fc360e-fa24-3dff-9bfe-79a065a3b88e.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/advancements/4292534d-f2c8-3960-ae02-8fc77d827539.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/advancements/e7c5c79a-91ee-3db1-afe8-a6ff4d4f15fa.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/data/Mineshaft.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/data/Monument.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/data/Temple.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/data/Village.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/data/capabilities.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/data/villages.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/forcedchunks.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/level.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/level.dat_old" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/playerdata/27fc360e-fa24-3dff-9bfe-79a065a3b88e.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/playerdata/4292534d-f2c8-3960-ae02-8fc77d827539.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/playerdata/e7c5c79a-91ee-3db1-afe8-a6ff4d4f15fa.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.-1.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.-1.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.0.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.0.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.0.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.1.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.1.2.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.19.19.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.194.19.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.194.1952.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.194.1953.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.195.19.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.195.1952.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.195.1953.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.1952.194.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.1952.195.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.1953.194.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.1953.195.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.2.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/region/r.2.2.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/session.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/stats/27fc360e-fa24-3dff-9bfe-79a065a3b88e.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/stats/4292534d-f2c8-3960-ae02-8fc77d827539.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World/stats/e7c5c79a-91ee-3db1-afe8-a6ff4d4f15fa.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/usercache.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/usernamecache.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/adversity/asm/AdversityLoadingPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/adversity/asm/AdversityLoadingPlugin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/adversity/client/visual/VisualOverlayRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/adversity/client/visual/VisualOverlayRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/adversity/config/AdversityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/adversity/config/AdversityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/adversity/debuff/DebuffEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/adversity/debuff/DebuffEventHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/adversity/debuff/PlayerDebuffManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/adversity/debuff/PlayerDebuffManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/adversity/difficulty/DifficultyManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/adversity/difficulty/DifficultyManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/adversity/item/ItemCalmDust.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/adversity/item/ItemCalmDust.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/adversity/item/ItemRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/adversity/item/ItemRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/adversity/lang/en_us.lang" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/adversity/lang/en_us.lang" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/adversity/lang/zh_cn.lang" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/adversity/lang/zh_cn.lang" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Adversity" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Adversity" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Adversity" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Adversity" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build setup" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Adversity" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="documentation" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Adversity" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="forgegradle" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;CFP106020087&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/CFP106020087/Adversity.git&quot;,
+    &quot;accountId&quot;: &quot;932a611c-dbf6-41f9-8447-6539870a8407&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="380VDYCOq8HVp6j9SFwe3nX5iu3" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.adversity [runClient].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;claude/review-adversity-yzYKN&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/mywork/adversity&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\jason\OneDrive\Desktop\adversity\run\mods" />
+      <recent name="C:\Users\jason\OneDrive\Desktop\adversity" />
+      <recent name="C:\Users\jason\OneDrive\Desktop" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="adversity [runClient]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="runClient" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <GradleProfilingDisabled>false</GradleProfilingDisabled>
+      <GradleCoverageDisabled>false</GradleCoverageDisabled>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.adversity [runClient]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b8fce333-225e-41cf-b2ba-2c86ec790924" name="Changes" comment="aaaa" />
+      <created>1767936355198</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1767936355198</updated>
+      <workItem from="1767936356266" duration="24136000" />
+      <workItem from="1768008902735" duration="4818000" />
+      <workItem from="1768266046631" duration="1899000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/claude/review-adversity-yzYKN" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="aaaa" />
+    <option name="LAST_COMMIT_MESSAGE" value="aaaa" />
+  </component>
 </project>

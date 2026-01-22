@@ -13,14 +13,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import com.adversity.curse.PermanentCurseManager;
+import com.adversity.spawn.NightmareSpawnHandler;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -190,5 +194,30 @@ public class MobEventHandler {
         );
 
         PacketHandler.INSTANCE.sendTo(packet, player);
+    }
+
+    /**
+     * 玩家睡眠起床时更新睡眠时间（用于梦魇系统）
+     */
+    @SubscribeEvent
+    public void onPlayerWakeUp(PlayerWakeUpEvent event) {
+        if (event.getEntityPlayer().world.isRemote) return;
+
+        // 只在正常起床时更新（不是被打断）
+        if (!event.wakeImmediately() && event.updateWorld()) {
+            NightmareSpawnHandler.onPlayerSleep(event.getEntityPlayer());
+        }
+    }
+
+    /**
+     * 玩家登录时同步诅咒数据
+     */
+    @SubscribeEvent
+    public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
+        if (event.player.world.isRemote) return;
+
+        // 同步诅咒数据到客户端
+        PermanentCurseManager manager = PermanentCurseManager.get(event.player.world);
+        manager.syncToClient(event.player);
     }
 }

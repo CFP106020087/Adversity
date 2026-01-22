@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+FMLCorePluginContainsFMLMod: true
+FMLAT: adversity_at.cfg
+FMLCorePlugin: com.adversity.asm.AdversityLoadingPlugin
+

@@ -2,6 +2,8 @@ package com.adversity.curse;
 
 import com.adversity.Adversity;
 import com.adversity.config.AdversityConfig;
+import com.adversity.network.PacketHandler;
+import com.adversity.network.PacketSyncCurse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -111,25 +113,23 @@ public class PermanentCurseManager extends WorldSavedData {
         PlayerCurseData data = getOrCreateData(playerId);
 
         float currentReduction = data.blackSwanReduction;
-        float newReduction = currentReduction + BLACK_SWAN_REDUCTION;
+        float newReduction = currentReduction + getBlackSwanReductionAmount();
 
         // 检查是否达到ban阈值
-        if (newReduction >= 1.0f) {
+        if (newReduction >= getBlackSwanBanThreshold()) {
             // 攻击力归零，应该ban
-            data.blackSwanReduction = 1.0f;
+            data.blackSwanReduction = getBlackSwanBanThreshold();
             data.banned = true;
             data.banReason = "black_swan";
             markDirty();
             return true;
         }
 
-        data.blackSwanReduction = Math.min(newReduction, BLACK_SWAN_MAX_REDUCTION);
+        data.blackSwanReduction = newReduction;
         markDirty();
 
-        // 发送警告
-        if (newReduction >= 0.5f) {
-            sendWarning(player, "black_swan", newReduction);
-        }
+        // 发送警告（从第一次触发就开始警告）
+        sendWarning(player, "black_swan", newReduction);
 
         return false;
     }
@@ -153,12 +153,12 @@ public class PermanentCurseManager extends WorldSavedData {
         PlayerCurseData data = getOrCreateData(playerId);
 
         float currentReduction = data.blackFridayReduction;
-        float newReduction = currentReduction + BLACK_FRIDAY_REDUCTION;
+        float newReduction = currentReduction + getBlackFridayReductionAmount();
 
         // 检查是否达到ban阈值（最大生命归零）
         float baseHealth = 20.0f;  // 原版基础生命
-        if (baseHealth - newReduction <= 0) {
-            data.blackFridayReduction = baseHealth;
+        if (baseHealth - newReduction <= getBlackFridayBanThreshold()) {
+            data.blackFridayReduction = baseHealth - getBlackFridayBanThreshold();
             data.banned = true;
             data.banReason = "black_friday";
             markDirty();
@@ -168,11 +168,9 @@ public class PermanentCurseManager extends WorldSavedData {
         data.blackFridayReduction = newReduction;
         markDirty();
 
-        // 发送警告
+        // 发送警告（从第一次触发就开始警告）
         float remainingHealth = baseHealth - newReduction;
-        if (remainingHealth <= 6.0f) {  // 3心以下
-            sendWarning(player, "black_friday", newReduction / baseHealth);
-        }
+        sendWarning(player, "black_friday", newReduction / baseHealth);
 
         return false;
     }
@@ -187,6 +185,9 @@ public class PermanentCurseManager extends WorldSavedData {
 
     // ==================== 黑棺 (背包封印) ====================
 
+    /** 快捷栏封印ban阈值：必须封印完所有36个槽位（包括快捷栏）才会ban */
+    private static final int HOTBAR_BAN_THRESHOLD = 36;
+
     /**
      * 增加黑棺诅咒（封印背包槽位）
      * @return 是否应该ban玩家
@@ -196,11 +197,12 @@ public class PermanentCurseManager extends WorldSavedData {
         PlayerCurseData data = getOrCreateData(playerId);
 
         int currentSealed = data.blackCoffinSealed;
-        int newSealed = currentSealed + 1;
+        int newSealed = currentSealed + getBlackCoffinSlotsAmount();
+        int warningThreshold = getBlackCoffinBanThreshold();
 
-        // 检查是否达到ban阈值
-        if (newSealed >= BLACK_COFFIN_MAX_SLOTS) {
-            data.blackCoffinSealed = BLACK_COFFIN_MAX_SLOTS;
+        // 检查是否达到ban阈值（必须封印完快捷栏，即全部36个槽位）
+        if (newSealed >= HOTBAR_BAN_THRESHOLD) {
+            data.blackCoffinSealed = HOTBAR_BAN_THRESHOLD;
             data.banned = true;
             data.banReason = "black_coffin";
             markDirty();
@@ -210,10 +212,8 @@ public class PermanentCurseManager extends WorldSavedData {
         data.blackCoffinSealed = newSealed;
         markDirty();
 
-        // 发送警告
-        if (newSealed >= BLACK_COFFIN_MAX_SLOTS - 5) {
-            sendWarning(player, "black_coffin", (float) newSealed / BLACK_COFFIN_MAX_SLOTS);
-        }
+        // 发送警告（从第一次触发就开始警告，使用配置的阈值计算百分比）
+        sendWarning(player, "black_coffin", (float) newSealed / HOTBAR_BAN_THRESHOLD);
 
         return false;
     }
@@ -228,11 +228,27 @@ public class PermanentCurseManager extends WorldSavedData {
 
     /**
      * 检查指定槽位是否被黑棺封印
+     * 先封主背包(9-35)，再封快捷栏(0-8)
+     * 顺序：9,10,11...35, 0,1,2...8
      */
     public boolean isSlotSealed(EntityPlayer player, int slotIndex) {
         int sealedCount = getBlackCoffinSealed(player);
-        // 从背包末尾开始封印
-        return slotIndex >= (36 - sealedCount) && slotIndex < 36;
+        if (sealedCount <= 0) return false;
+
+        // 主背包有27个槽位(9-35)，快捷栏有9个槽位(0-8)
+        if (slotIndex >= 9 && slotIndex < 36) {
+            // 主背包槽位：先封印
+            // slotIndex 9 对应第1个封印，slotIndex 35 对应第27个封印
+            int sealOrder = slotIndex - 9;  // 0-26
+            return sealOrder < sealedCount;
+        } else if (slotIndex >= 0 && slotIndex < 9) {
+            // 快捷栏槽位：后封印（在主背包全部封印之后）
+            // 需要超过27个封印才开始封快捷栏
+            if (sealedCount <= 27) return false;
+            int hotbarSealed = sealedCount - 27;  // 快捷栏已封印数
+            return slotIndex < hotbarSealed;
+        }
+        return false;
     }
 
     // ==================== 赎罪系统 ====================
@@ -268,6 +284,10 @@ public class PermanentCurseManager extends WorldSavedData {
         }
 
         markDirty();
+
+        // 同步到客户端
+        syncToClient(player);
+
         return true;
     }
 
@@ -311,6 +331,25 @@ public class PermanentCurseManager extends WorldSavedData {
         );
         warning.getStyle().setColor(severity > 0.7f ? TextFormatting.DARK_RED : TextFormatting.RED);
         player.sendMessage(warning);
+
+        // 同步到客户端
+        syncToClient(player);
+    }
+
+    /**
+     * 同步诅咒数据到客户端
+     */
+    public void syncToClient(EntityPlayer player) {
+        if (player.world.isRemote) return;
+        if (!(player instanceof EntityPlayerMP)) return;
+
+        PlayerCurseData data = playerCurses.get(player.getUniqueID());
+        int sealed = data != null ? data.blackCoffinSealed : 0;
+        float attack = data != null ? data.blackSwanReduction : 0f;
+        float health = data != null ? data.blackFridayReduction : 0f;
+
+        PacketSyncCurse packet = new PacketSyncCurse(sealed, attack, health);
+        PacketHandler.INSTANCE.sendTo(packet, (EntityPlayerMP) player);
     }
 
     // ==================== NBT 序列化 ====================

@@ -162,7 +162,7 @@ public class DifficultyManager {
     /**
      * 应用玩家的难度倍率
      */
-    private static float applyPlayerMultiplier(float baseDifficulty, @Nullable EntityPlayer player) {
+    public static float applyPlayerMultiplier(float baseDifficulty, @Nullable EntityPlayer player) {
         if (player == null) {
             return baseDifficulty;
         }
@@ -178,11 +178,31 @@ public class DifficultyManager {
     // ==================== 属性缩放计算 ====================
 
     /**
-     * 计算生命值倍率
+     * 计算生命值倍率（使用服务器配置）
      */
     public static double calculateHealthMultiplier(float difficulty) {
+        return calculateHealthMultiplier(difficulty, null);
+    }
+
+    /**
+     * 计算生命值倍率（支持玩家个人设置）
+     */
+    public static double calculateHealthMultiplier(float difficulty, @Nullable EntityPlayer player) {
+        ScalingFormula.ScalingMode mode = healthMode;
+
+        // 检查玩家是否有自定义缩放模式
+        if (player != null) {
+            IPlayerDifficulty playerDiff = CapabilityHandler.getPlayerDifficulty(player);
+            if (playerDiff != null) {
+                IPlayerDifficulty.ScalingMode playerMode = playerDiff.getHealthScalingMode();
+                if (playerMode != IPlayerDifficulty.ScalingMode.DEFAULT) {
+                    mode = convertScalingMode(playerMode);
+                }
+            }
+        }
+
         return ScalingFormula.calculate(
-            healthMode,
+            mode,
             AdversityConfig.statScaling.healthBase,
             difficulty,
             AdversityConfig.statScaling.healthRate,
@@ -192,17 +212,59 @@ public class DifficultyManager {
     }
 
     /**
-     * 计算攻击力倍率
+     * 计算攻击力倍率（使用服务器配置）
      */
     public static double calculateDamageMultiplier(float difficulty) {
+        return calculateDamageMultiplier(difficulty, null);
+    }
+
+    /**
+     * 计算攻击力倍率（支持玩家个人设置）
+     */
+    public static double calculateDamageMultiplier(float difficulty, @Nullable EntityPlayer player) {
+        ScalingFormula.ScalingMode mode = damageMode;
+
+        // 检查玩家是否有自定义缩放模式
+        if (player != null) {
+            IPlayerDifficulty playerDiff = CapabilityHandler.getPlayerDifficulty(player);
+            if (playerDiff != null) {
+                IPlayerDifficulty.ScalingMode playerMode = playerDiff.getDamageScalingMode();
+                if (playerMode != IPlayerDifficulty.ScalingMode.DEFAULT) {
+                    mode = convertScalingMode(playerMode);
+                }
+            }
+        }
+
         return ScalingFormula.calculate(
-            damageMode,
+            mode,
             AdversityConfig.statScaling.damageBase,
             difficulty,
             AdversityConfig.statScaling.damageRate,
             AdversityConfig.statScaling.damagePower,
             AdversityConfig.statScaling.damageMax
         );
+    }
+
+    /**
+     * 将玩家缩放模式转换为公式缩放模式
+     */
+    private static ScalingFormula.ScalingMode convertScalingMode(IPlayerDifficulty.ScalingMode playerMode) {
+        switch (playerMode) {
+            case LINEAR:
+                return ScalingFormula.ScalingMode.LINEAR;
+            case EXPONENTIAL:
+                return ScalingFormula.ScalingMode.EXPONENTIAL;
+            case COMPOUND:
+                return ScalingFormula.ScalingMode.COMPOUND;
+            case POLYNOMIAL:
+                return ScalingFormula.ScalingMode.POLYNOMIAL;
+            case LOGARITHMIC:
+                return ScalingFormula.ScalingMode.LOGARITHMIC;
+            case SIGMOID:
+                return ScalingFormula.ScalingMode.SIGMOID;
+            default:
+                return healthMode; // 默认回退到服务器配置
+        }
     }
 
     /**
@@ -312,8 +374,8 @@ public class DifficultyManager {
         // 检查是否在精英黑名单中
         boolean eliteBlacklisted = AdversityConfig.isEliteBlacklisted(entity);
 
-        // 检查是否强制精英
-        boolean forcedElite = AdversityConfig.isForcedElite(entity);
+        // 检查是否有强制等级
+        int forcedTier = AdversityConfig.getForcedTier(entity);
 
         // 计算精英概率
         double eliteChance = Math.min(
@@ -327,9 +389,9 @@ public class DifficultyManager {
         if (eliteBlacklisted) {
             // 在黑名单中，永远不会成为精英
             tier = 0;
-        } else if (forcedElite) {
-            // 强制成为精英
-            tier = Math.max(calculateTier(difficulty), AdversityConfig.getForcedEliteMinTier());
+        } else if (forcedTier > 0) {
+            // 强制指定等级
+            tier = forcedTier;
         } else {
             // 正常随机检查
             double minDiff = AdversityConfig.eliteSettings.minDifficultyForElite;
@@ -345,7 +407,7 @@ public class DifficultyManager {
 
         // 只有精英才应用属性修正和词条
         if (tier > 0) {
-            applyStatModifiers(entity, cap, difficulty);
+            applyStatModifiers(entity, cap, difficulty, nearestPlayer);
             applyAffixes(entity, cap, difficulty, tier);
         }
 
@@ -377,10 +439,11 @@ public class DifficultyManager {
     /**
      * 应用属性修正
      */
-    private static void applyStatModifiers(EntityLiving entity, IAdversityCapability cap, float difficulty) {
-        // 计算各项属性
-        double healthMult = calculateHealthMultiplier(difficulty);
-        double damageMult = calculateDamageMultiplier(difficulty);
+    private static void applyStatModifiers(EntityLiving entity, IAdversityCapability cap, float difficulty,
+                                          @Nullable EntityPlayer nearestPlayer) {
+        // 计算各项属性（使用玩家的个人缩放设置）
+        double healthMult = calculateHealthMultiplier(difficulty, nearestPlayer);
+        double damageMult = calculateDamageMultiplier(difficulty, nearestPlayer);
         double armorBonus = calculateArmorBonus(difficulty);
 
         cap.setHealthMultiplier((float) healthMult);
@@ -470,6 +533,15 @@ public class DifficultyManager {
             if (forcedAffixIds.contains(affix.getId())) {
                 continue;
             }
+            // 检查词条的Tier限制
+            int minTier = affix.getMinTier();
+            int maxTier = affix.getMaxTier();
+            if (minTier > 0 && tier < minTier) {
+                continue; // Tier太低，跳过高级词条
+            }
+            if (maxTier > 0 && tier > maxTier) {
+                continue; // Tier太高，跳过低级词条
+            }
             // 检查词条的难度和实体要求
             if (affix.getMinDifficulty() <= difficulty && affix.canApplyTo(entity)) {
                 availableAffixes.add(affix);
@@ -493,11 +565,24 @@ public class DifficultyManager {
     }
 
     /**
-     * 加权随机选择词条
+     * 加权随机选择词条（支持词条依赖）
      */
     private static List<IAffix> selectAffixes(List<IAffix> available, int count) {
         List<IAffix> selected = new ArrayList<>();
-        List<IAffix> pool = new ArrayList<>(available);
+        java.util.Set<ResourceLocation> selectedIds = new java.util.HashSet<>();
+
+        // 分离有前置要求和无前置要求的词条
+        List<IAffix> pool = new ArrayList<>();
+        List<IAffix> dependentAffixes = new ArrayList<>();
+
+        for (IAffix affix : available) {
+            java.util.Set<ResourceLocation> required = affix.getRequiredAffixes();
+            if (required.isEmpty()) {
+                pool.add(affix);
+            } else {
+                dependentAffixes.add(affix);
+            }
+        }
 
         for (int i = 0; i < count && !pool.isEmpty(); i++) {
             int totalWeight = 0;
@@ -521,8 +606,28 @@ public class DifficultyManager {
 
             if (chosen != null) {
                 selected.add(chosen);
+                selectedIds.add(chosen.getId());
                 final IAffix finalChosen = chosen;
                 pool.removeIf(a -> a.equals(finalChosen) || !a.isCompatibleWith(finalChosen));
+
+                // 检查是否有依赖词条现在可以加入池中
+                java.util.Iterator<IAffix> it = dependentAffixes.iterator();
+                while (it.hasNext()) {
+                    IAffix dep = it.next();
+                    java.util.Set<ResourceLocation> required = dep.getRequiredAffixes();
+                    // 检查是否有任何前置词条已被选中
+                    boolean requirementMet = false;
+                    for (ResourceLocation req : required) {
+                        if (selectedIds.contains(req)) {
+                            requirementMet = true;
+                            break;
+                        }
+                    }
+                    if (requirementMet && dep.isCompatibleWith(finalChosen)) {
+                        pool.add(dep);
+                        it.remove();
+                    }
+                }
             }
         }
 
