@@ -1,0 +1,121 @@
+
+> Configure project :
+This mapping 'stable_39' was designed for MC 1.12! Use at your own peril.
+WARNING: You are using an unsupported version of ForgeGradle.
+Please consider upgrading to ForgeGradle 5 and helping in the efforts to get old versions working on the modern toolchain.
+See https://gist.github.com/TheCurle/fe7ad3ede188cbdd15c235cc75d52d4a for more info on contributing.
+
+> Task :deobfCompileDummyTask
+> Task :deobfProvidedDummyTask
+> Task :sourceApiJava UP-TO-DATE
+> Task :compileApiJava NO-SOURCE
+> Task :processApiResources NO-SOURCE
+> Task :apiClasses UP-TO-DATE
+> Task :sourceMainJava UP-TO-DATE
+
+> Task :compileJava FAILED
+C:\mywork\adversity\build\sources\main\java\com\adversity\sanctuary\TileEntitySanctuary.java:168: error: cannot find symbol
+    public boolean teleportTo(EntityPlayer player, BlockPos targetPos) {
+                              ^
+  symbol:   class EntityPlayer
+  location: class TileEntitySanctuary
+C:\mywork\adversity\build\sources\main\java\com\adversity\config\AdversityConfig.java:862: error: variable naturalFuelUsage is already defined in class SanctuarySettings
+        public int naturalFuelUsage = 100;
+                   ^
+C:\mywork\adversity\build\sources\main\java\com\adversity\config\AdversityConfig.java:869: error: variable artificialFuelUsage is already defined in class SanctuarySettings
+        public int artificialFuelUsage = 200;
+                   ^
+C:\mywork\adversity\build\sources\main\java\com\adversity\bauble\BaubleAuraHandler.java:54: error: cannot find symbol
+        boolean hasSoulChain = BaubleHelper.hasBauble(player, ItemRegistry.SOUL_CHAIN);
+                               ^
+  symbol:   variable BaubleHelper
+  location: class BaubleAuraHandler
+C:\mywork\adversity\build\sources\main\java\com\adversity\bauble\BaubleAuraHandler.java:55: error: cannot find symbol
+        boolean hasSpatialAnchor = BaubleHelper.hasBauble(player, ItemRegistry.SPATIAL_ANCHOR);
+                                   ^
+  symbol:   variable BaubleHelper
+  location: class BaubleAuraHandler
+C:\mywork\adversity\build\sources\main\java\com\adversity\bauble\BaubleAuraHandler.java:56: error: cannot find symbol
+        boolean hasGuardianHeart = BaubleHelper.hasBauble(player, ItemRegistry.GUARDIAN_HEART);
+                                   ^
+  symbol:   variable BaubleHelper
+  location: class BaubleAuraHandler
+C:\mywork\adversity\build\sources\main\java\com\adversity\bauble\BaubleAuraHandler.java:57: error: cannot find symbol
+        boolean hasFlameWard = BaubleHelper.hasBauble(player, ItemRegistry.FLAME_WARD);
+                               ^
+  symbol:   variable BaubleHelper
+  location: class BaubleAuraHandler
+C:\mywork\adversity\build\sources\main\java\com\adversity\bauble\BaubleAuraHandler.java:58: error: cannot find symbol
+        boolean hasFrostWard = BaubleHelper.hasBauble(player, ItemRegistry.FROST_WARD);
+                               ^
+  symbol:   variable BaubleHelper
+  location: class BaubleAuraHandler
+C:\mywork\adversity\build\sources\main\java\com\adversity\bauble\BaubleAuraHandler.java:96: error: incompatible types: ResourceLocation cannot be converted to IAffix
+            if (hasFlameWard && cap.hasAffix(new ResourceLocation("adversity:fiery"))) {
+                                             ^
+C:\mywork\adversity\build\sources\main\java\com\adversity\bauble\BaubleAuraHandler.java:103: error: incompatible types: ResourceLocation cannot be converted to IAffix
+            if (hasFrostWard && cap.hasAffix(new ResourceLocation("adversity:frosty"))) {
+                                             ^
+C:\mywork\adversity\build\sources\main\java\com\adversity\bauble\BaubleAuraHandler.java:116: error: incompatible types: ResourceLocation cannot be converted to IAffix
+        if (cap.hasAffix(id)) {
+                         ^
+C:\mywork\adversity\build\sources\main\java\com\adversity\block\BlockRegistry.java:51: error: cannot find symbol
+                createItemBlock(SANCTUARY_ALTAR),
+                ^
+  symbol:   method createItemBlock(Block)
+  location: class BlockRegistry
+C:\mywork\adversity\build\sources\main\java\com\adversity\block\BlockRegistry.java:52: error: cannot find symbol
+                createItemBlock(SANCTUARY_CORE),
+                                ^
+  symbol:   variable SANCTUARY_CORE
+  location: class BlockRegistry
+C:\mywork\adversity\build\sources\main\java\com\adversity\block\BlockRegistry.java:53: error: cannot find symbol
+                createItemBlock(SANCTUARY_STONE));
+                ^
+  symbol:   method createItemBlock(Block)
+  location: class BlockRegistry
+C:\mywork\adversity\build\sources\main\java\com\adversity\block\BlockRegistry.java:62: error: cannot find symbol
+        registerBlockModel(SANCTUARY_CORE);
+                           ^
+  symbol:   variable SANCTUARY_CORE
+  location: class BlockRegistry
+C:\mywork\adversity\build\sources\main\java\com\adversity\enchantment\EnchantmentHandler.java:48: error: incompatible types: ResourceLocation cannot be converted to IAffix
+            if (cap.hasAffix(shackleId) && RANDOM.nextFloat() < 0.25f * soulboundLevel) {
+                             ^
+C:\mywork\adversity\build\sources\main\java\com\adversity\item\bauble\AbstractWardBauble.java:54: error: cannot find symbol
+            return getInSanctuaryStrength() * zone.baubleEffectMultiplier;
+                                                  ^
+  symbol:   variable baubleEffectMultiplier
+  location: variable zone of type SanctuaryZone
+C:\mywork\adversity\build\sources\main\java\com\adversity\sanctuary\SanctuaryManager.java:74: error: cannot find symbol
+        return zone != null ? zone.eliteReduction : 0.0f;
+                                  ^
+  symbol:   variable eliteReduction
+  location: variable zone of type SanctuaryZone
+C:\mywork\adversity\build\sources\main\java\com\adversity\sanctuary\SanctuaryManager.java:87: error: cannot find symbol
+        return zone.baubleEffectMultiplier;
+                   ^
+  symbol:   variable baubleEffectMultiplier
+  location: variable zone of type SanctuaryZone
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+19 errors
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava'.
+> Compilation failed; see the compiler error output for details.
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights.
+
+* Get more help at https://help.gradle.org
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 5.0.
+Use '--warning-mode all' to show the individual deprecation warnings.
+See https://docs.gradle.org/4.9/userguide/command_line_interface.html#sec:command_line_warnings
+
+BUILD FAILED in 0s
+5 actionable tasks: 3 executed, 2 up-to-date

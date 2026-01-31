@@ -1,6 +1,9 @@
 package com.adversity;
 
 import com.adversity.command.CommandAdversity;
+import com.adversity.command.CommandDifficulty;
+import com.adversity.command.CommandProgression;
+import com.adversity.command.CommandSanctuary;
 import com.adversity.command.CommandSummonElite;
 import com.adversity.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
@@ -45,6 +48,11 @@ public class Adversity {
     public void init(FMLInitializationEvent event) {
         LOGGER.info("Adversity Initialization");
         proxy.init(event);
+
+        // 注册 GUI 处理器
+        net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler(
+                instance,
+                new com.adversity.client.gui.AdversityGuiHandler());
     }
 
     @Mod.EventHandler
@@ -58,6 +66,9 @@ public class Adversity {
         // 注册指令
         event.registerServerCommand(new CommandAdversity());
         event.registerServerCommand(new CommandSummonElite());
+        event.registerServerCommand(new CommandDifficulty());
+        event.registerServerCommand(new CommandSanctuary());
+        event.registerServerCommand(new CommandProgression());
         LOGGER.info("Adversity commands registered");
     }
 }

@@ -1,8 +1,6 @@
 package com.adversity.asm;
 
 import com.adversity.client.gui.SealedSlotOverlayRenderer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,22 +20,27 @@ public class DrawSlotHook {
     public static boolean shouldSkipSlot(Slot slot) {
         if (slot == null) return false;
 
-        Minecraft mc = Minecraft.getMinecraft();
-        EntityPlayer player = mc.player;
-        if (player == null) return false;
+        try {
+            // Get sealed slot count from client cache
+            int sealedCount = SealedSlotOverlayRenderer.ClientCurseCache.getSealedSlots();
+            if (sealedCount <= 0)
+                return false;
 
-        // Check if this slot belongs to player's inventory
-        if (slot.inventory != player.inventory) {
+            // Use method calls instead of field access to avoid SRG issues
+            // getSlotIndex() is a method, not a field
+            int slotIndex = slot.getSlotIndex();
+
+            // Only check player inventory slots (0-35)
+            // Skip other container slots
+            if (slotIndex < 0 || slotIndex >= 36) {
+                return false;
+            }
+
+            return isSlotSealedByCount(slotIndex, sealedCount);
+        } catch (Exception e) {
+            // Silently fail - don't block rendering on error
             return false;
         }
-
-        // Get sealed slot count from client cache
-        int sealedCount = SealedSlotOverlayRenderer.ClientCurseCache.getSealedSlots();
-        if (sealedCount <= 0) return false;
-
-        // Check if this slot index is sealed
-        int slotIndex = slot.getSlotIndex();
-        return isSlotSealedByCount(slotIndex, sealedCount);
     }
 
     /**

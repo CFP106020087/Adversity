@@ -95,7 +95,7 @@ public class GuiAffixGuide extends GuiScreen {
         }
 
         // 计算最大滚动
-        int totalHeight = displayedAffixes.size() * 55; // 每个词条55像素高
+        int totalHeight = displayedAffixes.size() * 73; // 每个词条73像素高（增加描述空间）
         maxScroll = Math.max(0, totalHeight - CONTENT_HEIGHT);
         scrollOffset = Math.min(scrollOffset, maxScroll);
     }
@@ -132,10 +132,10 @@ public class GuiAffixGuide extends GuiScreen {
         int y = contentTop - scrollOffset;
 
         for (IAffix affix : displayedAffixes) {
-            if (y + 55 > contentTop && y < contentTop + CONTENT_HEIGHT) {
+            if (y + 73 > contentTop && y < contentTop + CONTENT_HEIGHT) {
                 drawAffixEntry(affix, guiLeft + CONTENT_X, y, mouseX, mouseY);
             }
-            y += 55;
+            y += 73;
         }
 
         GlStateManager.popMatrix();
@@ -159,11 +159,11 @@ public class GuiAffixGuide extends GuiScreen {
     }
 
     private void drawAffixEntry(IAffix affix, int x, int y, int mouseX, int mouseY) {
-        // 背景
+        // 背景 (增加高度到70像素以容纳多行描述)
         boolean hovered = mouseX >= x && mouseX < x + CONTENT_WIDTH - 15 &&
-                mouseY >= y && mouseY < y + 52;
+                mouseY >= y && mouseY < y + 70;
         int bgColor = hovered ? 0x44FFFFFF : 0x22FFFFFF;
-        drawRect(x, y, x + CONTENT_WIDTH - 15, y + 52, bgColor);
+        drawRect(x, y, x + CONTENT_WIDTH - 15, y + 70, bgColor);
 
         // 先计算难度要求的宽度（用于限制名称长度）
         int reservedWidth = 0;
@@ -200,17 +200,33 @@ public class GuiAffixGuide extends GuiScreen {
                 + "]";
         fontRenderer.drawString(typeLabel, x + 5, y + 16, 0x888888);
 
-        // 描述
+        // 描述 (支持多行自动换行，最多3行)
         String descKey = "affix.adversity." + affix.getId().getPath() + ".desc";
         String desc = I18n.format(descKey);
         // 如果翻译不存在，显示默认描述
         if (desc.equals(descKey)) {
             desc = "No description available";
         }
-        if (fontRenderer.getStringWidth(desc) > CONTENT_WIDTH - 25) {
-            desc = fontRenderer.trimStringToWidth(desc, CONTENT_WIDTH - 30) + "...";
+
+        // 使用多行渲染
+        int descWidth = CONTENT_WIDTH - 25;
+        List<String> descLines = fontRenderer.listFormattedStringToWidth(desc, descWidth);
+        int lineY = y + 30;
+        int maxLines = 3; // 最多显示3行
+        for (int i = 0; i < Math.min(descLines.size(), maxLines); i++) {
+            String line = descLines.get(i);
+            // 如果是最后一行且还有更多内容，添加省略号
+            if (i == maxLines - 1 && descLines.size() > maxLines) {
+                line = fontRenderer.trimStringToWidth(line, descWidth - 15) + "...";
+            }
+            fontRenderer.drawString(line, x + 5, lineY, 0xCCCCCC);
+            lineY += 10;
         }
-        fontRenderer.drawString(desc, x + 5, y + 30, 0xCCCCCC);
+
+        // 鼠标悬停时显示完整描述工具提示
+        if (hovered && descLines.size() > maxLines) {
+            drawHoveringText(descLines, mouseX, mouseY);
+        }
     }
 
     private String getTypeColor(AffixType type) {

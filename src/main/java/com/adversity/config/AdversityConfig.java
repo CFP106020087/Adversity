@@ -75,6 +75,12 @@ public class AdversityConfig {
     })
     public static final ClientSettings clientSettings = new ClientSettings();
 
+    @Config.Comment({
+            "Sanctuary Settings - Safe zones for players",
+            "圣所设置 - 玩家安全区域"
+    })
+    public static final SanctuarySettings sanctuarySettings = new SanctuarySettings();
+
     // ==================== 实体过滤 ====================
 
     public static class EntityFilter {
@@ -139,7 +145,7 @@ public class AdversityConfig {
             "超出安全距离后，每增加多少格距离增加 1 点难度"
         })
         @Config.RangeDouble(min = 50, max = 10000)
-        public double blocksPerDifficulty = 500;
+        public double blocksPerDifficulty = 1000;
 
         @Config.Comment({
             "Maximum difficulty from distance",
@@ -153,7 +159,7 @@ public class AdversityConfig {
             "每过多少天增加 1 点难度"
         })
         @Config.RangeDouble(min = 0.5, max = 100)
-        public double daysPerDifficulty = 2; // 更快的时间增长 (原值: 5)
+        public double daysPerDifficulty = 5; // 平缓增长 (每5天+1难度)
 
         @Config.Comment({
             "Maximum difficulty from time (0 = no limit)",
@@ -175,6 +181,18 @@ public class AdversityConfig {
         })
         @Config.RangeDouble(min = 0, max = 10)
         public double timeWeight = 1.0;
+
+        @Config.Comment({
+                "Use per-player play time instead of global world time for time difficulty",
+                "使用玩家个人游玩时间而非全局世界时间计算时间难度",
+                "",
+                "true = Each player has their own difficulty progression (recommended for multiplayer)",
+                "false = All players share the same time-based difficulty (legacy behavior)",
+                "",
+                "true = 每个玩家有独立的难度进度（多人游戏推荐）",
+                "false = 所有玩家共享时间难度（传统模式）"
+        })
+        public boolean usePerPlayerTime = true;
     }
 
     // ==================== 属性缩放 (核心重构) ====================
@@ -525,6 +543,21 @@ public class AdversityConfig {
         })
         @Config.RangeInt(min = 0, max = 200)
         public int sealDurationPerTier = 80;  // 4秒每级
+
+        @Config.Comment({
+                "=== AFFIX TIER LIMITS ===",
+                "=== 词条等级限制 ===",
+                "",
+                "Limit specific affixes to only appear on certain tiers.",
+                "限制特定词条只能出现在特定等级。",
+                "",
+                "Format: affix_id:min-max (e.g., adversity:splitting:1-5 means T1-T5 only)",
+                "格式: affix_id:min-max（例如 adversity:splitting:1-5 表示只在T1-T5出现）"
+        })
+        public String[] affixTierLimits = new String[] {
+                // "adversity:splitting:1-5", // Example: Splitting only on T1-T5
+                // "adversity:outer_god:8-10" // Example: Outer God only on T8-T10
+        };
     }
 
     // ==================== 永久诅咒设置 ====================
@@ -701,7 +734,7 @@ public class AdversityConfig {
             "Enable mod item drops from elite mobs (disable if using LootTweaker)",
             "启用精英怪物的模组物品掉落（使用LootTweaker时建议禁用）"
         })
-        public boolean enableModItemDrops = false;
+        public boolean enableModItemDrops = true;
 
         @Config.Comment({
             "Base XP multiplier for elite mobs (multiplied by tier)",
@@ -739,13 +772,212 @@ public class AdversityConfig {
             "Enable bonus XP orbs for elite kills",
             "启用精英击杀的额外经验球"
         })
-        public boolean enableBonusXp = false;
+        public boolean enableBonusXp = true;
 
         @Config.Comment({
             "Enable extra vanilla loot drops for elite kills",
             "启用精英击杀的额外原版战利品"
         })
-        public boolean enableExtraLoot = false;
+        public boolean enableExtraLoot = true;
+    }
+
+    // ==================== 圣所设置 ====================
+
+    public static class SanctuarySettings {
+        @Config.Comment({
+                "Enable sanctuary system",
+                "启用圣所系统"
+        })
+        public boolean enableSanctuaries = true;
+
+        @Config.Comment({
+                "Items required to activate a sanctuary (registry name format)",
+                "激活圣所所需物品（注册名格式）",
+                "Format: modid:item_name or modid:item_name:metadata",
+                "格式: modid:item_name 或 modid:item_name:metadata",
+                "Examples: minecraft:nether_star, minecraft:diamond_block, thermalfoundation:material:136",
+                "示例: minecraft:nether_star, minecraft:diamond_block, thermalfoundation:material:136"
+        })
+        public String[] activationItems = new String[] { "minecraft:nether_star" };
+
+        @Config.Comment({
+                "Consume activation item when activating sanctuary",
+                "激活圣所时是否消耗激活物品"
+        })
+        public boolean consumeActivationItem = true;
+
+        @Config.Comment({
+                "Natural sanctuary base radius (blocks)",
+                "天然圣所基础半径（格）"
+        })
+        @Config.RangeInt(min = 8, max = 64)
+        public int naturalBaseRadius = 16;
+
+        @Config.Comment({
+                "Natural sanctuary radius per tier (blocks)",
+                "天然圣所每级增加的半径（格）"
+        })
+        @Config.RangeInt(min = 1, max = 16)
+        public int naturalRadiusPerTier = 4;
+
+        @Config.Comment({
+                "Artificial sanctuary radius (blocks)",
+                "人造圣所半径（格）"
+        })
+        @Config.RangeInt(min = 4, max = 32)
+        public int artificialRadius = 8;
+
+        @Config.Comment({
+                "Natural sanctuary fuel capacity",
+                "天然圣所燃料容量"
+        })
+        @Config.RangeInt(min = 1000, max = 1000000)
+        public int naturalFuelCapacity = 10000;
+
+        @Config.Comment({
+                "Dimensions where natural sanctuaries can generate",
+                "允许生成天然圣所的维度ID列表",
+                "Default: 0 (Overworld)",
+                "默认: 0 (主世界)"
+        })
+        public int[] allowedDimensions = new int[] { 0 };
+
+        @Config.Comment({
+                "Natural sanctuary fuel usage per hour",
+                "天然圣所每小时燃料消耗"
+        })
+        @Config.RangeInt(min = 0, max = 1000)
+        public int naturalFuelUsage = 100;
+
+        @Config.Comment({
+                "Artificial sanctuary fuel usage per hour",
+                "人造圣所每小时燃料消耗"
+        })
+        @Config.RangeInt(min = 0, max = 1000)
+        public int artificialFuelUsage = 200;
+
+        @Config.Comment({
+                "Sanctuary Mode Multipliers (SAFE, FARM, EASE)",
+                "圣所模式的消耗倍率",
+                "Format: SAFE_Multiplier, FARM_Multiplier, EASE_Multiplier"
+        })
+        public double[] modeMultipliers = new double[] { 1.0, 0.5, 0.2 };
+
+        @Config.Comment({
+                "Artificial sanctuary fuel capacity",
+                "人造圣所燃料容量"
+        })
+        @Config.RangeInt(min = 1000, max = 1000000)
+        public int artificialFuelCapacity = 5000;
+
+        @Config.Comment({
+                "Fuel usage multiplier for FARM mode",
+                "狩猎模式燃料消耗倍率"
+        })
+        @Config.RangeDouble(min = 0.0, max = 10.0)
+        public double farmModeFuelMultiplier = 0.5;
+
+        @Config.Comment({
+                "Fuel usage multiplier for EASE mode",
+                "压制模式燃料消耗倍率"
+        })
+        @Config.RangeDouble(min = 0.0, max = 10.0)
+        public double easeModeFuelMultiplier = 0.2;
+
+        @Config.Comment({
+                "Difficulty reduction multiplier for EASE mode (0.5 = 50% difficulty)",
+                "压制模式的难度减少倍率（0.5 = 50%难度）"
+        })
+        @Config.RangeDouble(min = 0.0, max = 1.0)
+        public double easeModeDifficultyMultiplier = 0.5;
+
+        // ==================== 维度黑名单 ====================
+
+        @Config.Comment({
+                "Dimension blacklist - Sanctuaries will NEVER generate in these dimensions",
+                "维度黑名单 - 圣所永远不会在这些维度生成",
+                "This takes priority over allowedDimensions",
+                "此设置优先于 allowedDimensions"
+        })
+        public int[] dimensionBlacklist = new int[] { 1 }; // 默认禁止末地
+
+        // ==================== 合成限制 ====================
+
+        @Config.Comment({
+                "Enable sanctuary crafting restrictions for baubles",
+                "启用圣所饰品合成限制"
+        })
+        public boolean enableCraftingRestrictions = true;
+
+        @Config.Comment({
+                "Distance from sanctuary altar required for crafting special items (blocks)",
+                "合成特殊物品所需的圣所祭坛距离（格）"
+        })
+        @Config.RangeInt(min = 8, max = 64)
+        public int craftingProximity = 20;
+
+        // ==================== 附魔限制 ====================
+
+        @Config.Comment({
+                "Remove Adversity enchantments from enchanting table when NOT near sanctuary",
+                "当玩家不在圣所附近时，从附魔台移除 Adversity 附魔"
+        })
+        public boolean removeEnchantsFromTable = true;
+
+        @Config.Comment({
+                "Remove Adversity enchantments from villager trades",
+                "从村民交易移除 Adversity 附魔"
+        })
+        public boolean removeEnchantsFromVillagers = true;
+
+        // ==================== Tier 限制 ====================
+
+        @Config.Comment({
+                "Tier-based crafting restrictions for baubles",
+                "饰品按 Tier 等级限制合成",
+                "Format: item_name:required_tier (e.g., guardian_heart:3)",
+                "格式: item_name:required_tier（例如 guardian_heart:3）"
+        })
+        public String[] baublesTierRequirements = new String[] {
+                "guardian_heart:3",
+                "spatial_anchor:2",
+                "soul_chain:2",
+                "enchant_guardian:2",
+                "flame_ward:1",
+                "frost_ward:1",
+                "corrosion_bane:1",
+                "clarity_lens:1",
+                "courage_charm:1",
+                "anchor_stone:1"
+        };
+    }
+
+    @Config.Comment({
+            "Bauble Aura Settings",
+            "饰品光环设置"
+    })
+    public static final AuraSettings auraSettings = new AuraSettings();
+
+    public static class AuraSettings {
+        @Config.Comment({
+                "Enable bauble suppression aura",
+                "启用饰品压制光环"
+        })
+        public boolean enableAura = true;
+
+        @Config.Comment({
+                "Aura radius in blocks",
+                "光环半径（格）"
+        })
+        @Config.RangeInt(min = 4, max = 64)
+        public int auraRadius = 16;
+
+        @Config.Comment({
+                "Aura check interval in ticks",
+                "光环检查间隔（tick）"
+        })
+        @Config.RangeInt(min = 1, max = 100)
+        public int auraInterval = 10;
     }
 
     // ==================== 运行时缓存 ====================

@@ -87,4 +87,22 @@ public interface IPlayerDifficulty {
      * 反序列化
      */
     void deserializeNBT(NBTTagCompound nbt);
+
+    // ==================== 玩家个人游玩时间追踪 ====================
+
+    /**
+     * 获取玩家的个人游玩时间（tick）
+     * 用于替代全局服务器时间计算难度
+     */
+    long getPlayTime();
+
+    /**
+     * 增加玩家的游玩时间
+     */
+    void addPlayTime(long ticks);
+
+    /**
+     * 设置玩家的游玩时间
+     */
+    void setPlayTime(long ticks);
 }

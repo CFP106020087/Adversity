@@ -80,6 +80,12 @@ public class GravityAffix extends AbstractAffix {
             double distance = entity.getDistance(player);
             if (distance < 1.5) continue;  // 太近不拉
 
+            // 检查饰品反制（锚石项链）
+            float reduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "gravity");
+            if (reduction >= 1.0f) {
+                continue; // 完全免疫
+            }
+
             // 计算拉力方向
             double dx = entity.posX - player.posX;
             double dy = entity.posY - player.posY;
@@ -93,9 +99,9 @@ public class GravityAffix extends AbstractAffix {
                 dz /= length;
             }
 
-            // 应用拉力（根据距离衰减）
+            // 应用拉力（根据距离衰减，并考虑反制减少）
             double distanceFactor = 1.0 - (distance / range);
-            double actualPull = pullStrength * distanceFactor;
+            double actualPull = pullStrength * distanceFactor * (1.0 - reduction);
 
             player.motionX += dx * actualPull;
             player.motionY += dy * actualPull * 0.5;  // 垂直方向减弱
@@ -104,6 +110,7 @@ public class GravityAffix extends AbstractAffix {
 
             pulled = true;
         }
+
 
         // 播放音效和粒子
         if (pulled && entity.world instanceof WorldServer) {

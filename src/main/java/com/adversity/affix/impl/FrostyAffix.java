@@ -88,11 +88,21 @@ public class FrostyAffix extends AbstractAffix {
         EntityPlayer player = (EntityPlayer) target;
         int tier = getTier(attacker);
 
-        // 计算添加的冻结层数
+        // 检查饰品反制（净化徽章 - 叠层系统）
+        float reduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "stack_system");
+        if (reduction >= 1.0f) {
+            return damage; // 完全免疫
+        }
+
+        // 计算添加的冻结层数（根据反制减少）
         int stacksToAdd = BASE_STACKS_ON_HIT + (tier / 3 * STACKS_PER_TIER);
+        if (reduction > 0) {
+            stacksToAdd = Math.max(1, (int) (stacksToAdd * (1.0f - reduction)));
+        }
 
         // 添加冻结debuff
         PlayerDebuffManager.addStacks(player, DebuffType.FROST, stacksToAdd, FROST_DURATION, attacker.getEntityId());
+
 
         // 重置衰减计时器
         PlayerDebuffManager.DebuffData debuffData = PlayerDebuffManager.getDebuff(player, DebuffType.FROST);

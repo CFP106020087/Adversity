@@ -69,6 +69,15 @@ public class TeleportingAffix extends AbstractAffix {
 
         // 随机判定
         if (RANDOM.nextFloat() < teleportChance) {
+            // 检查攻击者是否有反制饰品（锚定之心 - 反制闪避/传送）
+            if (source.getTrueSource() instanceof net.minecraft.entity.player.EntityPlayer) {
+                net.minecraft.entity.player.EntityPlayer player = (net.minecraft.entity.player.EntityPlayer) source
+                        .getTrueSource();
+                if (com.adversity.item.bauble.BaubleHelper.tryBlockEffect(player, "evasion", entity)) {
+                    return damage; // 传送被阻止
+                }
+            }
+
             // 计算传送距离
             int maxDistance = BASE_DISTANCE + (tier * DISTANCE_PER_TIER);
 
@@ -76,6 +85,7 @@ public class TeleportingAffix extends AbstractAffix {
             if (tryTeleport(entity, maxDistance)) {
                 // 设置冷却
                 data.setCooldown(TELEPORT_COOLDOWN);
+
 
                 // 播放音效
                 if (!entity.world.isRemote) {

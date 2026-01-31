@@ -56,8 +56,23 @@ public class RegeneratingAffix extends AbstractAffix {
                 // 计算回复量
                 float healAmount = entity.getMaxHealth() * regenRatio;
 
+                // 检查反制：凋零印记 (Wither Mark)
+                // 检查最近攻击者（复仇目标）是否有凋零印记
+                if (entity.getRevengeTarget() instanceof net.minecraft.entity.player.EntityPlayer) {
+                    net.minecraft.entity.player.EntityPlayer player = (net.minecraft.entity.player.EntityPlayer) entity
+                            .getRevengeTarget();
+                    // 如果有凋零印记，根据强度减少回复
+                    // 获取饰品效果强度（0.0-1.0，1.0 = 完全禁止回复）
+                    float reduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "healing");
+                    if (reduction > 0) {
+                        healAmount *= (1.0f - reduction);
+                    }
+                }
+
                 // 回复生命
-                entity.heal(healAmount);
+                if (healAmount > 0) {
+                    entity.heal(healAmount);
+                }
 
                 // 生成粒子效果
                 if (!entity.world.isRemote && entity.world instanceof WorldServer) {

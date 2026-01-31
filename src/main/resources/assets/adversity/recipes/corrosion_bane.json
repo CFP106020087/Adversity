@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GMG",
+    "MEM",
+    "GMG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "M": {
+      "item": "minecraft:milk_bucket"
+    },
+    "E": {
+      "item": "adversity:entropy",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "adversity:corrosion_bane",
+    "count": 1
+  }
+}

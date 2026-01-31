@@ -131,4 +131,24 @@ public interface IAdversityCapability {
      * 标记该实体已被处理
      */
     void setProcessed(boolean processed);
+    // ==================== 进度系统 ====================
+
+    /**
+     * 玩家进度能力接口
+     */
+    interface IProgression {
+        boolean hasStage(String stage);
+
+        void addStage(String stage);
+
+        void removeStage(String stage);
+
+        java.util.Set<String> getStages();
+
+        void clear();
+
+        NBTTagCompound serializeNBT();
+
+        void deserializeNBT(NBTTagCompound nbt);
+    }
 }

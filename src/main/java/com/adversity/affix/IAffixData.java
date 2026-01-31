@@ -61,4 +61,34 @@ public interface IAffixData {
      * 减少冷却时间
      */
     void decrementCooldown();
+
+    // ==================== 便捷数据存储方法 ====================
+
+    /**
+     * 设置自定义整数值
+     */
+    default void setCustomInt(String key, int value) {
+        getCustomData().setInteger(key, value);
+    }
+
+    /**
+     * 获取自定义整数值
+     */
+    default int getCustomInt(String key) {
+        return getCustomData().getInteger(key);
+    }
+
+    /**
+     * 设置自定义字符串值
+     */
+    default void setCustomString(String key, String value) {
+        getCustomData().setString(key, value);
+    }
+
+    /**
+     * 获取自定义字符串值
+     */
+    default String getCustomString(String key) {
+        return getCustomData().getString(key);
+    }
 }

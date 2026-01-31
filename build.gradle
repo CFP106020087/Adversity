@@ -33,12 +33,19 @@ repositories {
     maven {
         name = "CurseForge"
         url = "https://www.cursemaven.com"
+       
+
     }
+    flatDir { dirs 'libs' }
 }
 
 dependencies {
     // Baubles API (soft dependency)
     compileOnly "curse.maven:baubles-227083:2518667"  // Baubles 1.5.2 for 1.12.2
+    // CraftTweaker (soft dependency)
+    compileOnly name:"CraftTweaker2-1.12-4.1.20.703" // CraftTweaker 2 for 1.12.2
+    // FermiumBooter (mixin support)
+    compileOnly name:"`FermiumBooter-1.2.0"
 }
 
 processResources {

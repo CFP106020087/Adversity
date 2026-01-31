@@ -77,6 +77,12 @@ public class ShackleAffix extends AbstractAffix {
             player.getName(), chance, roll, roll < chance);
 
         if (roll < chance) {
+            // 检查饰品保护（灵魂锁链）
+            if (com.adversity.item.bauble.BaubleHelper.tryBlockEffect(player, "shackle", attacker)) {
+                Adversity.LOGGER.info("[Shackle] 被灵魂锁链阻止!");
+                return damage;
+            }
+
             // 设置冷却（在执行前设置，防止重入）
             playerCooldowns.put(playerId, currentTime);
 

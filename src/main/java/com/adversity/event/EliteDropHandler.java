@@ -4,12 +4,11 @@ import com.adversity.Adversity;
 import com.adversity.capability.CapabilityHandler;
 import com.adversity.capability.IAdversityCapability;
 import com.adversity.config.AdversityConfig;
+import com.adversity.item.ItemEntropy;
 import com.adversity.item.ItemRegistry;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
@@ -28,14 +27,14 @@ import java.util.Random;
  *
  * 掉落设计理念：
  * - 掉落率和数量与等级正相关
- * - 高等级材料只从高等级精英获取
+ * - 高等级熵能只从高等级精英获取
  * - 玩家击杀才有掉落（防止自动化农场）
  * - 掉落位置在怪物身上，增强反馈感
  *
  * 掉落表：
- * T1-T4: 词条残渣 (Affix Essence) - 1~3个，100%概率
- * T5-T7: 词条水晶 (Affix Crystal) - 1~2个，50%-80%概率 + 残渣
- * T8-T10: 虚空碎片 (Void Shard) - 1个，30%-60%概率 + 水晶 + 残渣
+ * T1-T4: 熵能碎片 (Entropy Shard) - 1~3个，100%概率
+ * T5-T7: 熵能结晶 (Entropy Crystal) - 1~2个，50%-80%概率 + 碎片
+ * T8-T10: 熵能核心 (Entropy Core) - 1个，30%-60%概率 + 结晶 + 碎片
  */
 @Mod.EventBusSubscriber(modid = Adversity.MODID)
 public class EliteDropHandler {
@@ -168,36 +167,41 @@ public class EliteDropHandler {
     }
 
     /**
-     * 处理掉落物
+     * 处理掉落物 - 使用新的熵能系统
      */
     private static void processDrops(World world, BlockPos pos, int tier, float difficulty) {
-        // T1-T10 都掉落基础材料（词条残渣）
-        dropEssence(world, pos, tier);
+        // T1-T10 都掉落基础熵能（熵能碎片）
+        dropEntropyShard(world, pos, tier);
 
-        // T5+ 掉落中级材料（词条水晶）
+        // T5+ 掉落中级熵能（熵能结晶）
         if (tier >= 5) {
-            dropCrystal(world, pos, tier);
+            dropEntropyCrystal(world, pos, tier);
         }
 
-        // T8+ 掉落高级材料（虚空碎片）
+        // T8+ 掉落高级熵能（熵能核心）
         if (tier >= 8) {
-            dropVoidShard(world, pos, tier);
+            dropEntropyCore(world, pos, tier);
         }
 
-        // 额外掉落（基于难度的经验加成暂不实现，留作扩展）
+        // 处理自定义掉落 (CraftTweaker)
+        for (com.adversity.loot.EliteLootEntry entry : com.adversity.loot.EliteLootManager.getDropsForTier(tier)) {
+            if (RANDOM.nextFloat() < entry.getChance()) {
+                spawnItemDrop(world, pos, entry.getStack());
+            }
+        }
     }
 
     /**
-     * 掉落词条残渣
+     * 掉落熵能碎片
      * T1: 1个 (100%)
      * T2: 1-2个 (100%)
      * T3: 2个 (100%)
      * T4: 2-3个 (100%)
      * T5+: 3个 (100%)
      */
-    private static void dropEssence(World world, BlockPos pos, int tier) {
-        Item item = ItemRegistry.AFFIX_ESSENCE;
-        if (item == null) return;
+    private static void dropEntropyShard(World world, BlockPos pos, int tier) {
+        if (ItemRegistry.ENTROPY == null)
+            return;
 
         int count;
         switch (tier) {
@@ -218,19 +222,19 @@ public class EliteDropHandler {
                 break;
         }
 
-        spawnItemDrop(world, pos, item, count);
+        spawnItemDrop(world, pos, ItemEntropy.createShard(count));
     }
 
     /**
-     * 掉落词条水晶
+     * 掉落熵能结晶
      * T5: 1个 (50%)
      * T6: 1个 (65%)
      * T7: 1-2个 (80%)
      * T8+: 2个 (100%)
      */
-    private static void dropCrystal(World world, BlockPos pos, int tier) {
-        Item item = ItemRegistry.AFFIX_CRYSTAL;
-        if (item == null) return;
+    private static void dropEntropyCrystal(World world, BlockPos pos, int tier) {
+        if (ItemRegistry.ENTROPY == null)
+            return;
 
         double chance;
         int count;
@@ -255,19 +259,19 @@ public class EliteDropHandler {
         }
 
         if (RANDOM.nextDouble() < chance) {
-            spawnItemDrop(world, pos, item, count);
+            spawnItemDrop(world, pos, ItemEntropy.createCrystal(count));
         }
     }
 
     /**
-     * 掉落虚空碎片
+     * 掉落熵能核心
      * T8: 1个 (30%)
      * T9: 1个 (45%)
      * T10: 1-2个 (60%)
      */
-    private static void dropVoidShard(World world, BlockPos pos, int tier) {
-        Item item = ItemRegistry.VOID_SHARD;
-        if (item == null) return;
+    private static void dropEntropyCore(World world, BlockPos pos, int tier) {
+        if (ItemRegistry.ENTROPY == null)
+            return;
 
         double chance;
         int count;
@@ -290,17 +294,16 @@ public class EliteDropHandler {
         }
 
         if (RANDOM.nextDouble() < chance) {
-            spawnItemDrop(world, pos, item, count);
+            spawnItemDrop(world, pos, ItemEntropy.createCore(count));
         }
     }
 
     /**
      * 在世界中生成掉落物
      */
-    private static void spawnItemDrop(World world, BlockPos pos, Item item, int count) {
-        if (count <= 0) return;
-
-        ItemStack stack = new ItemStack(item, count);
+    private static void spawnItemDrop(World world, BlockPos pos, ItemStack stack) {
+        if (stack.isEmpty() || stack.getCount() <= 0)
+            return;
 
         // 添加随机偏移，让掉落物更自然
         double x = pos.getX() + 0.5 + (RANDOM.nextDouble() - 0.5) * 0.5;
@@ -320,3 +323,4 @@ public class EliteDropHandler {
         world.spawnEntity(entityItem);
     }
 }
+

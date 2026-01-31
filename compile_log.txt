@@ -1,0 +1,402 @@
+Initialized native services in: C:\Users\jason\.gradle\native
+Found daemon DaemonInfo{pid=5728, address=[107a94d8-c74e-4e1e-90b6-fb12ed67b988 port:52570, addresses:[/127.0.0.1, /0:0:0:0:0:0:0:1]], state=Idle, lastBusy=1769298508938, context=DefaultDaemonContext[uid=ed506f7a-ca87-45d3-9b9c-9efbe72a1860,javaHome=C:\Program Files\Eclipse Adoptium\jdk-8.0.472.8-hotspot,daemonRegistryDir=C:\Users\jason\.gradle\daemon,pid=5728,idleTimeout=10800000,daemonOpts=-Xmx3G,-Dfile.encoding=x-windows-950,-Duser.country=TW,-Duser.language=zh,-Duser.variant]} however its context does not match the desired criteria.
+At least one daemon option is different.
+Wanted: DefaultDaemonContext[uid=null,javaHome=C:\Program Files\Eclipse Adoptium\jdk-8.0.472.8-hotspot,daemonRegistryDir=C:\Users\jason\.gradle\daemon,pid=62540,idleTimeout=null,daemonOpts=-XX:+HeapDumpOnOutOfMemoryError,-Xmx1024m,-Dfile.encoding=x-windows-950,-Duser.country=TW,-Duser.language=zh,-Duser.variant]
+Actual: DefaultDaemonContext[uid=ed506f7a-ca87-45d3-9b9c-9efbe72a1860,javaHome=C:\Program Files\Eclipse Adoptium\jdk-8.0.472.8-hotspot,daemonRegistryDir=C:\Users\jason\.gradle\daemon,pid=5728,idleTimeout=10800000,daemonOpts=-Xmx3G,-Dfile.encoding=x-windows-950,-Duser.country=TW,-Duser.language=zh,-Duser.variant]
+
+  Looking for a different daemon...
+The client will now receive all logging from the daemon (pid: 65620). The daemon log file: C:\Users\jason\.gradle\daemon\4.9\daemon-65620.out.log
+Starting 47th build in daemon [uptime: 5 hrs 55 mins 4.24 secs, performance: 100%]
+Using 20 worker leases.
+Starting Build
+Settings evaluated using settings file 'C:\mywork\adversity\settings.gradle'.
+Projects loaded. Root project using build file 'C:\mywork\adversity\build.gradle'.
+Included projects: [root project 'Adversity']
+
+> Configure project :
+Evaluating root project 'Adversity' using build file 'C:\mywork\adversity\build.gradle'.
+This mapping 'stable_39' was designed for MC 1.12! Use at your own peril.
+WARNING: You are using an unsupported version of ForgeGradle.
+Please consider upgrading to ForgeGradle 5 and helping in the efforts to get old versions working on the modern toolchain.
+See https://gist.github.com/TheCurle/fe7ad3ede188cbdd15c235cc75d52d4a for more info on contributing.
+file or directory 'C:\mywork\adversity\src\api\resources', not found
+All projects evaluated.
+Selected primary task 'compileJava' from project :
+Tasks to be executed: [task ':deobfCompileDummyTask', task ':deobfProvidedDummyTask', task ':sourceApiJava', task ':compileApiJava', task ':processApiResources', task ':apiClasses', task ':sourceMainJava', task ':compileJava']
+:deobfCompileDummyTask (Thread[Task worker for ':',5,main]) started.
+
+> Task :deobfCompileDummyTask
+Task ':deobfCompileDummyTask' is not up-to-date because:
+  Task has not declared any outputs despite executing actions.
+:deobfCompileDummyTask (Thread[Task worker for ':',5,main]) completed. Took 0.003 secs.
+:deobfProvidedDummyTask (Thread[Task worker for ':',5,main]) started.
+
+> Task :deobfProvidedDummyTask
+Task ':deobfProvidedDummyTask' is not up-to-date because:
+  Task has not declared any outputs despite executing actions.
+:deobfProvidedDummyTask (Thread[Task worker for ':',5,main]) completed. Took 0.001 secs.
+:sourceApiJava (Thread[Task worker for ':',5,main]) started.
+
+> Task :sourceApiJava UP-TO-DATE
+file or directory 'C:\mywork\adversity\src\api\java', not found
+Skipping task ':sourceApiJava' as it is up-to-date.
+:sourceApiJava (Thread[Task worker for ':',5,main]) completed. Took 0.0 secs.
+:compileApiJava (Thread[Task worker for ':',5,main]) started.
+
+> Task :compileApiJava NO-SOURCE
+Skipping task ':compileApiJava' as it has no source files and no previous output files.
+:compileApiJava (Thread[Task worker for ':',5,main]) completed. Took 0.0 secs.
+:processApiResources (Thread[Task worker for ':',5,main]) started.
+
+> Task :processApiResources NO-SOURCE
+file or directory 'C:\mywork\adversity\src\api\resources', not found
+Skipping task ':processApiResources' as it has no source files and no previous output files.
+:processApiResources (Thread[Task worker for ':',5,main]) completed. Took 0.0 secs.
+:apiClasses (Thread[Task worker for ':',5,main]) started.
+
+> Task :apiClasses UP-TO-DATE
+Skipping task ':apiClasses' as it has no actions.
+:apiClasses (Thread[Task worker for ':',5,main]) completed. Took 0.0 secs.
+:sourceMainJava (Thread[Task worker for ':' Thread 10,5,main]) started.
+
+> Task :sourceMainJava UP-TO-DATE
+Skipping task ':sourceMainJava' as it is up-to-date.
+:sourceMainJava (Thread[Task worker for ':' Thread 10,5,main]) completed. Took 0.01 secs.
+:compileJava (Thread[Task worker for ':' Thread 10,5,main]) started.
+
+> Task :compileJava FAILED
+Task ':compileJava' is not up-to-date because:
+  Task has failed previously.
+All input files are considered out-of-date for incremental task ':compileJava'.
+Compiling with JDK Java compiler API.
+C:\mywork\adversity\build\sources\main\java\com\adversity\sanctuary\TileEntitySanctuary.java:168: error: cannot find symbol
+    public boolean teleportTo(EntityPlayer player, BlockPos targetPos) {
+                              ^
+  symbol:   class EntityPlayer
+  location: class TileEntitySanctuary
+C:\mywork\adversity\build\sources\main\java\com\adversity\config\AdversityConfig.java:862: error: variable naturalFuelUsage is already defined in class SanctuarySettings
+        public int naturalFuelUsage = 100;
+                   ^
+C:\mywork\adversity\build\sources\main\java\com\adversity\config\AdversityConfig.java:869: error: variable artificialFuelUsage is already defined in class SanctuarySettings
+        public int artificialFuelUsage = 200;
+                   ^
+C:\mywork\adversity\build\sources\main\java\com\adversity\bauble\BaubleAuraHandler.java:54: error: cannot find symbol
+        boolean hasSoulChain = BaubleHelper.hasBauble(player, ItemRegistry.SOUL_CHAIN);
+                               ^
+  symbol:   variable BaubleHelper
+  location: class BaubleAuraHandler
+C:\mywork\adversity\build\sources\main\java\com\adversity\bauble\BaubleAuraHandler.java:55: error: cannot find symbol
+        boolean hasSpatialAnchor = BaubleHelper.hasBauble(player, ItemRegistry.SPATIAL_ANCHOR);
+                                   ^
+  symbol:   variable BaubleHelper
+  location: class BaubleAuraHandler
+C:\mywork\adversity\build\sources\main\java\com\adversity\bauble\BaubleAuraHandler.java:56: error: cannot find symbol
+        boolean hasGuardianHeart = BaubleHelper.hasBauble(player, ItemRegistry.GUARDIAN_HEART);
+                                   ^
+  symbol:   variable BaubleHelper
+  location: class BaubleAuraHandler
+C:\mywork\adversity\build\sources\main\java\com\adversity\bauble\BaubleAuraHandler.java:57: error: cannot find symbol
+        boolean hasFlameWard = BaubleHelper.hasBauble(player, ItemRegistry.FLAME_WARD);
+                               ^
+  symbol:   variable BaubleHelper
+  location: class BaubleAuraHandler
+C:\mywork\adversity\build\sources\main\java\com\adversity\bauble\BaubleAuraHandler.java:58: error: cannot find symbol
+        boolean hasFrostWard = BaubleHelper.hasBauble(player, ItemRegistry.FROST_WARD);
+                               ^
+  symbol:   variable BaubleHelper
+  location: class BaubleAuraHandler
+C:\mywork\adversity\build\sources\main\java\com\adversity\bauble\BaubleAuraHandler.java:96: error: incompatible types: ResourceLocation cannot be converted to IAffix
+            if (hasFlameWard && cap.hasAffix(new ResourceLocation("adversity:fiery"))) {
+                                             ^
+C:\mywork\adversity\build\sources\main\java\com\adversity\bauble\BaubleAuraHandler.java:103: error: incompatible types: ResourceLocation cannot be converted to IAffix
+            if (hasFrostWard && cap.hasAffix(new ResourceLocation("adversity:frosty"))) {
+                                             ^
+C:\mywork\adversity\build\sources\main\java\com\adversity\bauble\BaubleAuraHandler.java:116: error: incompatible types: ResourceLocation cannot be converted to IAffix
+        if (cap.hasAffix(id)) {
+                         ^
+C:\mywork\adversity\build\sources\main\java\com\adversity\block\BlockRegistry.java:51: error: cannot find symbol
+                createItemBlock(SANCTUARY_ALTAR),
+                ^
+  symbol:   method createItemBlock(Block)
+  location: class BlockRegistry
+C:\mywork\adversity\build\sources\main\java\com\adversity\block\BlockRegistry.java:52: error: cannot find symbol
+                createItemBlock(SANCTUARY_CORE),
+                                ^
+  symbol:   variable SANCTUARY_CORE
+  location: class BlockRegistry
+C:\mywork\adversity\build\sources\main\java\com\adversity\block\BlockRegistry.java:53: error: cannot find symbol
+                createItemBlock(SANCTUARY_STONE));
+                ^
+  symbol:   method createItemBlock(Block)
+  location: class BlockRegistry
+C:\mywork\adversity\build\sources\main\java\com\adversity\block\BlockRegistry.java:62: error: cannot find symbol
+        registerBlockModel(SANCTUARY_CORE);
+                           ^
+  symbol:   variable SANCTUARY_CORE
+  location: class BlockRegistry
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:40: error: cannot find symbol
+        contentLines.clear();
+        ^
+  symbol:   variable contentLines
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:41: error: cannot find symbol
+        scrollOffset = 0;
+        ^
+  symbol:   variable scrollOffset
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:68: error: cannot find symbol
+        int totalHeight = contentLines.size() * 11;
+                          ^
+  symbol:   variable contentLines
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:69: error: cannot find symbol
+        maxScroll = Math.max(0, totalHeight - CONTENT_HEIGHT);
+        ^
+  symbol:   variable maxScroll
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:214: error: cannot find symbol
+        contentLines.add("§6§l" + I18n.format(key));
+        ^
+  symbol:   variable contentLines
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:218: error: cannot find symbol
+        contentLines.add("§e" + I18n.format(key));
+        ^
+  symbol:   variable contentLines
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:222: error: cannot find symbol
+        contentLines.add(text);
+        ^
+  symbol:   variable contentLines
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:226: error: cannot find symbol
+        contentLines.add("§7? " + I18n.format(key));
+        ^
+  symbol:   variable contentLines
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:233: error: cannot find symbol
+            contentLines.add("§7" + line);
+            ^
+  symbol:   variable contentLines
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:243: error: cannot find symbol
+        drawRect(guiLeft, guiTop, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT, 0xDD1a1a2e);
+                 ^
+  symbol:   variable guiLeft
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:243: error: cannot find symbol
+        drawRect(guiLeft, guiTop, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT, 0xDD1a1a2e);
+                          ^
+  symbol:   variable guiTop
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:243: error: cannot find symbol
+        drawRect(guiLeft, guiTop, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT, 0xDD1a1a2e);
+                                  ^
+  symbol:   variable guiLeft
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:243: error: cannot find symbol
+        drawRect(guiLeft, guiTop, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT, 0xDD1a1a2e);
+                                                       ^
+  symbol:   variable guiTop
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:246: error: cannot find symbol
+        drawRect(guiLeft, guiTop, guiLeft + GUI_WIDTH, guiTop + 2, 0xFF6a4c93);
+                 ^
+  symbol:   variable guiLeft
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:246: error: cannot find symbol
+        drawRect(guiLeft, guiTop, guiLeft + GUI_WIDTH, guiTop + 2, 0xFF6a4c93);
+                          ^
+  symbol:   variable guiTop
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:246: error: cannot find symbol
+        drawRect(guiLeft, guiTop, guiLeft + GUI_WIDTH, guiTop + 2, 0xFF6a4c93);
+                                  ^
+  symbol:   variable guiLeft
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:246: error: cannot find symbol
+        drawRect(guiLeft, guiTop, guiLeft + GUI_WIDTH, guiTop + 2, 0xFF6a4c93);
+                                                       ^
+  symbol:   variable guiTop
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:247: error: cannot find symbol
+        drawRect(guiLeft, guiTop + GUI_HEIGHT - 2, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT, 0xFF6a4c93);
+                 ^
+  symbol:   variable guiLeft
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:247: error: cannot find symbol
+        drawRect(guiLeft, guiTop + GUI_HEIGHT - 2, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT, 0xFF6a4c93);
+                          ^
+  symbol:   variable guiTop
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:247: error: cannot find symbol
+        drawRect(guiLeft, guiTop + GUI_HEIGHT - 2, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT, 0xFF6a4c93);
+                                                   ^
+  symbol:   variable guiLeft
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:247: error: cannot find symbol
+        drawRect(guiLeft, guiTop + GUI_HEIGHT - 2, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT, 0xFF6a4c93);
+                                                                        ^
+  symbol:   variable guiTop
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:248: error: cannot find symbol
+        drawRect(guiLeft, guiTop, guiLeft + 2, guiTop + GUI_HEIGHT, 0xFF6a4c93);
+                 ^
+  symbol:   variable guiLeft
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:248: error: cannot find symbol
+        drawRect(guiLeft, guiTop, guiLeft + 2, guiTop + GUI_HEIGHT, 0xFF6a4c93);
+                          ^
+  symbol:   variable guiTop
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:248: error: cannot find symbol
+        drawRect(guiLeft, guiTop, guiLeft + 2, guiTop + GUI_HEIGHT, 0xFF6a4c93);
+                                  ^
+  symbol:   variable guiLeft
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:248: error: cannot find symbol
+        drawRect(guiLeft, guiTop, guiLeft + 2, guiTop + GUI_HEIGHT, 0xFF6a4c93);
+                                               ^
+  symbol:   variable guiTop
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:249: error: cannot find symbol
+        drawRect(guiLeft + GUI_WIDTH - 2, guiTop, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT, 0xFF6a4c93);
+                 ^
+  symbol:   variable guiLeft
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:249: error: cannot find symbol
+        drawRect(guiLeft + GUI_WIDTH - 2, guiTop, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT, 0xFF6a4c93);
+                                          ^
+  symbol:   variable guiTop
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:249: error: cannot find symbol
+        drawRect(guiLeft + GUI_WIDTH - 2, guiTop, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT, 0xFF6a4c93);
+                                                  ^
+  symbol:   variable guiLeft
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:249: error: cannot find symbol
+        drawRect(guiLeft + GUI_WIDTH - 2, guiTop, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT, 0xFF6a4c93);
+                                                                       ^
+  symbol:   variable guiTop
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:254: error: cannot find symbol
+        fontRenderer.drawStringWithShadow(title, guiLeft + (GUI_WIDTH - titleWidth) / 2, guiTop + 8, 0xFFd4af37);
+                                                 ^
+  symbol:   variable guiLeft
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:254: error: cannot find symbol
+        fontRenderer.drawStringWithShadow(title, guiLeft + (GUI_WIDTH - titleWidth) / 2, guiTop + 8, 0xFFd4af37);
+                                                                                         ^
+  symbol:   variable guiTop
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:265: error: cannot find symbol
+        int contentTop = guiTop + CONTENT_Y;
+                         ^
+  symbol:   variable guiTop
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:266: error: cannot find symbol
+        int y = contentTop - scrollOffset;
+                             ^
+  symbol:   variable scrollOffset
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:270: error: cannot find symbol
+        for (String line : contentLines) {
+                           ^
+  symbol:   variable contentLines
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:272: error: cannot find symbol
+                fontRenderer.drawString(line, guiLeft + CONTENT_X, y, 0xFFFFFF);
+                                              ^
+  symbol:   variable guiLeft
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:279: error: cannot find symbol
+        if (maxScroll > 0) {
+            ^
+  symbol:   variable maxScroll
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:280: error: cannot find symbol
+            int scrollBarX = guiLeft + GUI_WIDTH - 10;
+                             ^
+  symbol:   variable guiLeft
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:281: error: cannot find symbol
+            int scrollBarY = guiTop + CONTENT_Y;
+                             ^
+  symbol:   variable guiTop
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:286: error: cannot find symbol
+            int thumbHeight = Math.max(20, scrollBarHeight * CONTENT_HEIGHT / (maxScroll + CONTENT_HEIGHT));
+                                                                               ^
+  symbol:   variable maxScroll
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:287: error: cannot find symbol
+            int thumbY = scrollBarY + (scrollBarHeight - thumbHeight) * scrollOffset / maxScroll;
+                                                                        ^
+  symbol:   variable scrollOffset
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:287: error: cannot find symbol
+            int thumbY = scrollBarY + (scrollBarHeight - thumbHeight) * scrollOffset / maxScroll;
+                                                                                       ^
+  symbol:   variable maxScroll
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:310: error: cannot find symbol
+            scrollOffset -= scroll / 4;
+            ^
+  symbol:   variable scrollOffset
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:311: error: cannot find symbol
+            scrollOffset = Math.max(0, Math.min(scrollOffset, maxScroll));
+            ^
+  symbol:   variable scrollOffset
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:311: error: cannot find symbol
+            scrollOffset = Math.max(0, Math.min(scrollOffset, maxScroll));
+                                                ^
+  symbol:   variable scrollOffset
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:311: error: cannot find symbol
+            scrollOffset = Math.max(0, Math.min(scrollOffset, maxScroll));
+                                                              ^
+  symbol:   variable maxScroll
+  location: class GuiAdversityGuide
+C:\mywork\adversity\build\sources\main\java\com\adversity\enchantment\EnchantmentHandler.java:48: error: incompatible types: ResourceLocation cannot be converted to IAffix
+            if (cap.hasAffix(shackleId) && RANDOM.nextFloat() < 0.25f * soulboundLevel) {
+                             ^
+C:\mywork\adversity\build\sources\main\java\com\adversity\item\bauble\AbstractWardBauble.java:54: error: cannot find symbol
+            return getInSanctuaryStrength() * zone.baubleEffectMultiplier;
+                                                  ^
+  symbol:   variable baubleEffectMultiplier
+  location: variable zone of type SanctuaryZone
+C:\mywork\adversity\build\sources\main\java\com\adversity\sanctuary\SanctuaryManager.java:74: error: cannot find symbol
+        return zone != null ? zone.eliteReduction : 0.0f;
+                                  ^
+  symbol:   variable eliteReduction
+  location: variable zone of type SanctuaryZone
+C:\mywork\adversity\build\sources\main\java\com\adversity\sanctuary\SanctuaryManager.java:87: error: cannot find symbol
+        return zone.baubleEffectMultiplier;
+                   ^
+  symbol:   variable baubleEffectMultiplier
+  location: variable zone of type SanctuaryZone
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+64 errors
+:compileJava (Thread[Task worker for ':' Thread 10,5,main]) completed. Took 0.284 secs.
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava'.
+> Compilation failed; see the compiler error output for details.
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --debug option to get more log output. Run with --scan to get full insights.
+
+* Get more help at https://help.gradle.org
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 5.0.
+Use '--warning-mode all' to show the individual deprecation warnings.
+See https://docs.gradle.org/4.9/userguide/command_line_interface.html#sec:command_line_warnings
+
+BUILD FAILED in 1s
+5 actionable tasks: 3 executed, 2 up-to-date

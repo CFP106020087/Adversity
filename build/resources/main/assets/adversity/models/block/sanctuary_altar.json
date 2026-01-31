@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "end": "adversity:block/sanctuary_altar_top",
+    "side": "adversity:block/sanctuary_altar_side"
+  }
+}

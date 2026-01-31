@@ -9,6 +9,8 @@ import com.adversity.capability.IAdversityCapability;
 import com.adversity.capability.IPlayerDifficulty;
 import com.adversity.config.AdversityConfig;
 import com.adversity.effect.SuppressionManager;
+import com.adversity.sanctuary.SanctuaryManager;
+import com.adversity.sanctuary.SanctuaryZone;
 import com.adversity.network.PacketHandler;
 import com.adversity.network.PacketSyncAdversity;
 import net.minecraft.entity.EntityLiving;
@@ -145,11 +147,17 @@ public class DifficultyManager {
     }
 
     /**
-     * 公开的难度计算接口（包含玩家倍率）
+     * 公开的难度计算接口（包含全局修正和玩家倍率）
      */
     public static float calculateDifficultyAt(World world, BlockPos pos, @Nullable EntityPlayer player) {
         float baseDifficulty = calculateDifficulty(world, pos, player);
-        return applyPlayerMultiplier(baseDifficulty, player);
+
+        // 应用全局难度修正
+        GlobalDifficultyData globalData = GlobalDifficultyData.get(world);
+        float modifiedDifficulty = globalData.applyGlobalModifiers(baseDifficulty);
+
+        // 最后应用玩家个人倍率
+        return applyPlayerMultiplier(modifiedDifficulty, player);
     }
 
     /**
@@ -371,6 +379,9 @@ public class DifficultyManager {
         // 检查区域压制
         boolean suppressed = SuppressionManager.isSuppressed(world.provider.getDimension(), pos);
 
+        // 检查圣所区域压制
+        float sanctuaryReduction = SanctuaryManager.getEliteReduction(world, pos);
+
         // 检查是否在精英黑名单中
         boolean eliteBlacklisted = AdversityConfig.isEliteBlacklisted(entity);
 
@@ -395,7 +406,9 @@ public class DifficultyManager {
         } else {
             // 正常随机检查
             double minDiff = AdversityConfig.eliteSettings.minDifficultyForElite;
-            if (!suppressed && difficulty >= minDiff && RANDOM.nextDouble() < eliteChance) {
+            // 应用圣所减少效果到精英概率
+            double effectiveEliteChance = eliteChance * (1.0 - sanctuaryReduction);
+            if (!suppressed && difficulty >= minDiff && RANDOM.nextDouble() < effectiveEliteChance) {
                 tier = calculateTier(difficulty);
             }
         }
@@ -541,6 +554,10 @@ public class DifficultyManager {
             }
             if (maxTier > 0 && tier > maxTier) {
                 continue; // Tier太高，跳过低级词条
+            }
+            // 检查配置中的词条等级限制
+            if (!com.adversity.util.AffixTierHelper.isAllowedForTier(affix.getId(), tier)) {
+                continue;
             }
             // 检查词条的难度和实体要求
             if (affix.getMinDifficulty() <= difficulty && affix.canApplyTo(entity)) {

@@ -132,6 +132,7 @@ adversity.curse.slot_sealed=你的背包槽位被黑棺封印，物品被弹出
 item.adversity.affix_guide.name=词条指南
 item.adversity.affix_guide.tooltip=记载着所有精英词条的知识
 item.adversity.affix_guide.hint=右键打开
+item.adversity.affix_guide.hint_shift=Shift+右键: 打开生存指南
 
 # GUI Labels
 gui.adversity.guide.title=词条指南
@@ -145,41 +146,41 @@ gui.adversity.guide.min_diff=难度 %.1f+
 
 # Affix Descriptions (36 affixes)
 affix.adversity.fiery.name=烈焰
-affix.adversity.fiery.desc=攻击叠加灼烧效果，满层时爆发火焰伤害
+affix.adversity.fiery.desc=攻击叠加灼烧层数(5层爆发)，周围4格灼热光环，高级留下火焰痕迹
 affix.adversity.frosty.name=冰霜
-affix.adversity.frosty.desc=攻击叠加冻结效果，满层时短暂完全冻结
+affix.adversity.frosty.desc=攻击叠加冻结层数(每层-12.5%速度)，满层完全冻结1秒，周围冰冻地面
 affix.adversity.vampiric.name=吸血
-affix.adversity.vampiric.desc=攻击时吸取目标生命值恢复自身
+affix.adversity.vampiric.desc=攻击吸取20%+生命，叠加血债层数(每层+25%吸血)，满4层建立持续吸血的血链
 affix.adversity.withering.name=凋零
-affix.adversity.withering.desc=攻击叠加腐蚀效果，持续造成穿透伤害
+affix.adversity.withering.desc=攻击叠加腐蚀层数(每层-16.7%护甲)，满6层造成穿甲爆发伤害并扩散
 affix.adversity.blinding.name=致盲
-affix.adversity.blinding.desc=攻击叠加黑暗效果，降低视野和命中
+affix.adversity.blinding.desc=攻击叠加黑暗层数(每层+10%视野遮蔽)，满10层迷失方向，5格黑暗光环
 affix.adversity.horror.name=恐惧
-affix.adversity.horror.desc=攻击叠加恐惧效果，强制目标后退
+affix.adversity.horror.desc=6格恐惧光环叠加恐惧层数(每层+20%强度)，满5层触发恐慌强制后退+失明
 affix.adversity.gravity.name=引力
-affix.adversity.gravity.desc=产生引力场，将玩家拉向自身
+affix.adversity.gravity.desc=每3秒产生引力脉冲，将6格内玩家拉向自身，距离越近拉力越强
 affix.adversity.regenerating.name=再生
-affix.adversity.regenerating.desc=持续恢复生命值
+affix.adversity.regenerating.desc=每秒恢复1%-5%最大生命值(随等级提升)
 affix.adversity.teleporting.name=传送
-affix.adversity.teleporting.desc=受到攻击时有几率传送
+affix.adversity.teleporting.desc=受伤时20%-50%几率传送(有2秒冷却)，传送距离随等级增加
 affix.adversity.splitting.name=分裂
-affix.adversity.splitting.desc=死亡时分裂成多个较弱的分身
+affix.adversity.splitting.desc=死亡时分裂成2个副本(50%血量、70%伤害)，副本不再分裂
 affix.adversity.reflective.name=反射
-affix.adversity.reflective.desc=反弹部分近战伤害给攻击者
+affix.adversity.reflective.desc=受到近战伤害时反弹15%-50%给攻击者(有上限防止秒杀)
 affix.adversity.haste.name=迅捷
-affix.adversity.haste.desc=大幅提升移动和攻击速度
+affix.adversity.haste.desc=移动速度提升15%-50%(随等级提升)
 affix.adversity.reaper.name=死神
-affix.adversity.reaper.desc=攻击对目标缺失生命值造成额外伤害
+affix.adversity.reaper.desc=玩家死亡次数越少，怪物越强(0次死亡+200%伤害/+50%速度)
 affix.adversity.blunt.name=钝击
-affix.adversity.blunt.desc=攻击无视护甲，造成真实伤害
+affix.adversity.blunt.desc=玩家护甲越高受伤越多(超过4护甲后每点+4%伤害，上限+150%)
 affix.adversity.giant_slayer.name=巨人杀手
-affix.adversity.giant_slayer.desc=根据目标最大生命值造成额外伤害
+affix.adversity.giant_slayer.desc=玩家最大生命值越高受伤越多(超过20血后每点+2%伤害，上限+200%)
 affix.adversity.shield_breaker.name=破盾
-affix.adversity.shield_breaker.desc=攻击无视盾牌和格挡
+affix.adversity.shield_breaker.desc=玩家吸收值(黄心)越高受伤越多(每点+8%伤害，上限+250%)
 affix.adversity.bloodthirst.name=嗜血
-affix.adversity.bloodthirst.desc=攻击受伤目标时获得攻击速度加成
-affix.adversity.avarice.name=贪婪
-affix.adversity.avarice.desc=死亡时掉落额外战利品
+affix.adversity.bloodthirst.desc=玩家血量越低受伤越多(50%血以下触发，30%以下大幅增强，最高+200%)
+affix.adversity.avarice.name=强欲
+affix.adversity.avarice.desc=玩家背包槽位占用越多受伤越多(超过9格后每格+3%伤害，上限+150%)
 affix.adversity.hero.name=英雄
 affix.adversity.hero.desc=激励附近盟友，赋予增益效果
 affix.adversity.divine.name=神圣
@@ -187,32 +188,439 @@ affix.adversity.divine.desc=受神力保护，减少所有伤害
 affix.adversity.outer_god.name=外神
 affix.adversity.outer_god.desc=扭曲周围现实，产生不可预测的效果
 affix.adversity.tetanus.name=破伤风
-affix.adversity.tetanus.desc=攻击施加随时间增强的毒素
+affix.adversity.tetanus.desc=累计命中5次后触发发作，扣除玩家当前生命的50%(10秒不被打重置)
 affix.adversity.reversal.name=逆转
 affix.adversity.reversal.desc=将部分伤害反弹给攻击者
 affix.adversity.oblivion.name=遗忘
-affix.adversity.oblivion.desc=攻击导致记忆丧失，清除有益效果
+affix.adversity.oblivion.desc=攻击扣除玩家经验值(等级越高扣越多，最低保留1级)
 affix.adversity.unclean.name=不洁
 affix.adversity.unclean.desc=向附近玩家传播疾病
+affix.adversity.progression.unlocked=解锁新阶段: %s
+adversity.sanctuary.protected=该结构受远古魔法保护，无法破坏。
 affix.adversity.ascension.name=飞升
 affix.adversity.ascension.desc=生命值越低越强大
 affix.adversity.purifier.name=净化者
-affix.adversity.purifier.desc=定期清除自身负面效果
+affix.adversity.purifier.desc=攻击25%+几率夺取玩家正面药水(转移给自己)，被夺取后30秒无法获得新药水
 affix.adversity.disenchant.name=祛魔
-affix.adversity.disenchant.desc=攻击降低目标附魔效果
+affix.adversity.disenchant.desc=攻击20%+几率封印装备附魔60秒(随tier延长)，期间附魔无效
 affix.adversity.shackle.name=枷锁
-affix.adversity.shackle.desc=暂时定住玩家
+affix.adversity.shackle.desc=攻击20%+几率封印一件盔甲30秒(转为令牌)，到期自动恢复
 affix.adversity.divest.name=褫夺
-affix.adversity.divest.desc=攻击暂时降低护甲效果
+affix.adversity.divest.desc=攻击25%+几率封印饰品或手持物品20秒(转为令牌)，到期自动恢复
 affix.adversity.annihilate.name=湮灭
-affix.adversity.annihilate.desc=长冷却的毁灭性攻击
+affix.adversity.annihilate.desc=攻击15%+几率将背包物品送入虚空60秒后自动返还(不会真正丢失)
 affix.adversity.nightmare.name=梦魇
 affix.adversity.nightmare.desc=扭曲视觉并召唤幻象
 affix.adversity.greed.name=强欲
 affix.adversity.greed.desc=击中时从玩家背包偷取物品
 affix.adversity.black_swan.name=黑天鹅
-affix.adversity.black_swan.desc=永久削弱玩家攻击力，需要赎罪之泪解除
+affix.adversity.black_swan.desc=【永久诅咒】每次受击削减攻击力，累积到100%将被封禁存档，使用赎罪之泪减轻
 affix.adversity.black_friday.name=黑色星期五
-affix.adversity.black_friday.desc=永久降低玩家最大生命值，需要赎罪之心解除
+affix.adversity.black_friday.desc=【永久诅咒】每次受击永久扣除最大生命值，降至0将被封禁存档，使用赎罪之心减轻
 affix.adversity.black_coffin.name=黑棺
-affix.adversity.black_coffin.desc=永久封印玩家背包槽位，需要赎罪之钥解除
+affix.adversity.black_coffin.desc=【永久诅咒】每次受击永久封印背包槽位，全部封印将被封禁存档，使用赎罪之钥减轻
+
+# ==================== 圣所系统 ====================
+
+# 方块名称
+tile.adversity.sanctuary_altar.name=圣所祭坛
+tile.adversity.sanctuary_core.name=人造圣核
+
+# 熵能物品
+item.adversity.entropy.shard.name=熵能碎片
+item.adversity.entropy.crystal.name=熵能结晶
+item.adversity.entropy.core.name=熵能核心
+adversity.entropy.fuel_value=燃料值: %d
+adversity.entropy.usage_hint=右键圣所祭坛添加燃料
+
+# 圣所消息
+adversity.sanctuary.activated=天然圣所已激活! 等级: T%d
+adversity.sanctuary.artificial_activated=人造圣所已激活!
+adversity.sanctuary.activation_failed=激活失败!
+adversity.sanctuary.structure_incomplete=多方块结构不完整! 需要3x3x3石砖+錾制石砖
+adversity.sanctuary.info=天然圣所 [T%d] | 燃料: %d/%d (%d%%)
+adversity.sanctuary.info_artificial=人造圣所 | 燃料: %d/%d (%d%%)
+adversity.sanctuary.fuel_added=添加了 %d 燃料! 当前: %d/%d
+
+# ==================== 守护饰品 ====================
+
+# 饰品名称
+item.adversity.soul_chain.name=灵魂锁链
+item.adversity.spatial_anchor.name=空间锚点
+item.adversity.flame_ward.name=净焰之环
+item.adversity.frost_ward.name=霜心坠
+item.adversity.corrosion_bane.name=腐蚀克星
+item.adversity.guardian_heart.name=守护之心
+item.adversity.anchor_stone.name=锚石项链
+item.adversity.clarity_lens.name=澄明之眼
+item.adversity.courage_charm.name=勇气护符
+
+# 圣所指南针
+item.adversity.sanctuary_compass.name=圣所指南针
+item.adversity.sanctuary_compass.tooltip=指向最近的天然圣所
+item.adversity.sanctuary_compass.hint=右键刷新定位
+item.adversity.sanctuary_compass.target=目标: %d, %d, %d
+item.adversity.sanctuary_compass.no_target=未发现附近圣所
+item.adversity.sanctuary_compass.found=发现圣所位于 %d, %d, %d (距离: %d格)
+item.adversity.sanctuary_compass.not_found=搜索范围内未发现天然圣所
+item.adversity.enchant_guardian.name=附魔守护者
+
+# 饰品通用
+adversity.bauble.ward_type=守护类型: %s
+adversity.bauble.in_sanctuary=圣所内: %s 效果
+adversity.bauble.outside_sanctuary=圣所外: %s 效果
+
+# 守护类型
+adversity.ward.shackle=枷锁
+adversity.ward.divest=褫夺
+adversity.ward.fiery=烈焰
+adversity.ward.frosty=冰霜
+adversity.ward.withering=凋零
+adversity.ward.curse=永久诅咒
+adversity.ward.gravity=引力
+adversity.ward.blinding=致盲
+adversity.ward.horror=恐惧
+adversity.ward.disenchant=祛魔
+
+# 饰品特殊效果
+adversity.bauble.soul_chain.special=§7特殊: 成功阻止时眩晕攻击者2秒
+adversity.bauble.spatial_anchor.special=§7特殊: 每次阻止获得5秒+10%攻击力
+adversity.bauble.flame_ward.special=§7特殊: 满层时自动清除所有火焰层
+adversity.bauble.frost_ward.special=§7特殊: 被冻结后2秒内受击获得3秒无敌
+adversity.bauble.corrosion_bane.special=§7特殊: 满层时反弹%d%%腐蚀伤害
+adversity.bauble.guardian_heart.special=§7特殊: 每阻止1次积累守护，%d层触发群体护盾
+adversity.bauble.anchor_stone.tradeoff=§c代价: -%d%% 移动速度
+adversity.bauble.clarity_lens.tradeoff=§c代价: 周围%d格怪物共享你的视野
+adversity.bauble.courage_charm.tradeoff=§c代价: 受恐惧攻击时+%d%%伤害
+adversity.bauble.enchant_guardian.special=§7特殊: 成功阻止时恢复%d经验
+
+# ==================== 附魔 ====================
+
+enchantment.adversity.soulbound=灵魂锁定
+enchantment.adversity.breaker=破咒者
+enchantment.adversity.entropy_affinity=熵能亲和
+enchantment.adversity.purifying_touch=净化之触
+enchantment.adversity.resolute_will=坚定意志
+
+# ==================== 综合指南 ====================
+
+# 页签名称
+guide.adversity.title=逆境生存指南
+guide.adversity.tab.overview=概览
+guide.adversity.tab.sanctuary=圣所
+guide.adversity.tab.baubles=饰品
+guide.adversity.tab.enchants=附魔
+guide.adversity.tab.rituals=仪式
+guide.adversity.tab.progression=进度
+guide.adversity.tab.tips=技巧
+guide.adversity.overview.title=欢迎来到逆境
+guide.adversity.overview.intro=逆境是一个为Minecraft增加渐进式挑战的模组。随着你探索更远、存活更久，怪物将变得更强大、更危险。但别担心，这本指南将帮助你理解游戏机制并找到应对策略。
+guide.adversity.overview.difficulty=难度系统
+guide.adversity.overview.difficulty.desc=难度基于两个因素：距离出生点的距离和游戏时间。距离越远、时间越久，难度越高。难度范围从1.0到10.0。
+guide.adversity.overview.elites=精英怪物
+guide.adversity.overview.elites.desc=高难度区域的怪物有概率成为"精英"。精英怪物有更高的血量、伤害，并携带特殊词条能力。击杀精英可获得稀有掉落物。
+guide.adversity.overview.affixes=词条系统
+guide.adversity.overview.affixes.desc=精英怪物会携带词条（Affixes），这些是特殊能力，如烈焰（燃烧攻击）、冰霜（冻结效果）、传送等。词条分为进攻型、防御型、功能型和特殊型四类。
+guide.adversity.overview.counterplay=反制手段
+guide.adversity.overview.counterplay.desc=本模组提供多种反制手段：圣所提供安全区域、饰品提供被动保护、附魔增强装备能力。合理利用这些机制是生存的关键！
+
+# 圣所页
+guide.adversity.sanctuary.title=圣所系统
+guide.adversity.sanctuary.intro=圣所是安全区域，可以大幅削弱精英怪物的生成，并增强你的饰品效果。有两种类型的圣所：天然圣所和人造圣所。
+
+guide.adversity.sanctuary.natural=天然圣所
+guide.adversity.sanctuary.natural.desc=天然圣所是生成在地底的石英神殿，祭坛和周围方块无法被破坏，提供强力保护效果。
+guide.adversity.sanctuary.natural.find=寻找方式：天然圣所每隔约1000格生成一处，位于地下Y=32层的石英神殿内
+guide.adversity.sanctuary.natural.activate=激活方式：右键点击圣所祭坛添加熵能燃料激活保护
+guide.adversity.sanctuary.natural.effect=保护效果：激活后阻止怪物生成，保护范围内方块和玩家
+
+guide.adversity.sanctuary.artificial=人造圣所
+guide.adversity.sanctuary.artificial.desc=人造圣所是玩家建造的结构，使用人造圣核激活，提供较小范围的保护。
+guide.adversity.sanctuary.artificial.build=建造方式：放置人造圣核方块并添加燃料激活
+guide.adversity.sanctuary.artificial.materials=所需材料：人造圣核可用黑曜石+錾制石砖+熵能核心合成
+guide.adversity.sanctuary.artificial.effect=保护效果：保护范围约8格，消耗燃料较快
+
+guide.adversity.sanctuary.entropy=熵能燃料
+guide.adversity.sanctuary.entropy.desc=圣所需要消耗熵能物品作为燃料才能运作。熵能物品从精英怪物掉落。
+guide.adversity.sanctuary.entropy.shard=熵能碎片：基础燃料(10点)，掉落自T1-T4精英
+guide.adversity.sanctuary.entropy.crystal=熵能结晶：中级燃料(50点)，掉落自T5-T7精英，或由碎片合成
+guide.adversity.sanctuary.entropy.core=熵能核心：高级燃料(200点)，掉落自T8-T10精英，或由结晶合成
+
+# 饰品页
+guide.adversity.baubles.title=守护饰品
+guide.adversity.baubles.intro=守护饰品是特殊的装备物品，可以保护你免受特定词条效果的影响。在圣所范围内，饰品效果会显著增强！
+
+guide.adversity.baubles.equipment=装备守护类
+guide.adversity.baubles.soul_chain=灵魂锁链：防护枷锁效果(盔甲封印)，在圣所内100%%免疫
+guide.adversity.baubles.spatial_anchor=空间锚点：防护褫夺效果(饰品封印)，阻止时获得攻击加成
+guide.adversity.baubles.enchant_guardian=附魔守护者：防护祛魔效果，阻止时恢复经验
+
+guide.adversity.baubles.elemental=元素守护类
+guide.adversity.baubles.flame_ward=净焰之环：防护烈焰词条的燃烧效果，满层时自动清除
+guide.adversity.baubles.frost_ward=霜心坠：防护冰霜词条的冻结效果，触发后短暂无敌
+guide.adversity.baubles.corrosion_bane=腐蚀克星：防护凋零词条的腐蚀效果，满层时反弹伤害
+
+guide.adversity.baubles.special=特殊守护类
+guide.adversity.baubles.guardian_heart=守护之心：防护永久诅咒(黑天鹅/黑色星期五/黑棺)
+guide.adversity.baubles.anchor_stone=锚石项链：防护重力词条的拉拽效果，代价是移速降低
+guide.adversity.baubles.clarity_lens=澄明之眼：防护致盲词条的视野干扰，代价是位置共享
+guide.adversity.baubles.courage_charm=勇气护符：防护恐惧词条的恐惧效果，代价是受恐惧伤害增加
+
+guide.adversity.baubles.sanctuary_bonus=圣所增幅
+guide.adversity.baubles.sanctuary_bonus.desc=在激活的圣所范围内，饰品的保护效果会得到增强。天然圣所提供更强的增幅效果。
+
+# 附魔页
+guide.adversity.enchants.title=抗逆附魔
+guide.adversity.enchants.intro=这些特殊附魔可以帮助你对抗精英怪物和词条效果。可在附魔台获得或通过其他方式获取。
+
+guide.adversity.enchants.list=附魔列表
+guide.adversity.enchants.soulbound=灵魂锁定：死亡时保留物品，不会掉落
+guide.adversity.enchants.breaker=破咒者：攻击有几率移除精英的一个词条buff
+guide.adversity.enchants.entropy_affinity=熵能亲和：增加精英掉落熵能物品的数量
+guide.adversity.enchants.purifying_touch=净化之触：攻击时缩短封印令牌的剩余时间
+guide.adversity.enchants.resolute_will=坚定意志：受精英攻击时有几率获得短暂无敌
+
+# 仪式页
+guide.adversity.rituals.title=仪式系统
+guide.adversity.rituals.intro=仪式是强大的临时效果，可以通过消耗特定物品在圣所祭坛上执行。
+guide.adversity.rituals.how_to=如何执行仪式
+guide.adversity.rituals.how_to.desc=手持仪式物品右键点击激活的圣所祭坛，消耗物品后获得仪式效果。
+guide.adversity.rituals.list=可用仪式
+guide.adversity.rituals.cleanse=净化仪式：消除所有永久诅咒和负面效果
+guide.adversity.rituals.awakening=觉醒仪式：临时提升所有饰品效果至100%%
+
+# 进度页
+guide.adversity.progression.title=游戏进度
+guide.adversity.progression.intro=本模组的核心玩法围绕着难度增长和反制机制的获取。以下是推荐的游戏进度流程。
+guide.adversity.progression.stages=进度阶段
+guide.adversity.progression.stage.0=阶段0 - 新手期：在出生点附近收集资源，准备基础装备
+guide.adversity.progression.stage.1=阶段1 - 首次探索：向外扩展，寻找第一个天然圣所(约1000格)
+guide.adversity.progression.stage.2=阶段2 - 建立网络：激活多个圣所，收集熵能物品，制作首批饰品
+guide.adversity.progression.stage.3=阶段3 - 挑战精英：使用饰品和附魔，有目的地狩猎精英获取资源
+guide.adversity.progression.stage.4=阶段4 - 远征深渊：挑战T8+区域，获取终极奖励
+
+# 技巧页
+guide.adversity.tips.title=生存技巧
+guide.adversity.tips.beginner=新手建议
+guide.adversity.tips.beginner.1=前期不要走太远！距离出生点500格内相对安全
+guide.adversity.tips.beginner.2=优先收集熵能碎片，它们是后期发展的关键资源
+guide.adversity.tips.beginner.3=找到天然圣所后立即激活，它将成为你探索远方的前进基地
+
+guide.adversity.tips.advanced=进阶策略
+guide.adversity.tips.advanced.1=搭配使用饰品和附魔，可以应对大多数词条组合
+guide.adversity.tips.advanced.2=在高难度区域建立人造圣所网络，确保总有安全点可以撤退
+guide.adversity.tips.advanced.3=关注精英的词条组合，有些组合特别危险(如烈焰+冰霜、枷锁+褫夺)
+
+guide.adversity.tips.danger=危险警告
+guide.adversity.tips.danger.1=永久诅咒(黑天鹅/黑色星期五/黑棺)是最危险的词条，务必携带守护之心！
+guide.adversity.tips.danger.2=T8以上精英极其危险，没有完善准备不要尝试挑战
+
+# ==================== 合成限制 ====================
+
+adversity.sanctuary.not_active=§c圣所尚未激活！
+adversity.sanctuary.teleporting=§d正在传送至目标维度...
+adversity.sanctuary.activated=§a圣所已激活！当前等级: T%d
+adversity.sanctuary.activation_failed=§c激活失败！请检查条件。
+adversity.sanctuary.info=等级: T%d | 燃料: %d/%d (%d%%)
+
+# ==================== 守护饰品 ====================
+
+# 核心三件
+item.adversity.guardian_heart.name=守护之心
+item.adversity.spatial_anchor.name=空间锚点
+item.adversity.soul_chain.name=灵魂锁链
+
+# 元素系
+item.adversity.flame_ward.name=净焰之环
+item.adversity.frost_ward.name=霜心坠
+item.adversity.corrosion_bane.name=腐蚀克星
+
+# 功能系
+item.adversity.anchor_stone.name=锚石项链
+item.adversity.clarity_lens.name=澄明之眼
+item.adversity.courage_charm.name=勇气护符
+item.adversity.enchant_guardian.name=附魔守护者
+
+# 新增高级系
+item.adversity.void_heart.name=虚空之心
+item.adversity.bloodrage_emblem.name=血怒徽章
+item.adversity.temporal_watch.name=时光怀表
+item.adversity.phantom_cloak.name=幽灵斗篷
+item.adversity.thunder_ring.name=雷霆指环
+item.adversity.aegis_medal.name=圣盾勋章
+
+# 饰品通用提示
+adversity.bauble.ward_type=§7守护: §a%s
+adversity.bauble.in_sanctuary=§7圣所内: §a%s 效果
+adversity.bauble.outside_sanctuary=§7圣所外: §e%s 效果
+
+# 守护类型
+adversity.ward.curse=诅咒
+adversity.ward.shackle=枷锁
+adversity.ward.divest=褫夺
+adversity.ward.fiery=烈焰
+adversity.ward.frosty=冰霜
+adversity.ward.withering=凋零
+adversity.ward.gravity=引力
+adversity.ward.blinding=致盲
+adversity.ward.horror=恐惧
+adversity.ward.disenchant=祛魔
+adversity.ward.teleport=传送
+adversity.ward.lifesteal=吸血
+adversity.ward.swift=迅捷
+adversity.ward.split=分裂
+adversity.ward.holy=神圣
+adversity.ward.giantslayer=巨人杀手
+
+# 守护之心特效
+adversity.bauble.guardian_heart.special=§d[被动] §7累计阻止%d次诅咒触发圣盾
+adversity.bauble.guardian_heart.effect1=§9+4生命值
+adversity.bauble.guardian_heart.effect2=§9低血减伤20%
+adversity.bauble.guardian_heart.effect3=§9致命保护(50%保命)
+
+# 空间锚点特效
+adversity.bauble.spatial_anchor.special=§d[被动] §7阻止褫夺获得攻击加成
+adversity.bauble.spatial_anchor.effect1=§9+15%攻击力
+adversity.bauble.spatial_anchor.effect2=§9+25%暴击伤害
+adversity.bauble.spatial_anchor.effect3=§9击杀回血
+
+# 灵魂锁链特效
+adversity.bauble.soul_chain.special=§d[被动] §7阻止枷锁眩晕攻击者
+adversity.bauble.soul_chain.effect1=§9+4护甲 +2韧性
+adversity.bauble.soul_chain.effect2=§9物理减伤10%
+adversity.bauble.soul_chain.effect3=§9盔甲不耗耐久
+
+# 元素饰品特效
+adversity.bauble.flame_ward.effect1=§9火焰伤害免疫
+adversity.bauble.flame_ward.effect2=§9攻击附带点燃
+adversity.bauble.flame_ward.effect3=§9下界攻击+20%
+
+adversity.bauble.frost_ward.effect1=§9缓慢效果免疫
+adversity.bauble.frost_ward.effect2=§9移速+15%
+adversity.bauble.frost_ward.effect3=§9攻击附带减速
+
+adversity.bauble.corrosion_bane.effect1=§9毒/凋零减半
+adversity.bauble.corrosion_bane.effect2=§9自动净化debuff
+adversity.bauble.corrosion_bane.effect3=§9生命恢复+50%
+
+# 功能饰品特效
+adversity.bauble.anchor_stone.effect1=§9击退免疫
+adversity.bauble.anchor_stone.effect2=§9摔落减伤75%
+adversity.bauble.anchor_stone.effect3=§9挖掘+25%
+
+adversity.bauble.clarity_lens.effect1=§9永久夜视
+adversity.bauble.clarity_lens.effect2=§9透视实体
+adversity.bauble.clarity_lens.effect3=§9弓箭+30%
+
+adversity.bauble.courage_charm.effect1=§9攻速+25%
+adversity.bauble.courage_charm.effect2=§9低血狂暴(+50%攻击)
+adversity.bauble.courage_charm.effect3=§9对精英+15%
+
+adversity.bauble.enchant_guardian.effect1=§9经验+50%
+adversity.bauble.enchant_guardian.effect2=§9经验修补+50%
+adversity.bauble.enchant_guardian.effect3=§9受击返经验
+
+# 新增高级饰品特效
+adversity.bauble.void_heart.effect1=§9珍珠无伤害
+adversity.bauble.void_heart.effect2=§9末地攻击+25%/移速+20%
+adversity.bauble.void_heart.effect3=§9虚空边缘保护
+
+adversity.bauble.bloodrage_emblem.effect1=§9攻击吸血5%
+adversity.bauble.bloodrage_emblem.effect2=§9低血加攻速(最高+30%)
+adversity.bauble.bloodrage_emblem.effect3=§9击杀回复半心
+
+adversity.bauble.temporal_watch.effect1=§9debuff时间-40%
+adversity.bauble.temporal_watch.effect2=§9buff时间+30%
+adversity.bauble.temporal_watch.effect3=§9饥饿-25%
+
+adversity.bauble.phantom_cloak.effect1=§9潜行时隐身
+adversity.bauble.phantom_cloak.effect2=§9背刺+40%
+adversity.bauble.phantom_cloak.effect3=§9仇恨-50%
+
+adversity.bauble.thunder_ring.effect1=§9攻击10%触发闪电
+adversity.bauble.thunder_ring.effect2=§9雨天攻击+20%
+adversity.bauble.thunder_ring.effect3=§9闪电免疫
+
+adversity.bauble.aegis_medal.effect1=§9队友受伤-15%
+adversity.bauble.aegis_medal.effect2=§9被攻击时警告队友
+adversity.bauble.aegis_medal.effect3=§9复活后双方+20%攻击
+
+# 新防御型词条
+adversity.affix.fortified=铁壁
+adversity.affix.thorny=荆刺
+adversity.affix.hardened=硬化
+adversity.affix.shedding=蜕皮
+adversity.affix.symbiotic=共生
+adversity.affix.antimagic=魔免
+adversity.affix.adaptive=适应
+
+affix.adversity.fortified.name=铁壁
+affix.adversity.fortified.desc=血量越低护甲越高，最高+150%
+affix.adversity.thorny.name=荆刺
+affix.adversity.thorny.desc=近战攻击叠加刺伤,满5层造成穿透伤害
+affix.adversity.hardened.name=硬化
+affix.adversity.hardened.desc=免疫击退,受伤后1秒内减免30%伤害
+affix.adversity.shedding.name=蜕皮
+affix.adversity.shedding.desc=致命伤害25%概率存活,恢复30%血量,每只怪物仅一次
+affix.adversity.symbiotic.name=共生
+affix.adversity.symbiotic.desc=30%伤害分摊给8格内的其他怪物
+affix.adversity.antimagic.name=魔免
+affix.adversity.antimagic.desc=免疫魔法伤害,6格范围内玩家正面药水失效
+affix.adversity.adaptive.name=适应
+affix.adversity.adaptive.desc=重复伤害类型每次+15%抗性,最高60%
+
+# 反制饰品
+item.adversity.purify_badge.name=净化徽章
+item.adversity.armor_pierce.name=破甲符文
+item.adversity.anchor_heart.name=锚定之心
+item.adversity.barrier_ward.name=结界护符
+item.adversity.wither_mark.name=凋零印记
+item.adversity.true_crystal.name=真伤水晶
+item.adversity.guardian_soul.name=守护者之魂
+
+adversity.ward.stack_system=叠层系统
+adversity.ward.armor_reduction=护甲/减伤
+adversity.ward.evasion=闪避/复活
+adversity.ward.aura=范围光环
+adversity.ward.healing=吸血/回复
+adversity.ward.damage_conversion=伤害转换
+adversity.ward.equipment_seal=装备封印
+
+adversity.bauble.purify_badge.desc1=减少负面叠层的累积速度
+adversity.bauble.purify_badge.desc2=反制: 烈焰、冰霜、凋零、致盲、恐惧、吸血、荆刺
+adversity.bauble.armor_pierce.desc1=无视额外护甲加成和减伤
+adversity.bauble.armor_pierce.desc2=反制: 铁壁、硬化、英雄、神明、外神
+adversity.bauble.anchor_heart.desc1=阻止敌人闪避和复活
+adversity.bauble.anchor_heart.desc2=反制: 传送、蜕皮
+adversity.bauble.barrier_ward.desc1=减少范围光环效果
+adversity.bauble.barrier_ward.desc2=反制: 烈焰、致盲、恐惧、引力、魔免、共生
+adversity.bauble.wither_mark.desc1=减少敌人的回复和吸血效果
+adversity.bauble.wither_mark.desc2=反制: 吸血、再生
+adversity.bauble.true_crystal.desc1=伤害无法被转换或吸收
+adversity.bauble.true_crystal.desc2=反制: 反射、适应
+adversity.bauble.guardian_soul.desc1=减少封印几率和持续时间
+adversity.bauble.guardian_soul.desc2=反制: 枷锁、褫夺、黑棺、祛魔
+
+# 圣所GUI
+adversity.gui.upgrade=升级
+adversity.gui.activate=激活
+adversity.gui.fuel_slot=燃料
+adversity.sanctuary.active=运行中
+adversity.sanctuary.inactive=未激活
+adversity.sanctuary.mode.safe=安全
+adversity.sanctuary.mode.farm=狩猎
+adversity.sanctuary.mode.ease=压制
+
+# 圣所传送消息
+adversity.sanctuary.teleport.same=不能传送到同一个圣所
+adversity.sanctuary.teleport.invalid=目标圣所不存在
+adversity.sanctuary.teleport.inactive=目标圣所未激活
+adversity.sanctuary.teleport.no_fuel=熵能不足，传送需要500点
+adversity.sanctuary.teleport.success=传送成功
+adversity.sanctuary.need_activation_item=手持 %s 来激活圣所
+# 护符盒 GUI
+adversity.gui.talisman.title=护符盒
+
+# 快捷键
+key.categories.adversity=逆境
+key.adversity.open_talisman=打开护符盒

@@ -89,11 +89,21 @@ public class WitheringAffix extends AbstractAffix {
         EntityPlayer player = (EntityPlayer) target;
         int tier = getTier(attacker);
 
-        // 计算添加的腐蚀层数
+        // 检查饰品反制（腐蚀克星）
+        float reduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "withering");
+        if (reduction >= 1.0f) {
+            return damage; // 完全免疫
+        }
+
+        // 计算添加的腐蚀层数（根据反制减少）
         int stacksToAdd = BASE_STACKS_ON_HIT + (tier / 4 * STACKS_PER_TIER);
+        if (reduction > 0) {
+            stacksToAdd = Math.max(1, (int) (stacksToAdd * (1.0f - reduction)));
+        }
 
         // 添加腐蚀debuff
         PlayerDebuffManager.addStacks(player, DebuffType.CORROSION, stacksToAdd, CORROSION_DURATION, attacker.getEntityId());
+
 
         // 重置衰减计时器
         PlayerDebuffManager.DebuffData debuffData = PlayerDebuffManager.getDebuff(player, DebuffType.CORROSION);

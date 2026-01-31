@@ -99,6 +99,12 @@ public class DivestAffix extends AbstractAffix {
         float chance = BASE_CHANCE + (tier * 0.03f);
 
         if (RANDOM.nextFloat() < chance) {
+            // 检查饰品保护（空间锚点）
+            if (com.adversity.item.bauble.BaubleHelper.tryBlockEffect(player, "divest", attacker)) {
+                Adversity.LOGGER.info("[Divest] 被空间锚点阻止!");
+                return damage;
+            }
+
             // 设置冷却
             playerCooldowns.put(playerId, currentTime);
 

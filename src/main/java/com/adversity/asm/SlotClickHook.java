@@ -27,91 +27,66 @@ public class SlotClickHook {
             debugLogged = true;
         }
 
-        // Only process on server side
-        if (player.world.isRemote) {
-            return null;
-        }
+        try {
+            // Use net.minecraftforge.common.DimensionManager to check if we're on server
+            // Avoid calling player methods that get reobfuscated
+            if (net.minecraftforge.fml.common.FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+                return null; // Skip on client side
+            }
 
-        // Ignore invalid slot IDs
-        if (slotId < 0) {
-            return null;
-        }
-
-        // Get the slot being clicked
-        if (slotId >= container.inventorySlots.size()) {
-            return null;
-        }
-
-        Slot slot = container.inventorySlots.get(slotId);
-        if (slot == null) {
-            return null;
-        }
-
-        // Check if this slot belongs to player's main inventory
-        if (slot.inventory != player.inventory) {
-            return null;
-        }
-
-        // Get the slot index in player's inventory
-        int slotIndex = slot.getSlotIndex();
-
-        // For ContainerPlayer, we need to exclude armor slots
-        // In ContainerPlayer layout:
-        // - Slots 5-8: Armor (slotIndex 0-3 in armorInventory)
-        // - Slots 9-35: Main inventory (slotIndex 9-35)
-        // - Slots 36-44: Hotbar (slotIndex 0-8)
-        // We need to check if this is actually a main inventory slot, not armor
-        if (container instanceof ContainerPlayer) {
-            // In ContainerPlayer, main inventory is at container slots 9-35 and 36-44
-            // Armor is at container slots 5-8
-            if (slotId >= 5 && slotId <= 8) {
-                // This is an armor slot, not main inventory
+            // Ignore invalid slot IDs
+            if (slotId < 0) {
                 return null;
             }
-            // Map container slotId to inventory slot index
-            if (slotId >= 9 && slotId <= 35) {
-                // Main inventory (slotIndex matches)
-                slotIndex = slot.getSlotIndex();
-            } else if (slotId >= 36 && slotId <= 44) {
-                // Hotbar (slotIndex 0-8)
-                slotIndex = slot.getSlotIndex();
+
+            // Get the slot being clicked
+            if (slotId >= container.inventorySlots.size()) {
+                return null;
+            }
+
+            Slot slot = container.inventorySlots.get(slotId);
+            if (slot == null) {
+                return null;
+            }
+
+            // Get the slot index in player's inventory
+            int slotIndex = slot.getSlotIndex();
+
+            // For ContainerPlayer, we need to exclude armor slots
+            if (container instanceof ContainerPlayer) {
+                // Armor is at container slots 5-8
+                if (slotId >= 5 && slotId <= 8) {
+                    return null;
+                }
+                // Map container slotId to inventory slot index
+                if (slotId >= 9 && slotId <= 35) {
+                    slotIndex = slot.getSlotIndex();
+                } else if (slotId >= 36 && slotId <= 44) {
+                    slotIndex = slot.getSlotIndex();
+                } else {
+                    return null;
+                }
             } else {
-                // Not a main inventory slot
-                return null;
-            }
-        } else {
-            // For other containers, use the slot index directly
-            // Only check main inventory slots (0-35)
-            if (slotIndex < 0 || slotIndex >= 36) {
-                return null;
-            }
-        }
-
-        // Check if this slot is sealed by Black Coffin
-        if (isSlotSealed(player, slotIndex)) {
-            // Play deny sound
-            player.world.playSound(
-                null,
-                player.posX, player.posY, player.posZ,
-                net.minecraft.init.SoundEvents.BLOCK_NOTE_BASS,
-                net.minecraft.util.SoundCategory.PLAYERS,
-                0.3f, 0.5f
-            );
-
-            // Force sync inventory to client
-            if (player instanceof net.minecraft.entity.player.EntityPlayerMP) {
-                ((net.minecraft.entity.player.EntityPlayerMP) player).sendContainerToPlayer(container);
+                // Only check main inventory slots (0-35)
+                if (slotIndex < 0 || slotIndex >= 36) {
+                    return null;
+                }
             }
 
-            // Return EMPTY to cancel the click
-            return ItemStack.EMPTY;
-        }
+            // Check if this slot is sealed by Black Coffin
+            if (isSlotSealed(player, slotIndex)) {
+                // Force sync inventory to client
+                if (player instanceof net.minecraft.entity.player.EntityPlayerMP) {
+                    ((net.minecraft.entity.player.EntityPlayerMP) player).sendContainerToPlayer(container);
+                }
 
-        // Also check if we're trying to shift-click INTO a sealed slot
-        if (clickType == ClickType.QUICK_MOVE && !slot.getStack().isEmpty()) {
-            // For shift-click, we need to check target slots
-            // This is handled by the tick-based cleanup, so we allow it here
-            // The item will be immediately moved out if it ends up in a sealed slot
+                // Return EMPTY to cancel the click
+                return ItemStack.EMPTY;
+            }
+
+        } catch (Exception e) {
+            // Silently fail - don't block slot clicks on error
+            // This catches SRG name mismatches
         }
 
         // Continue with normal slotClick

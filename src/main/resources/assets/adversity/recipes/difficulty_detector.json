@@ -10,7 +10,8 @@
       "item": "minecraft:glass"
     },
     "E": {
-      "item": "adversity:affix_essence"
+      "item": "adversity:entropy",
+      "data": 0
     },
     "C": {
       "item": "minecraft:compass"

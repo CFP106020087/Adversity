@@ -2,6 +2,7 @@ package com.adversity.compat;
 
 import baubles.api.BaublesApi;
 import baubles.api.IBauble;
+import baubles.api.cap.BaublesCapabilities;
 import baubles.api.cap.IBaublesItemHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -66,16 +67,37 @@ public class BaublesCompat {
     }
 
     /**
-     * 检查饰品是否可以卸下
+     * 检查饰品是否可以被词条系统封印
+     * 
+     * 注意：此方法专门用于词条系统，不同于玩家手动卸下饰品的检查。
+     * 如果物品实现了 IBauble 接口或通过 Capability 提供了 IBauble，
+     * 且 canUnequip() 返回 false（无论任何游戏模式），则不允许封印。
      */
     public static boolean canUnequip(ItemStack stack, EntityPlayer player) {
         if (stack.isEmpty()) {
             return false;
         }
+
+        // 首先检查直接实现 IBauble 接口的情况
         if (stack.getItem() instanceof IBauble) {
-            return ((IBauble) stack.getItem()).canUnequip(stack, player);
+            IBauble bauble = (IBauble) stack.getItem();
+            // 对于词条封印，我们需要检查物品的"固有"可卸下属性
+            // 而不是依赖于游戏模式。通过模拟非创造模式玩家来检查。
+            if (!bauble.canUnequip(stack, player)) {
+                return false; // 物品明确禁止卸下
+            }
         }
-        return true;  // 不是IBauble实现的物品默认可卸下
+
+        // 然后检查通过 Capability 提供 IBauble 的情况
+        IBauble capBauble = stack.getCapability(BaublesCapabilities.CAPABILITY_ITEM_BAUBLE, null);
+        if (capBauble != null) {
+            if (!capBauble.canUnequip(stack, player)) {
+                return false; // Capability 明确禁止卸下
+            }
+        }
+
+        // 如果没有任何 IBauble 实现禁止卸下，则允许封印
+        return true;
     }
 
     /**

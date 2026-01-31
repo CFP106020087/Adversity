@@ -12,6 +12,7 @@ public class PlayerDifficulty implements IPlayerDifficulty {
     private int killCount = 0;
     private ScalingMode healthScalingMode = ScalingMode.DEFAULT;
     private ScalingMode damageScalingMode = ScalingMode.DEFAULT;
+    private long playTime = 0; // 玩家个人游玩时间（tick）
 
     @Override
     public float getDifficultyMultiplier() {
@@ -68,6 +69,23 @@ public class PlayerDifficulty implements IPlayerDifficulty {
         this.damageScalingMode = mode != null ? mode : ScalingMode.DEFAULT;
     }
 
+    // ==================== 玩家个人游玩时间追踪 ====================
+
+    @Override
+    public long getPlayTime() {
+        return playTime;
+    }
+
+    @Override
+    public void addPlayTime(long ticks) {
+        this.playTime += ticks;
+    }
+
+    @Override
+    public void setPlayTime(long ticks) {
+        this.playTime = Math.max(0, ticks);
+    }
+
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = new NBTTagCompound();
@@ -76,6 +94,7 @@ public class PlayerDifficulty implements IPlayerDifficulty {
         nbt.setInteger("killCount", killCount);
         nbt.setString("healthScalingMode", healthScalingMode.name());
         nbt.setString("damageScalingMode", damageScalingMode.name());
+        nbt.setLong("playTime", playTime);
         return nbt;
     }
 
@@ -84,6 +103,7 @@ public class PlayerDifficulty implements IPlayerDifficulty {
         this.difficultyMultiplier = nbt.hasKey("difficultyMultiplier") ? nbt.getFloat("difficultyMultiplier") : 1.0f;
         this.difficultyDisabled = nbt.getBoolean("difficultyDisabled");
         this.killCount = nbt.getInteger("killCount");
+        this.playTime = nbt.getLong("playTime");
 
         // 读取缩放模式，兼容旧数据
         if (nbt.hasKey("healthScalingMode")) {

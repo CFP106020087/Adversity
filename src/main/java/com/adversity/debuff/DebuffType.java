@@ -101,6 +101,18 @@ public enum DebuffType {
         public float getEffectStrength(int stacks) {
             return stacks * 0.333f;
         }
+    },
+
+    /**
+     * 荆刺 - 荆刺词条施加
+     * 效果：受到攻击时反弹伤害
+     */
+    THORNS("thorns", 5, 60, VisualEffectType.THORNS, false) {
+        @Override
+        public float getEffectStrength(int stacks) {
+            // 每层10%反伤
+            return stacks * 0.1f;
+        }
     };
 
     private final String id;

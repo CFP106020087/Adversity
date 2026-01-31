@@ -12,6 +12,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -61,6 +62,14 @@ public class SplittingAffix extends AbstractAffix {
         World world = entity.world;
         if (world.isRemote) {
             return;
+        }
+
+        // 检查是否被玩家饰品反制（比如幻影披风）
+        if (source.getTrueSource() instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) source.getTrueSource();
+            if (com.adversity.item.bauble.BaubleHelper.tryBlockEffect(player, "split", entity)) {
+                return;
+            }
         }
 
         // 生成分裂体

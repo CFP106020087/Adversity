@@ -7,7 +7,9 @@
   },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
-      "forest_hills": "2026-01-22 06:56:33 +0800"
+      "extreme_hills_with_trees": "2026-01-25 05:49:07 +0800",
+      "forest_hills": "2026-01-22 06:56:33 +0800",
+      "river": "2026-01-25 05:49:01 +0800"
     },
     "done": false
   }

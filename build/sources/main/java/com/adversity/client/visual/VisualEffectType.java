@@ -46,7 +46,17 @@ public enum VisualEffectType {
     /**
      * 吸血标记 - 血红色边缘闪烁
      */
-    BLOOD_MARK(7, "blood_mark", 0.8f, 0.0f, 0.0f, 0.4f);
+    BLOOD_MARK(7, "blood_mark", 0.8f, 0.0f, 0.0f, 0.4f),
+
+    /**
+     * 荆刺效果 - 绿色荆棘刺伤
+     */
+    THORNS(8, "thorns", 0.2f, 0.6f, 0.1f, 0.35f),
+
+    /**
+     * 圣所升级效果 - 金色光芒，神圣升华
+     */
+    SANCTUARY_UPGRADE(9, "sanctuary_upgrade", 1.0f, 0.85f, 0.3f, 0.6f);
 
     private final int id;
     private final String name;

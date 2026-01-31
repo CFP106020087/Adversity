@@ -1,6 +1,7 @@
 package com.adversity.asm;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import fermiumbooter.FermiumRegistryAPI;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -8,18 +9,32 @@ import java.util.Map;
 /**
  * Adversity ASM Loading Plugin
  * Used to inject hooks into Container.slotClick for sealed slot blocking
+ * Also registers FermiumBooter mixins for enchantment/crafting restrictions
  */
 @IFMLLoadingPlugin.Name("AdversityCore")
 @IFMLLoadingPlugin.MCVersion("1.12.2")
-@IFMLLoadingPlugin.TransformerExclusions({"com.adversity.asm"})
+@IFMLLoadingPlugin.TransformerExclusions({ "com.adversity.asm", "com.adversity.mixin" })
 @IFMLLoadingPlugin.SortingIndex(1001)
 public class AdversityLoadingPlugin implements IFMLLoadingPlugin {
+
+    static {
+        System.out.println("[Adversity] AdversityLoadingPlugin static init");
+        try {
+            // Early mixin - 原版 Minecraft 类 (ContainerEnchantment 等)
+            FermiumRegistryAPI.enqueueMixin(false, "adversity.early.mixins.json");
+            System.out.println("[Adversity] Early mixins queued via FermiumBooter");
+        } catch (Throwable e) {
+            System.err.println("[Adversity] FermiumBooter registration failed: " + e);
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public String[] getASMTransformerClass() {
         return new String[] {
                 "com.adversity.asm.ContainerTransformer",
-                "com.adversity.asm.GuiContainerTransformer" // Client-side slot rendering block
+                "com.adversity.asm.GuiContainerTransformer", // Client-side slot rendering block
+                "com.adversity.asm.ContainerEnchantmentTransformer" // Enchantment injection
         };
     }
 

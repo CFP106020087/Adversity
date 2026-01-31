@@ -94,18 +94,34 @@ public class VampiricAffix extends AbstractAffix {
         if (target instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) target;
 
-            // 添加血债层数
-            PlayerDebuffManager.addStacks(player, DebuffType.BLOOD_DEBT, 1, BLOOD_DEBT_DURATION, attacker.getEntityId());
+            // 检查饰品反制（凋零印记 - 抑制吸血；净化徽章 - 抑制叠层）
+            float healReduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "healing");
+            float stackReduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "stack_system");
+            float totalReduction = Math.max(healReduction, stackReduction);
 
-            // 重置衰减计时器
-            PlayerDebuffManager.DebuffData debuffData = PlayerDebuffManager.getDebuff(player, DebuffType.BLOOD_DEBT);
-            if (debuffData != null) {
-                debuffData.resetHitTimer();
+            if (totalReduction >= 1.0f) {
+                // 完全免疫血债系统
+                return damage;
             }
 
-            // 根据血债层数增加吸血
+            // 根据反制减少血债叠加
+            if (totalReduction < 1.0f && com.adversity.item.bauble.BaubleHelper.RANDOM.nextFloat() >= totalReduction) {
+                // 添加血债层数
+                PlayerDebuffManager.addStacks(player, DebuffType.BLOOD_DEBT, 1, BLOOD_DEBT_DURATION,
+                        attacker.getEntityId());
+
+                // 重置衰减计时器
+                PlayerDebuffManager.DebuffData debuffData = PlayerDebuffManager.getDebuff(player,
+                        DebuffType.BLOOD_DEBT);
+                if (debuffData != null) {
+                    debuffData.resetHitTimer();
+                }
+            }
+
+            // 根据血债层数增加吸血（吸血量也受反制影响）
             int bloodDebtStacks = PlayerDebuffManager.getStacks(player, DebuffType.BLOOD_DEBT);
-            lifestealRatio += bloodDebtStacks * BLOOD_DEBT_BONUS;
+            float bonusLifesteal = bloodDebtStacks * BLOOD_DEBT_BONUS * (1.0f - healReduction);
+            lifestealRatio += bonusLifesteal;
 
             // 发送视觉效果
             float intensity = PlayerDebuffManager.getIntensity(player, DebuffType.BLOOD_DEBT);

@@ -88,8 +88,18 @@ public class HorrorAffix extends AbstractAffix {
 
         EntityPlayer player = (EntityPlayer) target;
 
-        // 被攻击时快速叠加恐惧
-        PlayerDebuffManager.addStacks(player, DebuffType.FEAR, STACKS_ON_HIT, FEAR_DURATION, attacker.getEntityId());
+        // 检查饰品反制（结界护符 - 光环系统）
+        float reduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "aura");
+        if (reduction >= 1.0f) {
+            return damage; // 完全免疫
+        }
+
+        // 被攻击时快速叠加恐惧（根据反制减少）
+        int stacksToAdd = STACKS_ON_HIT;
+        if (reduction > 0) {
+            stacksToAdd = Math.max(1, (int) (stacksToAdd * (1.0f - reduction)));
+        }
+        PlayerDebuffManager.addStacks(player, DebuffType.FEAR, stacksToAdd, FEAR_DURATION, attacker.getEntityId());
 
         // 重置衰减计时器
         PlayerDebuffManager.DebuffData debuffData = PlayerDebuffManager.getDebuff(player, DebuffType.FEAR);

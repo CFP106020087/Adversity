@@ -20,7 +20,7 @@ public class AdversityTab extends CreativeTabs {
     @Override
     @SideOnly(Side.CLIENT)
     public ItemStack createIcon() {
-        return new ItemStack(ItemRegistry.AFFIX_ESSENCE);
+        return new ItemStack(ItemRegistry.CALM_DUST);
     }
 
     @Override

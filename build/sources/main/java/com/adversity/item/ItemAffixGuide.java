@@ -2,6 +2,7 @@ package com.adversity.item;
 
 import com.adversity.Adversity;
 import com.adversity.client.gui.GuiAffixGuide;
+import com.adversity.client.gui.GuiAdversityGuide;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -21,7 +22,8 @@ import java.util.List;
 
 /**
  * 词条指南 - 模组手册物品
- * 右键打开GUI，展示所有词条信息
+ * 右键打开词条指南GUI
+ * Shift+右键打开综合生存指南
  */
 public class ItemAffixGuide extends Item {
 
@@ -38,15 +40,26 @@ public class ItemAffixGuide extends Item {
 
         if (worldIn.isRemote) {
             // 客户端打开GUI
-            openGuide();
+            if (playerIn.isSneaking()) {
+                // Shift+右键: 打开综合生存指南
+                openSurvivalGuide();
+            } else {
+                // 普通右键: 打开词条指南
+                openAffixGuide();
+            }
         }
 
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
 
     @SideOnly(Side.CLIENT)
-    private void openGuide() {
+    private void openAffixGuide() {
         Minecraft.getMinecraft().displayGuiScreen(new GuiAffixGuide());
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void openSurvivalGuide() {
+        Minecraft.getMinecraft().displayGuiScreen(new GuiAdversityGuide());
     }
 
     @Override
@@ -59,6 +72,7 @@ public class ItemAffixGuide extends Item {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         tooltip.add("\u00a77" + I18n.format("item.adversity.affix_guide.tooltip"));
         tooltip.add("\u00a78" + I18n.format("item.adversity.affix_guide.hint"));
+        tooltip.add("\u00a76" + I18n.format("item.adversity.affix_guide.hint_shift"));
     }
 
     @Override

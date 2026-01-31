@@ -1,6 +1,7 @@
 package com.adversity.network;
 
 import com.adversity.Adversity;
+import com.adversity.progression.ProgressionSyncMessage;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -41,6 +42,41 @@ public class PacketHandler {
             id++,
             Side.CLIENT
         );
+
+        // 圣所传送请求 (Client -> Server)
+        INSTANCE.registerMessage(
+                PacketSanctuaryTeleport.Handler.class,
+                PacketSanctuaryTeleport.class,
+                id++,
+                Side.SERVER);
+
+        // 同步玩家难度设置到客户端 (用于HUD显示)
+        INSTANCE.registerMessage(
+                PacketSyncPlayerDifficulty.Handler.class,
+                PacketSyncPlayerDifficulty.class,
+                id++,
+                Side.CLIENT);
+
+        // 同步进度阶段到客户端
+        INSTANCE.registerMessage(
+                ProgressionSyncMessage.Handler.class,
+                ProgressionSyncMessage.class,
+                id++,
+                Side.CLIENT);
+
+        // 圣所操作 (Client -> Server) - 模式切换、升级、激活
+        INSTANCE.registerMessage(
+                PacketSanctuaryAction.Handler.class,
+                PacketSanctuaryAction.class,
+                id++,
+                Side.SERVER);
+
+        // 打开护符盒 GUI (Client -> Server)
+        INSTANCE.registerMessage(
+                PacketOpenTalisman.Handler.class,
+                PacketOpenTalisman.class,
+                id++,
+                Side.SERVER);
 
         Adversity.LOGGER.info("Network packets registered");
     }

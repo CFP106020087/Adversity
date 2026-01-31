@@ -67,12 +67,22 @@ public class ReflectiveAffix extends AbstractAffix {
 
             int tier = getTier(entity);
 
+            // 检查玩家是否有反制饰品（真伤水晶 - 反制伤害转换）
+            if (attacker instanceof net.minecraft.entity.player.EntityPlayer) {
+                net.minecraft.entity.player.EntityPlayer player = (net.minecraft.entity.player.EntityPlayer) attacker;
+                float reduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "damage_conversion");
+                if (reduction >= 1.0f) {
+                    return damage; // 完全免疫反弹
+                }
+            }
+
             // 计算反弹比例
             float reflectRatio = BASE_REFLECT + (tier * REFLECT_PER_TIER);
             reflectRatio = Math.min(reflectRatio, 0.5f);  // 最多50%
 
             // 计算反弹伤害
             float reflectDamage = damage * reflectRatio;
+
 
             // 限制单次反弹伤害上限
             float maxReflect = entity.getMaxHealth() * MAX_REFLECT_RATIO;

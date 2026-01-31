@@ -77,11 +77,23 @@ public class BlindingAffix extends AbstractAffix {
         EntityPlayer player = (EntityPlayer) target;
         int tier = getTier(attacker);
 
-        // 计算添加的黑暗层数
+        // 检查饰品反制（结界护符 - 光环系统；净化徽章 - 叠层系统）
+        float auraReduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "aura");
+        float stackReduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "stack_system");
+        float totalReduction = Math.max(auraReduction, stackReduction);
+        if (totalReduction >= 1.0f) {
+            return damage; // 完全免疫
+        }
+
+        // 计算添加的黑暗层数（根据反制减少）
         int stacksToAdd = BASE_STACKS_ON_HIT + (tier / 3 * STACKS_PER_TIER);
+        if (totalReduction > 0) {
+            stacksToAdd = Math.max(1, (int) (stacksToAdd * (1.0f - totalReduction)));
+        }
 
         // 添加黑暗debuff
         PlayerDebuffManager.addStacks(player, DebuffType.DARKNESS, stacksToAdd, DARKNESS_DURATION, attacker.getEntityId());
+
 
         // 重置衰减计时器
         PlayerDebuffManager.DebuffData debuffData = PlayerDebuffManager.getDebuff(player, DebuffType.DARKNESS);

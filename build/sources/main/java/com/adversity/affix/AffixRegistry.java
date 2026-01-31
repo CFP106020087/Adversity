@@ -158,6 +158,13 @@ public class AffixRegistry {
         register(new DivineAffix());          // 神明 - 伤害开立方根 (难度8+)
         register(new OuterGodAffix());        // 外神 - 伤害开四次根 (难度10+)
         register(new ReversalAffix());        // 反转 - 伤害反转机制 (难度5+)
+        register(new FortifiedAffix()); // 铁壁 - 低血量增加护甲 (难度2+)
+        register(new ThornyAffix()); // 荆刺 - 近战反伤叠层 (难度3+)
+        register(new HardenedAffix()); // 硬化 - 免击退+霸体 (难度4+)
+        register(new SheddingAffix()); // 蜕皮 - 致命伤复活 (难度5+)
+        register(new SymbioticAffix()); // 共生 - 伤害分摊 (难度6+)
+        register(new AntimagicAffix()); // 魔免 - 魔法免疫+药水禁用 (难度7+)
+        register(new AdaptiveAffix()); // 适应 - 重复伤害抗性 (难度8+)
 
         // ========== 功能型词条 (UTILITY) ==========
         register(new HasteAffix());           // 迅捷 - 移动速度加成 (难度1+)

@@ -52,7 +52,9 @@ import java.util.Locale;
  */
 public class CommandAdversity extends CommandBase {
 
-    private static final List<String> SUBCOMMANDS = Arrays.asList("set", "preset", "disable", "enable", "reset", "health", "damage");
+    private static final List<String> SUBCOMMANDS = Arrays.asList("set", "preset", "disable", "enable", "world",
+
+            "reset", "health", "damage");
     private static final List<String> PRESETS = Arrays.asList("peaceful", "easy", "normal", "hard", "nightmare");
     private static final List<String> SCALING_MODES = Arrays.asList("default", "linear", "exponential", "compound", "polynomial", "logarithmic", "sigmoid");
 
@@ -154,6 +156,7 @@ public class CommandAdversity extends CommandBase {
                 }
                 float multiplier = (float) parseDouble(args[valueIndex], 0.0, 6.0);
                 cap.setDifficultyMultiplier(multiplier);
+                syncPlayerDifficulty(target, cap);
                 notifySuccess(sender, target, "难度倍率设为 " + formatMultiplier(multiplier), isAdmin);
                 break;
 
@@ -162,16 +165,48 @@ public class CommandAdversity extends CommandBase {
                     throw new CommandException("Usage: /adversity " + (isAdmin ? "<player> " : "") + "preset <peaceful|easy|normal|hard|nightmare>");
                 }
                 applyPreset(sender, target, cap, args[valueIndex].toLowerCase(), isAdmin);
+                syncPlayerDifficulty(target, cap);
                 break;
 
             case "disable":
+                // 仅个人生效
                 cap.setDifficultyDisabled(true);
-                notifySuccess(sender, target, "Adversity系统 " + TextFormatting.RED + "已禁用", isAdmin);
+                syncPlayerDifficulty(target, cap);
+                notifySuccess(sender, target, "Adversity系统 " + TextFormatting.RED + "已禁用 (仅对你生效)", isAdmin);
                 break;
 
             case "enable":
+                // 仅个人生效
                 cap.setDifficultyDisabled(false);
+                syncPlayerDifficulty(target, cap);
                 notifySuccess(sender, target, "Adversity系统 " + TextFormatting.GREEN + "已启用", isAdmin);
+                break;
+
+            case "world":
+                // 全局禁用/启用 (需要OP权限)
+                if (args.length <= valueIndex) {
+                    throw new CommandException("Usage: /adversity world <disable|enable>");
+                }
+                String worldAction = args[valueIndex].toLowerCase();
+                if (target.world == null || target.world.isRemote) {
+                    throw new CommandException("Cannot modify world settings from client");
+                }
+
+                com.adversity.difficulty.GlobalDifficultyData globalData = com.adversity.difficulty.GlobalDifficultyData
+                        .get(target.world);
+
+                if ("disable".equals(worldAction)) {
+                    globalData.setPermanentlyDisabled(true);
+                    sender.sendMessage(new TextComponentString(TextFormatting.RED + "[Adversity] 全局难度系统已禁用 (难度锁定为0)"));
+                } else if ("enable".equals(worldAction)) {
+                    globalData.setPermanentlyDisabled(false);
+
+                    globalData.clearDifficultyLock(); // 解除难度锁定
+                    sender.sendMessage(new TextComponentString(TextFormatting.GREEN + "[Adversity] 全局难度系统已恢复"));
+
+                } else {
+                    throw new CommandException("Usage: /adversity world <disable|enable>");
+                }
                 break;
 
             case "reset":
@@ -180,6 +215,7 @@ public class CommandAdversity extends CommandBase {
                 cap.resetKillCount();
                 cap.setHealthScalingMode(ScalingMode.DEFAULT);
                 cap.setDamageScalingMode(ScalingMode.DEFAULT);
+                syncPlayerDifficulty(target, cap);
                 notifySuccess(sender, target, "难度已重置为默认值", isAdmin);
                 break;
 
@@ -189,6 +225,7 @@ public class CommandAdversity extends CommandBase {
                 }
                 ScalingMode healthMode = parseScalingMode(args[valueIndex]);
                 cap.setHealthScalingMode(healthMode);
+                syncPlayerDifficulty(target, cap);
                 notifySuccess(sender, target, "血量增长模式设为 " + TextFormatting.AQUA + healthMode.name(), isAdmin);
                 break;
 
@@ -198,11 +235,24 @@ public class CommandAdversity extends CommandBase {
                 }
                 ScalingMode damageMode = parseScalingMode(args[valueIndex]);
                 cap.setDamageScalingMode(damageMode);
+                syncPlayerDifficulty(target, cap);
                 notifySuccess(sender, target, "伤害增长模式设为 " + TextFormatting.RED + damageMode.name(), isAdmin);
                 break;
 
             default:
-                throw new CommandException("Unknown subcommand: " + subcommand + ". Use: set, preset, disable, enable, reset, health, damage");
+                throw new CommandException("Unknown subcommand: " + subcommand
+                        + ". Use: set, preset, disable, enable, world, reset, health, damage");
+        }
+    }
+
+    /**
+     * 同步玩家难度设置到客户端
+     */
+    private void syncPlayerDifficulty(EntityPlayer target, IPlayerDifficulty cap) {
+        if (target instanceof net.minecraft.entity.player.EntityPlayerMP) {
+            com.adversity.network.PacketHandler.INSTANCE.sendTo(
+                    new com.adversity.network.PacketSyncPlayerDifficulty(cap),
+                    (net.minecraft.entity.player.EntityPlayerMP) target);
         }
     }
 
@@ -346,6 +396,9 @@ public class CommandAdversity extends CommandBase {
                 }
                 if ("health".equals(firstArg) || "damage".equals(firstArg)) {
                     return getListOfStringsMatchingLastWord(args, SCALING_MODES);
+                }
+                if ("world".equals(firstArg)) {
+                    return getListOfStringsMatchingLastWord(args, Arrays.asList("disable", "enable"));
                 }
             }
         } else {

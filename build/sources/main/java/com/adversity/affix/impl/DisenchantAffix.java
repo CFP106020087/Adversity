@@ -74,6 +74,11 @@ public class DisenchantAffix extends AbstractAffix {
         EntityPlayer player = (EntityPlayer) target;
         int tier = getTier(attacker);
 
+        // 检查饰品反制（附魔守护者）
+        if (com.adversity.item.bauble.BaubleHelper.tryBlockEffect(player, "disenchant", attacker)) {
+            return damage;
+        }
+
         // 计算触发概率
         float chance = BASE_CHANCE + (tier * 0.03f);
 
@@ -83,6 +88,7 @@ public class DisenchantAffix extends AbstractAffix {
 
         return damage;
     }
+
 
     /**
      * 随机封印一件装备的附魔
