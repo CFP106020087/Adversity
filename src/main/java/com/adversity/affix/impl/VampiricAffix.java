@@ -94,10 +94,11 @@ public class VampiricAffix extends AbstractAffix {
         if (target instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) target;
 
-            // 检查饰品反制（凋零印记 - 抑制吸血；净化徽章 - 抑制叠层）
+            // 检查饰品反制（凋零印记 - 抑制吸血；净化徽章 - 抑制叠层；血怒徽章 - 反制吸血）
             float healReduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "healing");
             float stackReduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "stack_system");
-            float totalReduction = Math.max(healReduction, stackReduction);
+            float lifeReduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "lifesteal");
+            float totalReduction = Math.max(healReduction, Math.max(stackReduction, lifeReduction));
 
             if (totalReduction >= 1.0f) {
                 // 完全免疫血债系统

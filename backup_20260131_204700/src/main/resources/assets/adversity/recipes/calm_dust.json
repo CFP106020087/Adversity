@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " E ",
+    "ERE",
+    " E "
+  ],
+  "key": {
+    "E": {
+      "item": "adversity:entropy",
+      "data": 0
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "adversity:calm_dust",
+    "count": 2
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GEG",
+    "ELE",
+    "GEG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:glass_pane"
+    },
+    "E": {
+      "item": "minecraft:ender_pearl"
+    },
+    "L": {
+      "item": "adversity:affix_essence"
+    }
+  },
+  "result": {
+    "item": "adversity:affix_lens",
+    "count": 1
+  }
+}

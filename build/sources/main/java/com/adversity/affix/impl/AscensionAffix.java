@@ -94,6 +94,20 @@ public class AscensionAffix extends AbstractAffix {
             return;
         }
 
+        // 检查封魂之尘反制（检查击杀者）
+        if (source.getTrueSource() instanceof net.minecraft.entity.player.EntityPlayer) {
+            net.minecraft.entity.player.EntityPlayer player = (net.minecraft.entity.player.EntityPlayer) source
+                    .getTrueSource();
+            float sealReduction = com.adversity.item.bauble.BaubleHelper.getReduction(player, "ascension");
+            if (sealReduction >= 1.0f) {
+                // 完全阻止复活
+                return;
+            } else if (sealReduction > 0) {
+                // 降低复活几率
+                chance = chance * (1.0f - sealReduction);
+            }
+        }
+
         // 概率检查
         if (RANDOM.nextFloat() > chance) {
             return;

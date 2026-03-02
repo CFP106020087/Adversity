@@ -65,6 +65,12 @@ public class GiantSlayerAffix extends AbstractAffix {
         float tierMultiplier = 1.0f + (tier * 0.1f);
         float damageBonus = extraHealth * DAMAGE_PER_HEALTH * tierMultiplier;
 
+        // 检查圣盾勋章饰品反制（giantslayer类型）
+        float giantReduction = com.adversity.item.bauble.BaubleHelper.getReduction(player, "giantslayer");
+        if (giantReduction > 0) {
+            damageBonus *= (1.0f - giantReduction);
+        }
+
         // 限制最大加成
         damageBonus = Math.min(damageBonus, MAX_DAMAGE_BONUS);
 

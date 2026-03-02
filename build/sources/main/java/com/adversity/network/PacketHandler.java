@@ -78,6 +78,20 @@ public class PacketHandler {
                 id++,
                 Side.SERVER);
 
+        // 圣所传送目标选择 (Client -> Server)
+        INSTANCE.registerMessage(
+                        PacketTeleportToSanctuary.Handler.class,
+                        PacketTeleportToSanctuary.class,
+                        id++,
+                        Side.SERVER);
+
+        // 圣所GUI切换 (Client -> Server)
+        INSTANCE.registerMessage(
+                        PacketSwitchSanctuaryGui.Handler.class,
+                        PacketSwitchSanctuaryGui.class,
+                        id++,
+                        Side.SERVER);
+
         Adversity.LOGGER.info("Network packets registered");
     }
 }

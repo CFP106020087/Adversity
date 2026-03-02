@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LPL",
+    "PEP",
+    "LPL"
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "P": {
+      "item": "minecraft:phantom_membrane"
+    },
+    "E": {
+      "item": "adversity:entropy",
+      "data": 1
+    }
+  },
+  "result": {
+    "item": "adversity:phantom_cloak",
+    "count": 1
+  }
+}

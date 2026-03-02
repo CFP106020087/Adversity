@@ -60,6 +60,12 @@ public class ShieldBreakerAffix extends AbstractAffix {
         float tierMultiplier = 1.0f + (tier * 0.15f);  // 每tier增加15%效果
         float damageBonus = absorptionAmount * DAMAGE_PER_ABSORPTION * tierMultiplier;
 
+        // 检查圣盾勋章饰品反制（giantslayer类型）
+        float giantReduction = com.adversity.item.bauble.BaubleHelper.getReduction(player, "giantslayer");
+        if (giantReduction > 0) {
+            damageBonus *= (1.0f - giantReduction);
+        }
+
         // 限制最大加成
         damageBonus = Math.min(damageBonus, MAX_DAMAGE_BONUS);
 

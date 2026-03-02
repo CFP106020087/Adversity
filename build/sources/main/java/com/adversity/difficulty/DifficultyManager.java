@@ -374,6 +374,13 @@ public class DifficultyManager {
         // 计算难度
         float baseDifficulty = calculateDifficulty(world, pos, nearestPlayer);
         float difficulty = applyPlayerMultiplier(baseDifficulty, nearestPlayer);
+
+        // 应用圣所难度倍率 (EASE模式降低难度)
+        double sanctuaryDiffMul = SanctuaryManager.getDifficultyMultiplier(world, pos);
+        if (sanctuaryDiffMul != 1.0) {
+            difficulty = (float) (difficulty * sanctuaryDiffMul);
+        }
+
         cap.setDifficultyLevel(difficulty);
 
         // 检查区域压制
@@ -412,6 +419,13 @@ public class DifficultyManager {
                 tier = calculateTier(difficulty);
             }
         }
+
+        // 应用圣所精英等级上限 (FARM模式限制 ≤ T4)
+        int maxTier = SanctuaryManager.getMaxAllowedTier(world, pos);
+        if (maxTier > 0 && tier > maxTier) {
+            tier = maxTier;
+        }
+
         cap.setTier(tier);
 
         // 计算并存储减伤（所有怪物）

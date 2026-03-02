@@ -88,8 +88,10 @@ public class HorrorAffix extends AbstractAffix {
 
         EntityPlayer player = (EntityPlayer) target;
 
-        // 检查饰品反制（结界护符 - 光环系统）
+        // 检查饰品反制（结界护符 - 光环系统；勇气护符 - 恐惧专攻）
         float reduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "aura");
+        float horrorReduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "horror");
+        reduction = Math.max(reduction, horrorReduction);
         if (reduction >= 1.0f) {
             return damage; // 完全免疫
         }

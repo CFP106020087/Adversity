@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GDG",
+    "DED",
+    "GDG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:golden_apple",
+      "data": 0
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "E": {
+      "item": "adversity:entropy",
+      "data": 2
+    }
+  },
+  "result": {
+    "item": "adversity:guardian_heart",
+    "count": 1
+  }
+}

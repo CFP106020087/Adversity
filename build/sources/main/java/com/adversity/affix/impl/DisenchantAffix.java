@@ -74,8 +74,11 @@ public class DisenchantAffix extends AbstractAffix {
         EntityPlayer player = (EntityPlayer) target;
         int tier = getTier(attacker);
 
-        // 检查饰品反制（附魔守护者）
+        // 检查饰品反制（附魔守护者 - disenchant / 守护之魂 - equipment_seal）
         if (com.adversity.item.bauble.BaubleHelper.tryBlockEffect(player, "disenchant", attacker)) {
+            return damage;
+        }
+        if (com.adversity.item.bauble.BaubleHelper.tryBlockEffect(player, "equipment_seal", attacker)) {
             return damage;
         }
 

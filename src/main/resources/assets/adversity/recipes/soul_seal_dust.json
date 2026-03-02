@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SBS",
+    "BEB",
+    "SBS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:soul_sand"
+    },
+    "B": {
+      "item": "minecraft:bone"
+    },
+    "E": {
+      "item": "adversity:affix_crystal"
+    }
+  },
+  "result": {
+    "item": "adversity:soul_seal_dust",
+    "count": 1
+  }
+}

@@ -7,18 +7,22 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 
 /**
- * 净化之触附魔 - 攻击有几率临时移除怪物词条
+ * 净化之触附魔 - 缩短封印(Shackle/Divest/Disenchant)效果持续时间
  * 
- * 等级 I: 5%几率移除1个词条30秒
+ * 等级 I: 封印持续时间-30%
+ * 等级 II: 封印持续时间-50%
+ * 等级 III: 封印持续时间-70%
  */
 public class EnchantmentPurifyingTouch extends Enchantment {
 
-    public static final float PROC_CHANCE = 0.05f;
-    public static final int SUPPRESS_DURATION = 600; // 30秒 in ticks
-
     public EnchantmentPurifyingTouch() {
-        super(Rarity.VERY_RARE, EnumEnchantmentType.WEAPON, 
-            new EntityEquipmentSlot[]{EntityEquipmentSlot.MAINHAND});
+        super(Rarity.RARE, EnumEnchantmentType.ARMOR,
+                new EntityEquipmentSlot[] {
+                        EntityEquipmentSlot.HEAD,
+                        EntityEquipmentSlot.CHEST,
+                        EntityEquipmentSlot.LEGS,
+                        EntityEquipmentSlot.FEET
+                });
         setRegistryName(Adversity.MODID, "purifying_touch");
         setName(Adversity.MODID + ".purifying_touch");
     }
@@ -30,24 +34,50 @@ public class EnchantmentPurifyingTouch extends Enchantment {
 
     @Override
     public int getMaxLevel() {
-        return 1;
+        return 3;
     }
 
     @Override
     public int getMinEnchantability(int level) {
-        return 30;
+        return 15 + (level - 1) * 10;
     }
 
     @Override
     public int getMaxEnchantability(int level) {
-        return 50;
+        return getMinEnchantability(level) + 20;
     }
 
     /**
-     * 检查是否触发净化效果
+     * 获取封印持续时间减免倍率 (0.7表示-30%)
      */
-    public static boolean shouldTrigger() {
-        return Math.random() < PROC_CHANCE;
+    public static float getSealDurationMultiplier(int level) {
+        switch (level) {
+            case 1:
+                return 0.70f; // -30%
+            case 2:
+                return 0.50f; // -50%
+            case 3:
+                return 0.30f; // -70%
+            default:
+                return 1.0f;
+        }
+    }
+
+    /**
+     * 计算玩家总封印时间减免
+     */
+    public static float getTotalSealReduction(Iterable<ItemStack> armorSlots) {
+        int maxLevel = 0;
+        for (ItemStack stack : armorSlots) {
+            if (!stack.isEmpty()) {
+                int level = net.minecraft.enchantment.EnchantmentHelper.getEnchantmentLevel(
+                        EnchantmentRegistry.PURIFYING_TOUCH, stack);
+                if (level > maxLevel) {
+                    maxLevel = level;
+                }
+            }
+        }
+        return getSealDurationMultiplier(maxLevel);
     }
 
     /**

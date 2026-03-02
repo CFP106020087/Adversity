@@ -1,0 +1,26 @@
+{
+  "minecraft:recipes/misc/map": {
+    "criteria": {
+      "has_compass": "2026-02-01 18:03:17 +0800"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/chest": {
+    "criteria": {
+      "has_lots_of_items": "2026-02-01 18:03:17 +0800"
+    },
+    "done": true
+  },
+  "minecraft:recipes/building_blocks/bookshelf": {
+    "criteria": {
+      "has_book": "2026-02-01 18:03:17 +0800"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/writable_book": {
+    "criteria": {
+      "has_book": "2026-02-01 18:03:17 +0800"
+    },
+    "done": true
+  }
+}

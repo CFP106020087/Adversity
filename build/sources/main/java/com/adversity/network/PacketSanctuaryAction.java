@@ -18,7 +18,8 @@ public class PacketSanctuaryAction implements IMessage {
     public enum Action {
         TOGGLE_MODE,
         UPGRADE,
-        ACTIVATE
+        ACTIVATE,
+        PERFORM_RITUAL
     }
 
     private BlockPos pos;
@@ -71,6 +72,9 @@ public class PacketSanctuaryAction implements IMessage {
                         break;
                     case ACTIVATE:
                         sanctuary.activate();
+                        break;
+                    case PERFORM_RITUAL:
+                        sanctuary.performRitualFromSlot(ctx.getServerHandler().player);
                         break;
                 }
             });

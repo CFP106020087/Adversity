@@ -1,0 +1,28 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "java (build)",
+			"paths": [
+				"${workspace}"
+			],
+			"isFullBuild": true,
+			"group": "build",
+			"problemMatcher": [],
+			"label": "java (build): Build Workspace",
+			"detail": "$(tools) Build all the Java projects in workspace."
+		},
+		{
+			"type": "shell",
+			"label": "runClient",
+			"command": ".\\gradlew",
+			"args": [
+				"runClient",
+				"--no-daemon"
+			],
+			"group": "none",
+			"problemMatcher": [],
+			"detail": "$(play) Launch Minecraft dev client"
+		}
+	]
+}

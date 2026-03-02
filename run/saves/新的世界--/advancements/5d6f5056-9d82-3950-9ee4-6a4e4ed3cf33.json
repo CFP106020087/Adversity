@@ -128,6 +128,12 @@
     },
     "done": true
   },
+  "minecraft:recipes/misc/beacon": {
+    "criteria": {
+      "has_nether_star": "2026-02-11 02:43:58 +0800"
+    },
+    "done": true
+  },
   "minecraft:recipes/building_blocks/cyan_concrete_powder": {
     "criteria": {
       "has_sand": "2026-01-31 06:05:43 +0800"
@@ -136,6 +142,8 @@
   },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
+      "forest_hills": "2026-02-11 02:42:24 +0800",
+      "plains": "2026-02-11 02:41:53 +0800",
       "desert": "2026-01-31 06:05:43 +0800"
     },
     "done": false

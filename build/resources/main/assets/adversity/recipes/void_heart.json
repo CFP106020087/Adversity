@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ENE",
+    "NVN",
+    "ENE"
+  ],
+  "key": {
+    "E": {
+      "item": "minecraft:ender_eye"
+    },
+    "N": {
+      "item": "minecraft:nether_star"
+    },
+    "V": {
+      "item": "adversity:void_shard"
+    }
+  },
+  "result": {
+    "item": "adversity:void_heart",
+    "count": 1
+  }
+}

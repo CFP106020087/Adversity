@@ -25,9 +25,12 @@ import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 怪物事件处理器 - 处理生成、攻击、受伤、死亡等事件
@@ -107,10 +110,28 @@ public class MobEventHandler {
                 // 应用伤害倍率
                 damage *= attackerCap.getDamageMultiplier();
 
+                // 记录词条伤害前的基础伤害
+                float damageBeforeAffixes = damage;
+
                 // 处理攻击型词条
                 for (AffixData data : attackerCap.getAllAffixData()) {
                     if (data.isActive() && data.getCooldown() <= 0) {
                         damage = data.getAffix().onAttack(attacker, event.getEntityLiving(), damage, data);
+                    }
+                }
+
+                // 如果目标是玩家，应用圣所词条伤害压制
+                if (event.getEntityLiving() instanceof EntityPlayer) {
+                    EntityPlayer targetPlayer = (EntityPlayer) event.getEntityLiving();
+                    float sanctuaryReduction = com.adversity.sanctuary.SanctuaryManager
+                            .getAffixDamageReduction(targetPlayer);
+                    if (sanctuaryReduction > 0) {
+                        // 只压制词条造成的额外伤害
+                        float affixDamage = damage - damageBeforeAffixes;
+                        if (affixDamage > 0) {
+                            float reducedAffixDamage = affixDamage * (1.0f - sanctuaryReduction);
+                            damage = damageBeforeAffixes + reducedAffixDamage;
+                        }
                     }
                 }
             }
@@ -162,9 +183,28 @@ public class MobEventHandler {
         }
     }
 
+    // 延迟同步队列 - 处理 StartTracking 在实体处理前触发的竞争条件
+    private static final CopyOnWriteArrayList<PendingSync> PENDING_SYNCS = new CopyOnWriteArrayList<>();
+
+    private static class PendingSync {
+        final EntityLiving entity;
+        final EntityPlayerMP player;
+        int ticksRemaining;
+
+        PendingSync(EntityLiving entity, EntityPlayerMP player, int ticksRemaining) {
+            this.entity = entity;
+            this.player = player;
+            this.ticksRemaining = ticksRemaining;
+        }
+    }
+
     /**
      * 玩家开始跟踪实体时同步数据
      * 这确保了当玩家加入服务器或移动到已处理实体附近时能够收到数据
+     *
+     * 注意：StartTracking 可能在 EntityJoinWorldEvent 之前触发，
+     * 此时实体尚未被 processSpawnedEntity() 处理。
+     * 如果尚未处理，加入延迟队列等待处理完成后再同步。
      */
     @SubscribeEvent
     public void onStartTracking(PlayerEvent.StartTracking event) {
@@ -173,6 +213,50 @@ public class MobEventHandler {
 
         EntityLiving entity = (EntityLiving) event.getTarget();
         EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
+
+        IAdversityCapability cap = CapabilityHandler.getCapability(entity);
+        if (cap == null)
+            return;
+
+        if (!cap.isProcessed()) {
+            // 实体尚未被处理（竞争条件），加入延迟队列，10 tick 后重试
+            PENDING_SYNCS.add(new PendingSync(entity, player, 10));
+            return;
+        }
+
+        sendSyncPacket(entity, player);
+    }
+
+    /**
+     * 服务端 tick - 处理延迟同步队列
+     */
+    @SubscribeEvent
+    public void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END)
+            return;
+        if (PENDING_SYNCS.isEmpty())
+            return;
+
+        Iterator<PendingSync> it = PENDING_SYNCS.iterator();
+        while (it.hasNext()) {
+            PendingSync pending = it.next();
+            pending.ticksRemaining--;
+
+            if (pending.ticksRemaining <= 0) {
+                PENDING_SYNCS.remove(pending);
+                sendSyncPacket(pending.entity, pending.player);
+            }
+        }
+    }
+
+    /**
+     * 向指定玩家发送实体词条同步包
+     */
+    private void sendSyncPacket(EntityLiving entity, EntityPlayerMP player) {
+        if (!entity.isEntityAlive())
+            return;
+        if (player.connection == null || !player.connection.getNetworkManager().isChannelOpen())
+            return;
 
         IAdversityCapability cap = CapabilityHandler.getCapability(entity);
         if (cap == null || !cap.isProcessed() || cap.getTier() <= 0) return;

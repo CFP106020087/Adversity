@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GHG",
+    "HEH",
+    "GHG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:ghast_tear"
+    },
+    "H": {
+      "item": "adversity:guardian_heart"
+    },
+    "E": {
+      "item": "adversity:entropy",
+      "data": 2
+    }
+  },
+  "result": {
+    "item": "adversity:guardian_soul",
+    "count": 1
+  }
+}

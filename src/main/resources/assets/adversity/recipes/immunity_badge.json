@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GMG",
+    "MEM",
+    "GMG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "M": {
+      "item": "minecraft:golden_apple",
+      "data": 0
+    },
+    "E": {
+      "item": "adversity:affix_crystal"
+    }
+  },
+  "result": {
+    "item": "adversity:immunity_badge",
+    "count": 1
+  }
+}

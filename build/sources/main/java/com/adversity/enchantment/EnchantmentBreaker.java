@@ -7,11 +7,11 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 
 /**
- * 破咒者附魔 - 对防御词条怪物造成额外伤害
+ * 破咒者附魔 - 移除精英词条buff
  * 
- * 等级 I: +50%伤害 vs Hero/Divine/OuterGod
- * 等级 II: +100%伤害 vs Hero/Divine/OuterGod
- * 等级 III: 真实伤害 vs Hero/Divine/OuterGod（无视其伤害减免）
+ * 等级 I: 10%几率移除一个随机词条
+ * 等级 II: 20%几率移除一个随机词条
+ * 等级 III: 30%几率移除一个随机词条
  */
 public class EnchantmentBreaker extends Enchantment {
 
@@ -43,22 +43,10 @@ public class EnchantmentBreaker extends Enchantment {
     }
 
     /**
-     * 获取伤害倍率
+     * 获取移除词条的几率
      */
-    public static float getDamageMultiplier(int level) {
-        switch (level) {
-            case 1: return 1.5f;  // +50%
-            case 2: return 2.0f;  // +100%
-            case 3: return 2.0f;  // 100%但作为真实伤害
-            default: return 1.0f;
-        }
-    }
-
-    /**
-     * 检查是否使用真实伤害（等级3）
-     */
-    public static boolean usesTrueDamage(int level) {
-        return level >= 3;
+    public static float getRemoveChance(int level) {
+        return 0.10f * level; // 10%/20%/30%
     }
 
     /**

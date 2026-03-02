@@ -95,6 +95,73 @@ public class SanctuaryManager {
         return zone != null && zone.type == SanctuaryType.NATURAL;
     }
 
+    /**
+     * 获取玩家的词条伤害压制比例
+     * 圣所内受到的词条伤害会被削减
+     * 
+     * @return 0.0 = 无压制, 0.5 = 50%伤害压制
+     */
+    public static float getAffixDamageReduction(EntityPlayer player) {
+        SanctuaryZone zone = getPlayerSanctuary(player);
+        return zone != null ? zone.getAffixDamageReduction() : 0.0f;
+    }
+
+    /**
+     * 获取位置的圣所难度倍率
+     * EASE模式降低难度
+     * 
+     * @return 1.0 = 无修正, 0.5 = 半难度
+     */
+    public static double getDifficultyMultiplier(World world, BlockPos pos) {
+        SanctuaryZone zone = getActiveSanctuaryAt(world, pos);
+        return zone != null ? zone.getDifficultyMultiplier() : 1.0;
+    }
+
+    /**
+     * 获取位置的圣所最高允许精英等级
+     * FARM模式限制精英等级上限
+     * 
+     * @return 0 = 无限制, >0 = 最高允许等级
+     */
+    public static int getMaxAllowedTier(World world, BlockPos pos) {
+        SanctuaryZone zone = getActiveSanctuaryAt(world, pos);
+        return zone != null ? zone.getMaxAllowedTier() : 0;
+    }
+
+    /**
+     * 获取指定世界所有已激活的圣所列表
+     */
+    public static java.util.List<SanctuaryZone> getActivatedSanctuaries(World world) {
+        java.util.List<SanctuaryZone> result = new java.util.ArrayList<>();
+        if (world == null)
+            return result;
+
+        SanctuaryData data = SanctuaryData.get(world);
+        for (SanctuaryZone zone : data.getAllSanctuaries()) {
+            if (zone.isActive()) {
+                result.add(zone);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 获取所有维度的已激活圣所列表（需要传入主世界）
+     */
+    public static java.util.List<SanctuaryZone> getAllActivatedSanctuaries(World overworld) {
+        java.util.List<SanctuaryZone> result = new java.util.ArrayList<>();
+        if (overworld == null)
+            return result;
+
+        SanctuaryData data = SanctuaryData.get(overworld);
+        for (SanctuaryZone zone : data.getAllSanctuaries()) {
+            if (zone.isActive()) {
+                result.add(zone);
+            }
+        }
+        return result;
+    }
+
     // ==================== 操作 API ====================
 
     /**

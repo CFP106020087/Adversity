@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LEL",
+    "EBE",
+    "LEL"
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:lapis_lazuli"
+    },
+    "E": {
+      "item": "minecraft:experience_bottle"
+    },
+    "B": {
+      "item": "adversity:affix_crystal"
+    }
+  },
+  "result": {
+    "item": "adversity:memory_crystal",
+    "count": 1
+  }
+}

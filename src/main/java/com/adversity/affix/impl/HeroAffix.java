@@ -45,6 +45,21 @@ public class HeroAffix extends AbstractAffix {
     public float onHurt(EntityLiving entity, DamageSource source, float damage, IAffixData data) {
         if (damage <= 0) return damage;
 
+        // 检查攻击者是否有反制饰品（破甲符文 - armor_reduction）
+        if (source.getTrueSource() instanceof net.minecraft.entity.player.EntityPlayer) {
+            net.minecraft.entity.player.EntityPlayer player = (net.minecraft.entity.player.EntityPlayer) source
+                    .getTrueSource();
+            float armorReduction = com.adversity.item.bauble.BaubleHelper.getReduction(player, "armor_reduction");
+            if (armorReduction >= 1.0f) {
+                return damage; // 完全穿透
+            }
+            if (armorReduction > 0) {
+                float reducedDamage = (float) Math.sqrt(damage);
+                reducedDamage = Math.max(reducedDamage, MIN_DAMAGE);
+                return reducedDamage + (damage - reducedDamage) * armorReduction;
+            }
+        }
+
         // 应用平方根
         float reducedDamage = (float) Math.sqrt(damage);
 

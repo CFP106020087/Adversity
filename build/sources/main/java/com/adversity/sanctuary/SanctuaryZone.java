@@ -31,10 +31,13 @@ public class SanctuaryZone {
      */
     public static SanctuaryZone createNatural(int dimension, BlockPos center, int tier) {
         int radius = getNaturalRadius(tier);
+        int maxFuel = AdversityConfig.sanctuarySettings.naturalFuelCapacity;
+        // 初始燃料为最大值的20%-50%随机
+        int initialFuel = maxFuel / 5 + new java.util.Random().nextInt(maxFuel * 3 / 10 + 1);
         return new SanctuaryZone(
                 dimension, center, SanctuaryType.NATURAL, radius, tier,
-                AdversityConfig.sanctuarySettings.naturalFuelCapacity,
-                AdversityConfig.sanctuarySettings.naturalFuelCapacity,
+                initialFuel,
+                maxFuel,
                 getNaturalEliteReduction(tier),
                 1.0f // 天然圣所饰品100%效果
         );
@@ -77,13 +80,13 @@ public class SanctuaryZone {
 
         switch (mode) {
             case SAFE:
-                return baseEliteReduction;
+                return 1.0f; // 庇护模式：完全阻止精英生成
             case FARM:
-                return baseEliteReduction * 0.5f; // 狩猎模式：减少率减半（允许更多生成）
+                return baseEliteReduction * 0.3f; // 狩猎模式：大幅降低减少率（允许精英生成）
             case EASE:
-                return baseEliteReduction * 0.8f; // 压制模式：减少率略降
+                return baseEliteReduction; // 压制模式：使用基础减少率
             default:
-                return baseEliteReduction;
+                return 1.0f;
         }
     }
 
@@ -97,17 +100,28 @@ public class SanctuaryZone {
     }
 
     /**
-     * 获取当前燃料消耗倍率
+     * 获取当前燃料消耗倍率（从配置读取）
+     * SAFE最贵 > EASE中等 > FARM最便宜
+     * 高等级消耗更重: 基础倍率 × (1 + (tier-1) × tierMultiplier)
      */
     public double getFuelUsageMultiplier() {
+        double modeMultiplier;
         switch (mode) {
-            case FARM:
-                return AdversityConfig.sanctuarySettings.farmModeFuelMultiplier;
+            case SAFE:
+                modeMultiplier = AdversityConfig.sanctuarySettings.safeModeFuelMultiplier;
+                break;
             case EASE:
-                return AdversityConfig.sanctuarySettings.easeModeFuelMultiplier;
+                modeMultiplier = AdversityConfig.sanctuarySettings.easeModeFuelMultiplier;
+                break;
+            case FARM:
+                modeMultiplier = AdversityConfig.sanctuarySettings.farmModeFuelMultiplier;
+                break;
             default:
-                return 1.0;
+                modeMultiplier = 1.0;
         }
+        // 等级越高消耗越重
+        double tierMultiplier = 1.0 + (tier - 1) * AdversityConfig.sanctuarySettings.tierFuelMultiplier;
+        return modeMultiplier * tierMultiplier;
     }
 
     /**
@@ -139,17 +153,39 @@ public class SanctuaryZone {
     }
 
     /**
+     * 获取词条伤害压制比例
+     * 圣所内词条造成的伤害会被削减
+     * 
+     * @return 0.0 = 无压制, 0.5 = 50%伤害压制
+     */
+    public float getAffixDamageReduction() {
+        if (!isActive())
+            return 0.0f;
+
+        // 根据圣所等级计算压制比例
+        // T1: 30%, T2: 35%, T3: 40%, T4: 45%, T5: 50%
+        float baseReduction = 0.25f + (tier * 0.05f);
+        baseReduction = Math.min(baseReduction, 0.5f); // 最高50%
+
+        switch (mode) {
+            case SAFE:
+                return baseReduction; // 安全模式：完整压制
+            case EASE:
+                return baseReduction * 1.2f; // 压制模式：额外20%压制
+            case FARM:
+                return baseReduction * 0.3f; // 狩猎模式：压制大幅降低
+            default:
+                return baseReduction;
+        }
+    }
+
+    /**
      * 获取天然圣所半径
+     * T1=1600, T2=2000, T3=2400, T4=2800, T5=3200
      */
     private static int getNaturalRadius(int tier) {
         return AdversityConfig.sanctuarySettings.naturalBaseRadius +
-                (tier - 1) * AdversityConfig.sanctuarySettings.naturalRadiusPerTier * 1000;
-        // 注意：原配置是blocksPerDifficulty=500, 这里假设RadiusPerTier是大数值
-        // 实际上之前的代码是5000, 10000...
-        // 让我们硬编码回之前的值以保持一致性，或者修改Config defaults
-        // 目前Config defaults较小 (base=16, tier=4)，需要大幅增加Config defaults或者在这里乘倍数
-        // 既然已经是 "Deep Audit" 后的修正，我们使用正确的数值：
-        // T1=5000, T2=10000, T3=15000, T4=20000
+                (tier - 1) * AdversityConfig.sanctuarySettings.naturalRadiusPerTier;
     }
 
     /**

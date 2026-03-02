@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GCG",
+    "CEC",
+    "GCG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "C": {
+      "item": "minecraft:clock"
+    },
+    "E": {
+      "item": "adversity:entropy",
+      "data": 2
+    }
+  },
+  "result": {
+    "item": "adversity:temporal_watch",
+    "count": 1
+  }
+}

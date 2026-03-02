@@ -71,6 +71,16 @@ public class AvariceAffix extends AbstractAffix {
         // 限制最大加成
         damageBonus = Math.min(damageBonus, MAX_DAMAGE_BONUS);
 
+        // 检查轻装护身符反制
+        float lightReduction = com.adversity.item.bauble.BaubleHelper.getReduction(player, "avarice");
+        if (lightReduction >= 1.0f) {
+            // 完全免疫惩罚
+            return damage;
+        } else if (lightReduction > 0) {
+            // 降低伤害加成
+            damageBonus = damageBonus * (1.0f - lightReduction);
+        }
+
         return damage * (1.0f + damageBonus);
     }
 

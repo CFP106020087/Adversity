@@ -72,6 +72,40 @@ public class FortifiedAffix extends AbstractAffix {
         updateArmorModifier(entity, armorBonus);
     }
 
+    @Override
+    public float onHurt(EntityLiving entity, net.minecraft.util.DamageSource source, float damage, IAffixData data) {
+        if (damage <= 0)
+            return damage;
+
+        // 检查攻击者是否有反制饰品（破甲符文 - armor_reduction）
+        if (source.getTrueSource() instanceof net.minecraft.entity.player.EntityPlayer) {
+            net.minecraft.entity.player.EntityPlayer player = (net.minecraft.entity.player.EntityPlayer) source
+                    .getTrueSource();
+            float armorReduction = com.adversity.item.bauble.BaubleHelper.getReduction(player, "armor_reduction");
+            if (armorReduction > 0) {
+                // 临时降低铁壁护甲加成效果
+                IAttributeInstance armorAttr = entity.getEntityAttribute(SharedMonsterAttributes.ARMOR);
+                if (armorAttr != null) {
+                    AttributeModifier currentModifier = armorAttr.getModifier(ARMOR_MODIFIER_UUID);
+                    if (currentModifier != null) {
+                        double currentBonus = currentModifier.getAmount();
+                        double reducedBonus = currentBonus * (1.0 - armorReduction);
+                        armorAttr.removeModifier(currentModifier);
+                        if (reducedBonus > 0) {
+                            AttributeModifier newModifier = new AttributeModifier(
+                                    ARMOR_MODIFIER_UUID,
+                                    "Fortified armor bonus",
+                                    reducedBonus,
+                                    2);
+                            armorAttr.applyModifier(newModifier);
+                        }
+                    }
+                }
+            }
+        }
+        return damage;
+    }
+
     /**
      * 计算护甲加成
      */

@@ -58,6 +58,11 @@ public class BlackSwanAffix extends AbstractAffix {
         EntityPlayer player = (EntityPlayer) target;
         int tier = getTier(attacker);
 
+        // 检查守护之心饰品反制（curse类型）
+        if (com.adversity.item.bauble.BaubleHelper.tryBlockEffect(player, "curse", attacker)) {
+            return damage;
+        }
+
         // 计算触发概率
         float chance = BASE_CHANCE + (tier * 0.02f);
 

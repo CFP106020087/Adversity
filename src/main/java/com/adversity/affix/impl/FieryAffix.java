@@ -97,8 +97,10 @@ public class FieryAffix extends AbstractAffix {
         EntityPlayer player = (EntityPlayer) target;
         int tier = getTier(attacker);
 
-        // 检查饰品反制（净化徽章 - 叠层系统）
+        // 检查饰品反制（净化徽章 - 叠层系统；净焰之环 - 火焰专攻）
         float reduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "stack_system");
+        float fieryReduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "fiery");
+        reduction = Math.max(reduction, fieryReduction);
         if (reduction >= 1.0f) {
             return damage; // 完全免疫
         }

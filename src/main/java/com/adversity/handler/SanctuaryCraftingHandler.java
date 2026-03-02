@@ -56,6 +56,25 @@ public class SanctuaryCraftingHandler {
         addIfNotNull(ItemRegistry.ENCHANT_GUARDIAN);
         addIfNotNull(ItemRegistry.ANCHOR_STONE);
         addIfNotNull(ItemRegistry.SANCTUARY_COMPASS);
+        // Phase 2: 补全全部饰品
+        addIfNotNull(ItemRegistry.VOID_HEART);
+        addIfNotNull(ItemRegistry.BLOODRAGE_EMBLEM);
+        addIfNotNull(ItemRegistry.TEMPORAL_WATCH);
+        addIfNotNull(ItemRegistry.PHANTOM_CLOAK);
+        addIfNotNull(ItemRegistry.THUNDER_RING);
+        addIfNotNull(ItemRegistry.AEGIS_MEDAL);
+        addIfNotNull(ItemRegistry.PURIFY_BADGE);
+        addIfNotNull(ItemRegistry.ARMOR_PIERCE);
+        addIfNotNull(ItemRegistry.ANCHOR_HEART);
+        addIfNotNull(ItemRegistry.BARRIER_WARD);
+        addIfNotNull(ItemRegistry.WITHER_MARK);
+        addIfNotNull(ItemRegistry.TRUE_CRYSTAL);
+        addIfNotNull(ItemRegistry.GUARDIAN_SOUL);
+        addIfNotNull(ItemRegistry.BALANCE_CHARM);
+        addIfNotNull(ItemRegistry.IMMUNITY_BADGE);
+        addIfNotNull(ItemRegistry.MEMORY_CRYSTAL);
+        addIfNotNull(ItemRegistry.SOUL_SEAL_DUST);
+        addIfNotNull(ItemRegistry.LIGHT_AMULET);
         
         // 解析 Tier 配置
         parseTierRequirements();
@@ -112,6 +131,43 @@ public class SanctuaryCraftingHandler {
             case "enchant_guardian": return ItemRegistry.ENCHANT_GUARDIAN;
             case "anchor_stone": return ItemRegistry.ANCHOR_STONE;
             case "sanctuary_compass": return ItemRegistry.SANCTUARY_COMPASS;
+            // Phase 2: 补全全部饰品
+            case "void_heart":
+                return ItemRegistry.VOID_HEART;
+            case "bloodrage_emblem":
+                return ItemRegistry.BLOODRAGE_EMBLEM;
+            case "temporal_watch":
+                return ItemRegistry.TEMPORAL_WATCH;
+            case "phantom_cloak":
+                return ItemRegistry.PHANTOM_CLOAK;
+            case "thunder_ring":
+                return ItemRegistry.THUNDER_RING;
+            case "aegis_medal":
+                return ItemRegistry.AEGIS_MEDAL;
+            case "purify_badge":
+                return ItemRegistry.PURIFY_BADGE;
+            case "armor_pierce":
+                return ItemRegistry.ARMOR_PIERCE;
+            case "anchor_heart":
+                return ItemRegistry.ANCHOR_HEART;
+            case "barrier_ward":
+                return ItemRegistry.BARRIER_WARD;
+            case "wither_mark":
+                return ItemRegistry.WITHER_MARK;
+            case "true_crystal":
+                return ItemRegistry.TRUE_CRYSTAL;
+            case "guardian_soul":
+                return ItemRegistry.GUARDIAN_SOUL;
+            case "balance_charm":
+                return ItemRegistry.BALANCE_CHARM;
+            case "immunity_badge":
+                return ItemRegistry.IMMUNITY_BADGE;
+            case "memory_crystal":
+                return ItemRegistry.MEMORY_CRYSTAL;
+            case "soul_seal_dust":
+                return ItemRegistry.SOUL_SEAL_DUST;
+            case "light_amulet":
+                return ItemRegistry.LIGHT_AMULET;
             default: return null;
         }
     }
@@ -169,16 +225,49 @@ public class SanctuaryCraftingHandler {
             }
         }
         
+        // 检查阶段要求
+        String requiredStage = com.adversity.sanctuary.StageGatingRegistry.getItemStageRequirement(result);
+        if (requiredStage != null) {
+            com.adversity.capability.IAdversityCapability.IProgression progression = player
+                    .getCapability(com.adversity.capability.CapabilityHandler.PROGRESSION_CAPABILITY, null);
+            if (progression == null || !progression.hasStage(requiredStage)) {
+                cancelCrafting(event, player, "adversity.crafting.stage_required", requiredStage);
+                return;
+            }
+        }
+
         // 合成成功！
     }
     
     /**
      * 取消合成并通知玩家
+     * 
+     * 由于 PlayerEvent.ItemCraftedEvent 不可取消（材料已被消耗），
+     * 需要将合成矩阵中的材料归还给玩家。
      */
     private static void cancelCrafting(PlayerEvent.ItemCraftedEvent event, EntityPlayer player, String msgKey, Object... args) {
         // 清空合成结果
         event.crafting.setCount(0);
         
+        // 归还被消耗的材料
+        // ItemCraftedEvent 触发时，craftMatrix 每个原本有材料的槽位已被 decrStackSize(1)
+        // 对于仍非空的槽位：可以确定消耗了1个同类物品，补回1个
+        // 对于已变空的槽位：无法确定原物品类型，无法补回（极端边缘情况）
+        if (event.craftMatrix != null) {
+            for (int i = 0; i < event.craftMatrix.getSizeInventory(); i++) {
+                ItemStack remaining = event.craftMatrix.getStackInSlot(i);
+                if (!remaining.isEmpty()) {
+                    // 这个槽位原来有 N+1 个物品，消耗1个后剩余 N 个
+                    // 补回被消耗的1个
+                    ItemStack refund = remaining.copy();
+                    refund.setCount(1);
+                    if (!player.inventory.addItemStackToInventory(refund)) {
+                        player.dropItem(refund, false);
+                    }
+                }
+            }
+        }
+
         // 发送消息
         player.sendStatusMessage(new TextComponentTranslation(msgKey, args), true);
     }

@@ -138,14 +138,14 @@ public class AdversityConfig {
             "RLCraft随机出生点(±10000)建议设为15000"
         })
         @Config.RangeDouble(min = 0, max = 100000)
-        public double safeDistance = 15000;
+        public double safeDistance = 5000;
 
         @Config.Comment({
             "Distance (in blocks) per 1 difficulty point (after safe distance)",
             "超出安全距离后，每增加多少格距离增加 1 点难度"
         })
         @Config.RangeDouble(min = 50, max = 10000)
-        public double blocksPerDifficulty = 1000;
+        public double blocksPerDifficulty = 1500;
 
         @Config.Comment({
             "Maximum difficulty from distance",
@@ -159,7 +159,7 @@ public class AdversityConfig {
             "每过多少天增加 1 点难度"
         })
         @Config.RangeDouble(min = 0.5, max = 100)
-        public double daysPerDifficulty = 5; // 平缓增长 (每5天+1难度)
+        public double daysPerDifficulty = 5; // 适度增长 (每5天+1难度)
 
         @Config.Comment({
             "Maximum difficulty from time (0 = no limit)",
@@ -180,7 +180,7 @@ public class AdversityConfig {
             "时间难度在最终计算中的权重"
         })
         @Config.RangeDouble(min = 0, max = 10)
-        public double timeWeight = 1.0;
+        public double timeWeight = 0.7;
 
         @Config.Comment({
                 "Use per-player play time instead of global world time for time difficulty",
@@ -239,7 +239,7 @@ public class AdversityConfig {
             "  0.30 = diff20 → 190x, diff50 → 497929x"
         })
         @Config.RangeDouble(min = 0, max = 2)
-        public double healthRate = 0.12;
+        public double healthRate = 0.06;
 
         @Config.Comment({
             "Power exponent for POLYNOMIAL mode",
@@ -304,7 +304,7 @@ public class AdversityConfig {
             "每点难度增加的盔甲值"
         })
         @Config.RangeDouble(min = 0, max = 10)
-        public double armorRate = 0.5;
+        public double armorRate = 0.2;
 
         @Config.Comment("Power exponent for POLYNOMIAL mode")
         @Config.RangeDouble(min = 1, max = 5)
@@ -339,7 +339,7 @@ public class AdversityConfig {
             "For SIGMOID mode, this controls how fast it approaches max"
         })
         @Config.RangeDouble(min = 0, max = 1)
-        public double damageReductionRate = 0.05;
+        public double damageReductionRate = 0.03;
 
         @Config.Comment("Power exponent for POLYNOMIAL mode")
         @Config.RangeDouble(min = 1, max = 5)
@@ -355,7 +355,7 @@ public class AdversityConfig {
             "0.99 = 接近免疫（仅限极端模组包）"
         })
         @Config.RangeDouble(min = 0, max = 0.99)
-        public double damageReductionMax = 0.5;
+        public double damageReductionMax = 0.4;
 
         @Config.Comment({
             "=== ADVANCED: ARMOR PENETRATION RESISTANCE ===",
@@ -402,14 +402,14 @@ public class AdversityConfig {
             "精英概率上限"
         })
         @Config.RangeDouble(min = 0.1, max = 1.0)
-        public double maxEliteChance = 0.6;
+        public double maxEliteChance = 0.55;
 
         @Config.Comment({
             "Minimum difficulty required for elite spawns",
             "生成精英所需的最低难度"
         })
         @Config.RangeDouble(min = 0, max = 50)
-        public double minDifficultyForElite = 2.0;
+        public double minDifficultyForElite = 1.5;
 
         @Config.Comment({
             "=== TIER THRESHOLDS ===",
@@ -639,14 +639,14 @@ public class AdversityConfig {
             "多少天不睡觉后开始生成梦魇"
         })
         @Config.RangeInt(min = 1, max = 14)
-        public int daysUntilNightmare = 3;
+        public int daysUntilNightmare = 5;
 
         @Config.Comment({
             "Base spawn chance per check (every 5 seconds at night)",
             "每次检查的基础生成概率（夜间每5秒检查一次）"
         })
         @Config.RangeDouble(min = 0.01, max = 0.5)
-        public double baseSpawnChance = 0.05;
+        public double baseSpawnChance = 0.03;
 
         @Config.Comment({
             "Maximum spawn chance",
@@ -743,7 +743,7 @@ public class AdversityConfig {
             "公式: 基础经验 × (1 + 等级 × xpMultiplierPerTier)"
         })
         @Config.RangeDouble(min = 0, max = 10)
-        public double xpMultiplierPerTier = 0.5;
+        public double xpMultiplierPerTier = 0.8;
 
         @Config.Comment({
             "Maximum XP multiplier (cap)",
@@ -759,14 +759,14 @@ public class AdversityConfig {
             "公式: 基础掉落 × (1 + 等级 × lootMultiplierPerTier)"
         })
         @Config.RangeDouble(min = 0, max = 5)
-        public double lootMultiplierPerTier = 0.2;
+        public double lootMultiplierPerTier = 0.35;
 
         @Config.Comment({
             "Maximum loot multiplier (cap)",
             "战利品倍率上限"
         })
         @Config.RangeDouble(min = 1, max = 50)
-        public double maxLootMultiplier = 5.0;
+        public double maxLootMultiplier = 8.0;
 
         @Config.Comment({
             "Enable bonus XP orbs for elite kills",
@@ -810,15 +810,15 @@ public class AdversityConfig {
                 "Natural sanctuary base radius (blocks)",
                 "天然圣所基础半径（格）"
         })
-        @Config.RangeInt(min = 8, max = 64)
-        public int naturalBaseRadius = 16;
+        @Config.RangeInt(min = 100, max = 10000)
+        public int naturalBaseRadius = 2000;
 
         @Config.Comment({
                 "Natural sanctuary radius per tier (blocks)",
                 "天然圣所每级增加的半径（格）"
         })
-        @Config.RangeInt(min = 1, max = 16)
-        public int naturalRadiusPerTier = 4;
+        @Config.RangeInt(min = 100, max = 5000)
+        public int naturalRadiusPerTier = 2000;
 
         @Config.Comment({
                 "Artificial sanctuary radius (blocks)",
@@ -832,7 +832,7 @@ public class AdversityConfig {
                 "天然圣所燃料容量"
         })
         @Config.RangeInt(min = 1000, max = 1000000)
-        public int naturalFuelCapacity = 10000;
+        public int naturalFuelCapacity = 5000;
 
         @Config.Comment({
                 "Dimensions where natural sanctuaries can generate",
@@ -847,42 +847,52 @@ public class AdversityConfig {
                 "天然圣所每小时燃料消耗"
         })
         @Config.RangeInt(min = 0, max = 1000)
-        public int naturalFuelUsage = 100;
+        public int naturalFuelUsage = 250;
 
         @Config.Comment({
                 "Artificial sanctuary fuel usage per hour",
                 "人造圣所每小时燃料消耗"
         })
         @Config.RangeInt(min = 0, max = 1000)
-        public int artificialFuelUsage = 200;
+        public int artificialFuelUsage = 300;
 
         @Config.Comment({
-                "Sanctuary Mode Multipliers (SAFE, FARM, EASE)",
-                "圣所模式的消耗倍率",
-                "Format: SAFE_Multiplier, FARM_Multiplier, EASE_Multiplier"
+                "Fuel usage multiplier for SAFE mode (highest protection = highest cost)",
+                "庇护模式燃料消耗倍率（最高保护 = 最高消耗）"
         })
-        public double[] modeMultipliers = new double[] { 1.0, 0.5, 0.2 };
+        @Config.RangeDouble(min = 0.1, max = 10.0)
+        public double safeModeFuelMultiplier = 2.5;
 
         @Config.Comment({
                 "Artificial sanctuary fuel capacity",
                 "人造圣所燃料容量"
         })
         @Config.RangeInt(min = 1000, max = 1000000)
-        public int artificialFuelCapacity = 5000;
+        public int artificialFuelCapacity = 2000;
 
         @Config.Comment({
-                "Fuel usage multiplier for FARM mode",
-                "狩猎模式燃料消耗倍率"
+                "Fuel usage multiplier for FARM mode (lowest cost, allows elites)",
+                "狩猎模式燃料消耗倍率（最低消耗，允许精英生成）"
         })
-        @Config.RangeDouble(min = 0.0, max = 10.0)
-        public double farmModeFuelMultiplier = 0.5;
+        @Config.RangeDouble(min = 0.1, max = 10.0)
+        public double farmModeFuelMultiplier = 0.3;
 
         @Config.Comment({
-                "Fuel usage multiplier for EASE mode",
-                "压制模式燃料消耗倍率"
+                "Fuel usage multiplier for EASE mode (medium cost, reduces difficulty)",
+                "压制模式燃料消耗倍率（中等消耗，降低难度）"
         })
-        @Config.RangeDouble(min = 0.0, max = 10.0)
-        public double easeModeFuelMultiplier = 0.2;
+        @Config.RangeDouble(min = 0.1, max = 10.0)
+        public double easeModeFuelMultiplier = 1.2;
+
+        @Config.Comment({
+                "Fuel usage multiplier per tier level (higher tier = more fuel)",
+                "每等级额外燃料消耗倍率（等级越高消耗越重）",
+                "Formula: modeMultiplier × (1 + (tier-1) × tierFuelMultiplier)",
+                "公式: 模式倍率 × (1 + (等级-1) × 此值)",
+                "Example: tier 5 with 0.25 = modeMultiplier × 2.0"
+        })
+        @Config.RangeDouble(min = 0.0, max = 2.0)
+        public double tierFuelMultiplier = 0.3;
 
         @Config.Comment({
                 "Difficulty reduction multiplier for EASE mode (0.5 = 50% difficulty)",
@@ -890,6 +900,29 @@ public class AdversityConfig {
         })
         @Config.RangeDouble(min = 0.0, max = 1.0)
         public double easeModeDifficultyMultiplier = 0.5;
+
+        // ==================== 熵能燃料值 ====================
+
+        @Config.Comment({
+                "Entropy Shard fuel value (dropped by T1-T4 elites)",
+                "熵能碎片燃料值（T1-T4精英掉落）"
+        })
+        @Config.RangeInt(min = 1, max = 1000)
+        public int entropyShardFuel = 10;
+
+        @Config.Comment({
+                "Entropy Crystal fuel value (dropped by T5-T7 elites)",
+                "熵能结晶燃料值（T5-T7精英掉落）"
+        })
+        @Config.RangeInt(min = 1, max = 5000)
+        public int entropyCrystalFuel = 50;
+
+        @Config.Comment({
+                "Entropy Core fuel value (dropped by T8-T10 elites)",
+                "熵能核心燃料值（T8-T10精英掉落）"
+        })
+        @Config.RangeInt(min = 1, max = 20000)
+        public int entropyCoreFuel = 200;
 
         // ==================== 维度黑名单 ====================
 

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "MBM",
+    "BEB",
+    "MBM"
+  ],
+  "key": {
+    "M": {
+      "item": "minecraft:magma_cream"
+    },
+    "B": {
+      "item": "minecraft:blaze_powder"
+    },
+    "E": {
+      "item": "adversity:entropy",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "adversity:flame_ward",
+    "count": 1
+  }
+}

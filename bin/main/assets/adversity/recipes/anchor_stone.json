@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "OEO",
+    "ESE",
+    "OEO"
+  ],
+  "key": {
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "E": {
+      "item": "minecraft:ender_pearl"
+    },
+    "S": {
+      "item": "adversity:entropy",
+      "data": 1
+    }
+  },
+  "result": {
+    "item": "adversity:anchor_stone",
+    "count": 1
+  }
+}

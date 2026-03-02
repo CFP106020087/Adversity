@@ -77,10 +77,11 @@ public class BlindingAffix extends AbstractAffix {
         EntityPlayer player = (EntityPlayer) target;
         int tier = getTier(attacker);
 
-        // 检查饰品反制（结界护符 - 光环系统；净化徽章 - 叠层系统）
+        // 检查饰品反制（结界护符 - 光环系统；净化徽章 - 叠层系统；澄明之眼 - 致盲专攻）
         float auraReduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "aura");
         float stackReduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "stack_system");
-        float totalReduction = Math.max(auraReduction, stackReduction);
+        float blindReduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "blinding");
+        float totalReduction = Math.max(auraReduction, Math.max(stackReduction, blindReduction));
         if (totalReduction >= 1.0f) {
             return damage; // 完全免疫
         }

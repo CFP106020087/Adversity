@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SWS",
+    "WEW",
+    "SWS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:skull",
+      "data": 1
+    },
+    "W": {
+      "item": "minecraft:nether_wart_block"
+    },
+    "E": {
+      "item": "adversity:entropy",
+      "data": 2
+    }
+  },
+  "result": {
+    "item": "adversity:wither_mark",
+    "count": 1
+  }
+}

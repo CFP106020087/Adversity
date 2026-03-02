@@ -27,14 +27,20 @@ public class ContainerSanctuary extends Container {
         // 燃料槽位 (位于GUI左侧燃料条下方)
         this.addSlotToContainer(new SlotFuel(te, 0, 8, 72));
 
-        // 绑定玩家背包
+        // 仪式输入槽位 (GUI中央左侧，与GUI绘制对齐)
+        this.addSlotToContainer(new Slot(te, 1, 46, 35));
+
+        // 仪式输出槽位 (GUI中央右侧，只能取出，与GUI绘制对齐)
+        this.addSlotToContainer(new SlotOutput(te, 2, 96, 35));
+
+        // 绑定玩家背包 (slot 3-29)
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
                 this.addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
         }
 
-        // 绑定玩家快捷栏
+        // 绑定玩家快捷栏 (slot 30-38)
         for (int k = 0; k < 9; ++k) {
             this.addSlotToContainer(new Slot(playerInv, k, 8 + k * 18, 142));
         }
@@ -95,26 +101,34 @@ public class ContainerSanctuary extends Container {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index == 0) {
-                // 从燃料槽移出到玩家背包
-                if (!this.mergeItemStack(itemstack1, 1, 37, true)) {
+            // 槽位0=燃料, 1=仪式输入, 2=仪式输出, 3-29=背包, 30-38=快捷栏
+            if (index < 3) {
+                // 从圣所槽位移出到玩家背包
+                if (!this.mergeItemStack(itemstack1, 3, 39, true)) {
                     return ItemStack.EMPTY;
                 }
             } else {
-                // 从玩家背包移入燃料槽
+                // 从玩家背包移入
                 if (TileEntitySanctuary.isValidFuel(itemstack1)) {
+                    // 先尝试放入燃料槽
                     if (!this.mergeItemStack(itemstack1, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (index < 28) {
-                    // 主背包到快捷栏
-                    if (!this.mergeItemStack(itemstack1, 28, 37, false)) {
-                        return ItemStack.EMPTY;
-                    }
                 } else {
-                    // 快捷栏到主背包
-                    if (!this.mergeItemStack(itemstack1, 1, 28, false)) {
-                        return ItemStack.EMPTY;
+                    // 尝试放入仪式输入槽
+                    if (!this.mergeItemStack(itemstack1, 1, 2, false)) {
+                        // 如果仪式槽满了，在背包内移动
+                        if (index < 30) {
+                            // 主背包到快捷栏
+                            if (!this.mergeItemStack(itemstack1, 30, 39, false)) {
+                                return ItemStack.EMPTY;
+                            }
+                        } else {
+                            // 快捷栏到主背包
+                            if (!this.mergeItemStack(itemstack1, 3, 30, false)) {
+                                return ItemStack.EMPTY;
+                            }
+                        }
                     }
                 }
             }
@@ -144,6 +158,20 @@ public class ContainerSanctuary extends Container {
         @Override
         public boolean isItemValid(ItemStack stack) {
             return TileEntitySanctuary.isValidFuel(stack);
+        }
+    }
+
+    /**
+     * 输出槽位 - 只能取出，不能放入
+     */
+    public static class SlotOutput extends Slot {
+        public SlotOutput(TileEntitySanctuary te, int index, int x, int y) {
+            super(te, index, x, y);
+        }
+
+        @Override
+        public boolean isItemValid(ItemStack stack) {
+            return false; // 不允许放入
         }
     }
 }

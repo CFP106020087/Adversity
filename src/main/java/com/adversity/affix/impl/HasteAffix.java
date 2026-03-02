@@ -68,6 +68,35 @@ public class HasteAffix extends AbstractAffix {
     }
 
     @Override
+    public float onAttack(EntityLiving attacker, net.minecraft.entity.EntityLivingBase target, float damage,
+            IAffixData data) {
+        // 检查目标是否有时之怀表反制（swift类型）
+        if (target instanceof net.minecraft.entity.player.EntityPlayer) {
+            net.minecraft.entity.player.EntityPlayer player = (net.minecraft.entity.player.EntityPlayer) target;
+            float swiftReduction = com.adversity.item.bauble.BaubleHelper.getReduction(player, "swift");
+            if (swiftReduction > 0) {
+                // 临时降低怪物速度加成
+                IAttributeInstance speedAttr = attacker.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+                if (speedAttr != null) {
+                    AttributeModifier currentModifier = speedAttr.getModifier(SPEED_MODIFIER_UUID);
+                    if (currentModifier != null) {
+                        double currentBonus = currentModifier.getAmount();
+                        double reducedBonus = currentBonus * (1.0 - swiftReduction);
+                        speedAttr.removeModifier(SPEED_MODIFIER_UUID);
+                        AttributeModifier newModifier = new AttributeModifier(
+                                SPEED_MODIFIER_UUID,
+                                "Adversity Haste",
+                                reducedBonus,
+                                2);
+                        speedAttr.applyModifier(newModifier);
+                    }
+                }
+            }
+        }
+        return damage;
+    }
+
+    @Override
     public void onRemove(EntityLiving entity, IAffixData data) {
         // 移除速度修改器
         IAttributeInstance speedAttr = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);

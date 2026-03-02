@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IDI",
+    "DED",
+    "IDI"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "E": {
+      "item": "adversity:affix_crystal"
+    }
+  },
+  "result": {
+    "item": "adversity:armor_pierce",
+    "count": 1
+  }
+}

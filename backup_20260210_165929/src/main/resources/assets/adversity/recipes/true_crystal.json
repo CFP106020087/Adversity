@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "QDQ",
+    "DED",
+    "QDQ"
+  ],
+  "key": {
+    "Q": {
+      "item": "minecraft:quartz"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "E": {
+      "item": "adversity:affix_crystal"
+    }
+  },
+  "result": {
+    "item": "adversity:true_crystal",
+    "count": 1
+  }
+}

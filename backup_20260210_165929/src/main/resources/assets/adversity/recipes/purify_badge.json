@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GMG",
+    "MEM",
+    "GMG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "M": {
+      "item": "minecraft:milk_bucket"
+    },
+    "E": {
+      "item": "adversity:affix_crystal"
+    }
+  },
+  "result": {
+    "item": "adversity:purify_badge",
+    "count": 1
+  }
+}

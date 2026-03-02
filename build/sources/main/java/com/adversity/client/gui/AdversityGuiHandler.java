@@ -17,6 +17,8 @@ public class AdversityGuiHandler implements IGuiHandler {
 
     public static final int GUI_SANCTUARY = 1;
     public static final int GUI_TALISMAN = 2;
+    public static final int GUI_SANCTUARY_TELEPORT = 3;
+    public static final int GUI_SANCTUARY_CONTROL = 4; // 圣所控制面板
 
     @Nullable
     @Override
@@ -30,6 +32,12 @@ public class AdversityGuiHandler implements IGuiHandler {
             ITalismanCapability cap = CapabilityHandler.getTalismanCapability(player);
             if (cap != null) {
                 return new ContainerTalisman(player.inventory, cap);
+            }
+        } else if (ID == GUI_SANCTUARY_CONTROL) {
+            TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
+            if (te instanceof TileEntitySanctuary) {
+                return new com.adversity.sanctuary.inventory.ContainerSanctuaryControl(
+                        player.inventory, (TileEntitySanctuary) te);
             }
         }
         return null;
@@ -47,6 +55,17 @@ public class AdversityGuiHandler implements IGuiHandler {
             ITalismanCapability cap = CapabilityHandler.getTalismanCapability(player);
             if (cap != null) {
                 return new GuiTalisman(new ContainerTalisman(player.inventory, cap));
+            }
+        } else if (ID == GUI_SANCTUARY_TELEPORT) {
+            // 传送选择GUI - 需要获取圣所列表
+            BlockPos pos = new BlockPos(x, y, z);
+            java.util.List<com.adversity.sanctuary.SanctuaryZone> sanctuaries = com.adversity.sanctuary.SanctuaryManager
+                    .getAllActivatedSanctuaries(world);
+            return new GuiSanctuaryTeleport(pos, sanctuaries, player);
+        } else if (ID == GUI_SANCTUARY_CONTROL) {
+            TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
+            if (te instanceof TileEntitySanctuary) {
+                return new GuiSanctuaryControl(player.inventory, (TileEntitySanctuary) te);
             }
         }
         return null;

@@ -143,6 +143,14 @@ public class CapabilityHandler {
             if (oldTalisman != null && newTalisman != null) {
                 newTalisman.deserializeNBT(oldTalisman.serializeNBT());
             }
+
+            // 进度阶段 - 死亡后保留
+            IAdversityCapability.IProgression oldProg = event.getOriginal().getCapability(PROGRESSION_CAPABILITY, null);
+            IAdversityCapability.IProgression newProg = event.getEntityPlayer().getCapability(PROGRESSION_CAPABILITY,
+                    null);
+            if (oldProg != null && newProg != null) {
+                newProg.deserializeNBT(oldProg.serializeNBT());
+            }
         }
     }
 

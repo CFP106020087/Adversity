@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LBL",
+    "BEB",
+    "LBL"
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:lapis_lazuli"
+    },
+    "B": {
+      "item": "minecraft:book"
+    },
+    "E": {
+      "item": "adversity:entropy",
+      "data": 2
+    }
+  },
+  "result": {
+    "item": "adversity:enchant_guardian",
+    "count": 1
+  }
+}

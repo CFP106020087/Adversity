@@ -1,0 +1,65 @@
+
+> Configure project :
+This mapping 'stable_39' was designed for MC 1.12! Use at your own peril.
+WARNING: You are using an unsupported version of ForgeGradle.
+Please consider upgrading to ForgeGradle 5 and helping in the efforts to get old versions working on the modern toolchain.
+See https://gist.github.com/TheCurle/fe7ad3ede188cbdd15c235cc75d52d4a for more info on contributing.
+#################################################
+         ForgeGradle 2.3.4-gfc67182        
+  https://github.com/MinecraftForge/ForgeGradle  
+#################################################
+                 Powered by MCP                  
+             http://modcoderpack.com             
+     by: Searge, ProfMobius, R4wk, ZeuX          
+     Fesh0r, IngisKahn, bspkrs, LexManos         
+#################################################
+
+> Task :deobfCompileDummyTask
+> Task :deobfProvidedDummyTask
+> Task :sourceApiJava UP-TO-DATE
+> Task :compileApiJava NO-SOURCE
+> Task :processApiResources NO-SOURCE
+> Task :apiClasses UP-TO-DATE
+> Task :sourceMainJava UP-TO-DATE
+
+> Task :compileJava FAILED
+Note: SpongePowered MIXIN Annotation Processor Version=0.8.7
+Note: Supported obfuscation types: ObfuscationServiceMCP supports [searge,notch]
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:366: error: cannot find symbol
+                    ((GuiTabButton) btn).active = ((((GuiTabButton) btn).tabIndex) != currentTab);
+                                        ^
+  symbol:   variable active
+  location: class GuiAdversityGuide.GuiTabButton
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:397: error: cannot find symbol
+            this.active = (tabIndex != currentTab);
+                ^
+  symbol: variable active
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:408: error: cannot find symbol
+                if (!this.active) { // 被?中
+                         ^
+  symbol: variable active
+C:\mywork\adversity\build\sources\main\java\com\adversity\client\gui\GuiAdversityGuide.java:420: error: cannot find symbol
+                if (!this.active)
+                         ^
+  symbol: variable active
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+4 errors
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava'.
+> Compilation failed; see the compiler error output for details.
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights.
+
+* Get more help at https://help.gradle.org
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 5.0.
+Use '--warning-mode all' to show the individual deprecation warnings.
+See https://docs.gradle.org/4.9/userguide/command_line_interface.html#sec:command_line_warnings
+
+BUILD FAILED in 4s
+5 actionable tasks: 3 executed, 2 up-to-date

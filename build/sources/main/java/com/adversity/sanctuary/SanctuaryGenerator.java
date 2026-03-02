@@ -76,7 +76,7 @@ public class SanctuaryGenerator implements IWorldGenerator {
             BlockPos pos = new BlockPos(nearestX, UNDERGROUND_Y, nearestZ);
             // 根据距离计算等级
             double dist = Math.sqrt(pos.getX() * pos.getX() + pos.getZ() * pos.getZ());
-            int tier = 1 + (int) (dist / 10000);
+            int tier = 1 + (int) (dist / 2500);
             if (tier > 4)
                 tier = 4;
             generateSanctuaryAtPosition(world, pos, tier);
@@ -86,24 +86,109 @@ public class SanctuaryGenerator implements IWorldGenerator {
     }
 
     /**
-     * 生成地底石英神殿结构
-     * 
-     * 结构设计:
-     * - 7x7x7 空腔房间
-     * - 石英块地板和墙壁
-     * - 石英柱子装饰
-     * - 中心圣所祭坛（不可破坏）
-     * - 发光石照明
-     */
-    /**
      * 生成圣所结构
+     * T1-T4: 优先使用schematic文件，失败则回退到程序化生成
      */
     public static void generateSanctuaryAtPosition(World world, BlockPos center, int tier) {
+        if (tier >= 1 && tier <= 4) {
+            // 先清空区域
+            int[] size = SchematicLoader.getSchematicSize(tier);
+            if (size != null) {
+                int clearRadius = Math.max(size[0], size[2]) / 2 + 2;
+                int clearHeight = size[1] + 2;
+                SchematicLoader.clearArea(world, center, clearRadius, clearHeight);
+            }
+            // 放置schematic
+            if (SchematicLoader.loadAndPlace(world, center, tier)) {
+                placeAltar(world, center, tier);
+                return;
+            }
+            Adversity.LOGGER.warn("Schematic load failed for T{}, falling back to procedural", tier);
+        }
+        // 回退：程序化生成
         new SanctuaryGenerator().generateSphericalSanctuary(world, center, tier);
     }
 
     /**
-     * 生成球形圣所结构
+     * 升级圣所：清空旧建筑 → 放置新等级schematic → 补祭坛
+     * 
+     * @param world   目标世界
+     * @param center  圣所中心点
+     * @param oldTier 旧等级
+     * @param newTier 新等级
+     * @return 是否升级成功
+     */
+    public static boolean upgradeSanctuary(World world, BlockPos center, int oldTier, int newTier) {
+        if (newTier < 1 || newTier > 4) {
+            Adversity.LOGGER.warn("Invalid upgrade tier: {}", newTier);
+            return false;
+        }
+
+        // 1. 计算需要清空的范围（取新旧中较大的）
+        int clearRadius = getClearRadius(oldTier, newTier);
+        int clearHeight = getClearHeight(oldTier, newTier);
+
+        // 2. 清空旧建筑
+        SchematicLoader.clearArea(world, center, clearRadius, clearHeight);
+
+        // 3. 放置新schematic
+        if (!SchematicLoader.loadAndPlace(world, center, newTier)) {
+            Adversity.LOGGER.error("Failed to place T{} schematic during upgrade!", newTier);
+            // 回退到程序化
+            new SanctuaryGenerator().generateSphericalSanctuary(world, center, newTier);
+        }
+
+        // 4. 放置祭坛
+        placeAltar(world, center, newTier);
+
+        Adversity.LOGGER.info("Upgraded sanctuary at {} from T{} to T{}", center, oldTier, newTier);
+        return true;
+    }
+
+    /**
+     * 在中心放置圣所祭坛 + 设置等级
+     */
+    private static void placeAltar(World world, BlockPos center, int tier) {
+        Block altarBlock = com.adversity.block.BlockRegistry.SANCTUARY_ALTAR;
+        if (altarBlock != null) {
+            // 底座（黑曜石）
+            world.setBlockState(center, Blocks.OBSIDIAN.getDefaultState(), 2);
+            // 祭坛（中心上方1格）
+            BlockPos altarPos = center.up();
+            world.setBlockState(altarPos, altarBlock.getDefaultState(), 2);
+
+            // 设置TileEntity等级
+            net.minecraft.tileentity.TileEntity te = world.getTileEntity(altarPos);
+            if (te instanceof com.adversity.sanctuary.TileEntitySanctuary) {
+                ((com.adversity.sanctuary.TileEntitySanctuary) te).setTier(tier);
+            }
+        }
+    }
+
+    /**
+     * 计算清空半径（XZ方向），取新旧schematic中较大的
+     */
+    private static int getClearRadius(int oldTier, int newTier) {
+        // 各等级schematic宽度: T1=7, T2=14, T3=16, T4=25
+        int[] widths = { 0, 7, 14, 16, 25 };
+        int oldW = (oldTier >= 1 && oldTier <= 4) ? widths[oldTier] : 14;
+        int newW = (newTier >= 1 && newTier <= 4) ? widths[newTier] : 14;
+        return Math.max(oldW, newW) / 2 + 2; // 额外2格余量
+    }
+
+    /**
+     * 计算清空高度
+     */
+    private static int getClearHeight(int oldTier, int newTier) {
+        // 各等级schematic高度: T1=17, T2=31, T3=50, T4=47
+        int[] heights = { 0, 17, 31, 50, 47 };
+        int oldH = (oldTier >= 1 && oldTier <= 4) ? heights[oldTier] : 31;
+        int newH = (newTier >= 1 && newTier <= 4) ? heights[newTier] : 31;
+        return Math.max(oldH, newH) + 2; // 额外2格余量
+    }
+
+    /**
+     * 生成球形圣所结构（程序化 - 用于回退和T0）
      */
     private void generateSphericalSanctuary(World world, BlockPos center, int tier) {
         // 限制等级范围

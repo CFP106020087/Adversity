@@ -8,7 +8,7 @@ item.adversity.affix_essence.name=Affix Essence
 item.adversity.affix_crystal.name=Affix Crystal
 item.adversity.void_shard.name=Void Shard
 item.adversity.calm_dust.name=Calm Dust
-item.adversity.difficulty_detector.name=Difficulty Detector
+item.adversity.difficulty_detector.name=Difficulty Detector\r\n\r\n# New Counter Baubles\r\nitem.adversity.balance_charm.name=Balance Charm\r\nitem.adversity.immunity_badge.name=Immunity Badge\r\nitem.adversity.memory_crystal.name=Memory Crystal\r\nitem.adversity.soul_seal_dust.name=Soul Seal Dust\r\nitem.adversity.light_amulet.name=Light Amulet\r\n\r\nadversity.bauble.balance_charm.effect=Normalizes damage against Reversal affix\r\nadversity.bauble.immunity_badge.effect=Slows Tetanus hit counter\r\nadversity.bauble.memory_crystal.effect=Protects experience from Oblivion\r\nadversity.bauble.soul_seal_dust.effect=Prevents enemy resurrection from Ascension\r\nadversity.bauble.light_amulet.effect=Reduces Avarice/Greed damage penalties\r\nadversity.bauble.light_amulet.also_counters=Also counters: Greed affix
 
 # Item Tooltips
 item.adversity.affix_essence.tooltip=Residue containing affix energy
@@ -27,6 +27,13 @@ item.adversity.calm_dust.activated=Calm Dust activated! Range %d blocks, duratio
 
 item.adversity.difficulty_detector.tooltip=Detect difficulty information at current location
 item.adversity.difficulty_detector.usage=Right-click to view difficulty report
+
+# Affix Lens
+item.adversity.affix_lens.name=Affix Lens
+item.adversity.affix_lens.tooltip=Scan monsters to view their affixes
+item.adversity.affix_lens.usage=Right-click while looking at a monster
+item.adversity.affix_lens.no_target=No valid target in sight
+item.adversity.affix_lens.no_affix=%s has no affixes
 
 # Affix Names
 adversity.affix.none=None
@@ -157,7 +164,7 @@ affix.adversity.haste.desc=Greatly increased movement and attack speed
 affix.adversity.reaper.name=Reaper
 affix.adversity.reaper.desc=Attacks deal bonus damage based on target's missing health
 affix.adversity.blunt.name=Blunt
-affix.adversity.blunt.desc=Attacks ignore armor and deal true damage
+affix.adversity.blunt.desc=The more armor you have, the more damage you take (+4% per armor point)
 affix.adversity.giant_slayer.name=Giant Slayer
 affix.adversity.giant_slayer.desc=Deals bonus damage based on target's max health
 affix.adversity.shield_breaker.name=Shield Breaker
@@ -165,39 +172,39 @@ affix.adversity.shield_breaker.desc=Attacks bypass shields and blocking
 affix.adversity.bloodthirst.name=Bloodthirst
 affix.adversity.bloodthirst.desc=Gains attack speed when attacking wounded targets
 affix.adversity.avarice.name=Avarice
-affix.adversity.avarice.desc=Drops extra loot on death
+affix.adversity.avarice.desc=The more inventory slots you use, the more damage you take (+3% per slot)
 affix.adversity.hero.name=Hero
-affix.adversity.hero.desc=Inspires nearby allies, granting buffs
+affix.adversity.hero.desc=Takes square root of damage (100 dmg -> 10 dmg)
 affix.adversity.divine.name=Divine
-affix.adversity.divine.desc=Protected by divine power, reduces all damage
+affix.adversity.divine.desc=Takes cube root of damage (125 dmg -> 5 dmg)
 affix.adversity.outer_god.name=Outer God
-affix.adversity.outer_god.desc=Warps reality around it, unpredictable effects
+affix.adversity.outer_god.desc=Takes fourth root of damage (256 dmg -> 4 dmg)
 affix.adversity.tetanus.name=Tetanus
-affix.adversity.tetanus.desc=Attacks apply poison that increases over time
+affix.adversity.tetanus.desc=After 5 hits, drains 50% of your current health
 affix.adversity.reversal.name=Reversal
-affix.adversity.reversal.desc=Reflects a portion of damage back to attackers
+affix.adversity.reversal.desc=Damage is reversed - weak attacks deal more, strong attacks deal less
 affix.adversity.oblivion.name=Oblivion
-affix.adversity.oblivion.desc=Attacks cause memory loss, clearing beneficial effects
+affix.adversity.oblivion.desc=Attacks drain your experience points
 affix.adversity.unclean.name=Unclean
-affix.adversity.unclean.desc=Spreads disease to nearby players
+affix.adversity.unclean.desc=Attacks have a chance to apply random negative potion effects
 affix.adversity.ascension.name=Ascension
-affix.adversity.ascension.desc=Becomes stronger as health decreases
+affix.adversity.ascension.desc=On death, resurrects with upgraded defense (Hero->Divine->Outer God)
 affix.adversity.progression.unlocked=Stage Unlocked: %s
 adversity.sanctuary.protected=This structure is protected by ancient magic.
 affix.adversity.purifier.name=Purifier
-affix.adversity.purifier.desc=Removes debuffs from itself periodically
+affix.adversity.purifier.desc=Steals positive potion effects, blocking new ones for 30s
 affix.adversity.disenchant.name=Disenchant
-affix.adversity.disenchant.desc=Attacks reduce target's enchantment effectiveness
+affix.adversity.disenchant.desc=Attacks temporarily seal equipment enchantments (1 min)
 affix.adversity.shackle.name=Shackle
-affix.adversity.shackle.desc=Roots players in place temporarily
+affix.adversity.shackle.desc=Attacks seal a random armor slot temporarily
 affix.adversity.divest.name=Divest
-affix.adversity.divest.desc=Attacks strip armor effectiveness temporarily
+affix.adversity.divest.desc=Attacks seal a random bauble/accessory slot temporarily
 affix.adversity.annihilate.name=Annihilate
-affix.adversity.annihilate.desc=Massive damage attacks with long cooldown
+affix.adversity.annihilate.desc=Attacks temporarily banish items to the void (returns after 60s)
 affix.adversity.nightmare.name=Nightmare
-affix.adversity.nightmare.desc=Distorts vision and spawns illusions
+affix.adversity.nightmare.desc=Applies blindness, slowness, and other debuffs
 affix.adversity.greed.name=Greed
-affix.adversity.greed.desc=Steals items from player's inventory on hit
+affix.adversity.greed.desc=The more baubles you wear, the more damage you take (+15% per bauble)
 affix.adversity.black_swan.name=Black Swan
 affix.adversity.black_swan.desc=Permanently reduces player attack, requires Tear of Redemption
 affix.adversity.black_friday.name=Black Friday
@@ -298,6 +305,127 @@ guide.adversity.tab.enchants=Enchants
 guide.adversity.tab.rituals=Rituals
 guide.adversity.tab.progression=Progression
 guide.adversity.tab.tips=Tips
+guide.adversity.tab.affixes=Affixes
+guide.adversity.tab.crt=CRT API
+
+# Affixes Page
+guide.adversity.affixes.title=Affix Encyclopedia
+guide.adversity.affixes.intro=Affixes are special abilities granted to elite monsters. They scale with difficulty tier. Baubles and enchantments provide counterplay. The following lists all known affixes.
+
+guide.adversity.affixes.offensive=§c⚔ Offensive Affixes
+guide.adversity.affixes.fiery=§6Fiery§r: Stacks burning (5 stacks = fire burst). Heat aura + fire trail. §7[Counter: Flame Ward]
+guide.adversity.affixes.frosty=§bFrosty§r: Stacks freeze (8 stacks = full freeze). Frost aura + frozen ground. §7[Counter: Frost Ward]
+guide.adversity.affixes.withering=§8Withering§r: Stacks decay reducing armor (6 stacks = rot burst). Decay aura. §7[Counter: Corrosion Bane]
+guide.adversity.affixes.blunt=§7Blunt§r: More armor = more damage taken (+4% per armor point, max +150%).
+guide.adversity.affixes.giant_slayer=§7Giant Slayer§r: More max HP = more damage taken (+2% per HP above 20, max +200%).
+guide.adversity.affixes.shield_breaker=§7Shield Breaker§r: More absorption = more damage taken (+8% per yellow heart, max +250%).
+guide.adversity.affixes.bloodthirst=§4Bloodthirst§r: Lower player HP% = more damage dealt. Exponential scaling below 50% HP.
+guide.adversity.affixes.avarice=§eAvarice§r: More occupied inventory slots = more damage (+3%/slot, max +150%). §7[Counter: Light Amulet]
+guide.adversity.affixes.greed=§eGreed§r: More baubles equipped = more damage (+15%/bauble, max +100%).
+guide.adversity.affixes.reaper=§5Reaper§r: Fewer player deaths = stronger monster (up to +200% dmg, +50% speed).
+guide.adversity.affixes.nightmare=§5Nightmare§r: Fear effect + slowness + phantom damage that ignores armor.
+
+guide.adversity.affixes.curses=§4⚠ Permanent Curses (Irreversible!)
+guide.adversity.affixes.black_swan=§4Black Swan§r: §cPERMANENT§r attack power reduction, stacks infinitely. §7[Counter: Guardian Heart]
+guide.adversity.affixes.black_friday=§4Black Friday§r: §cPERMANENT§r max HP reduction, stacks infinitely. §7[Counter: Guardian Heart]
+guide.adversity.affixes.black_coffin=§4Black Coffin§r: §cPERMANENT§r inventory slot seal. §7[Counter: Guardian Heart]
+
+guide.adversity.affixes.defensive=§a🛡 Defensive Affixes
+guide.adversity.affixes.reflective=§eReflective§r: Reflects melee damage back to attacker. Ratio scales with tier. §7[Counter: True Crystal]
+guide.adversity.affixes.regenerating=§aRegenerating§r: Continuous health regeneration. §7[Counter: Wither Mark]
+guide.adversity.affixes.hardened=§7Hardened§r: Immune to knockback + super armor (30% damage reduction for 1s after hit, 2s cooldown).
+guide.adversity.affixes.fortified=§7Fortified§r: Below 50% HP gains armor (+1.5% per 1% HP missing, max +150%). Extra bonus below 30%.
+guide.adversity.affixes.hero=§eHero§r: Damage taken becomes square root (√x). 100dmg→10, 16dmg→4. §7[Mutually exclusive with Divine/OuterGod]
+guide.adversity.affixes.divine=§bDivine§r: Damage taken becomes cube root (∛x). 125dmg→5, 27dmg→3. §7[Mutually exclusive with Hero/OuterGod]
+guide.adversity.affixes.outer_god=§5Outer God§r: Damage taken becomes 4th root (x^0.25). 256dmg→4, 10000dmg→10. Only from Ascension. §7[Ultimate defense]
+guide.adversity.affixes.adaptive=§9Adaptive§r: Remembers damage types, reducing repeated damage progressively.
+guide.adversity.affixes.antimagic=§5Antimagic§r: Immune to magic damage. 6-block aura nullifies player positive potions. §7[Counter: Antimagic Ward]
+guide.adversity.affixes.symbiotic=§dSymbiotic§r: Shares damage with nearby allies of the same type.
+guide.adversity.affixes.shedding=§aShedding§r: 25% chance to survive lethal damage: revives to 30% HP, clears debuffs, gains speed. Once per mob.
+guide.adversity.affixes.ascension=§6Ascension§r: On death, upgrades defense affix: Hero→Divine→OuterGod chain. §7[Counter: Soul Seal Dust]
+
+guide.adversity.affixes.utility=§d⚡ Utility Affixes
+guide.adversity.affixes.teleporting=§dTeleporting§r: Teleports to random position after being hurt. §7[Counter: Spatial Anchor]
+guide.adversity.affixes.blinding=§8Blinding§r: Applies screen blind effect + reduces attack power. §7[Counter: Clarity Lens]
+guide.adversity.affixes.horror=§5Horror§r: Applies screen fear effect + knockback + slowness. §7[Counter: Courage Charm]
+guide.adversity.affixes.shackle=§8Shackle§r: Seals random equipment slots on attack. §7[Counter: Soul Chain]
+guide.adversity.affixes.divest=§cDivest§r: 25% chance to seal a random bauble into a token (auto-restores after ~20s). No Baubles mod = seals hand item. §7[Counter: Spatial Anchor]
+guide.adversity.affixes.disenchant=§5Disenchant§r: 20% chance to temporarily SILENCE all enchantments on one equipment piece for 60s+. §7[Counter: Enchant Guardian]
+guide.adversity.affixes.gravity=§9Gravity§r: Pulls player toward the monster. §7[Counter: Anchor Stone]
+guide.adversity.affixes.haste=§bHaste§r: Permanently increased movement speed.
+guide.adversity.affixes.splitting=§aSplitting§r: Splits into 2 weaker copies on death (half HP). Copies cannot split again and drop no loot. §7[Counter: Phantom Cloak]
+guide.adversity.affixes.oblivion=§8Oblivion§r: Causes player to lose experience on attack. §7[Counter: Memory Crystal]
+guide.adversity.affixes.tetanus=§2Tetanus§r: After 5 consecutive hits, drains 50% of player current HP. Hit counter decays after 10s. §7[Counter: Immunity Badge]
+guide.adversity.affixes.reversal=§cReversal§r: Inverts damage scaling — weak attacks deal MORE, strong attacks deal LESS. Use weak weapons! §7[Counter: Balance Charm]
+
+guide.adversity.affixes.special=§6★ Special Affixes
+guide.adversity.affixes.vampiric=§4Vampiric§r: 20%+3%/tier lifesteal. Blood debt stacking system. Below 30% HP enters frenzy (+50% lifesteal). Blood chain aura.
+guide.adversity.affixes.purifier=§ePurifier§r: STEALS a positive potion from player and transfers it to the mob. 30s potion lockout on player.
+guide.adversity.affixes.unclean=§2Unclean§r: Applies random debuff combinations on attack.
+guide.adversity.affixes.annihilate=§cAnnihilate§r: On attack, randomly deletes a player inventory item into the void temporarily.
+guide.adversity.affixes.thorny=§2Thorny§r: Melee attackers gain "thorn" stacks (+10% damage taken per stack). At 5 stacks triggers piercing true damage.
+
+# CRT/Modpack Page
+guide.adversity.crt.title=CraftTweaker API
+guide.adversity.crt.intro=Adversity provides CraftTweaker integration for modpack developers to customize rituals and stage gating.
+guide.adversity.crt.rituals=Ritual API
+guide.adversity.crt.rituals.add=addRitual(id, input, output, cost, reqStage, rewardStage) - Add custom ritual
+guide.adversity.crt.rituals.remove=removeRitual(id) / removeAllRituals() - Remove rituals
+guide.adversity.crt.rituals.command=addCommandRitual(id, input, cost, stage, command) - Execute command on ritual
+guide.adversity.crt.stage_gating=Stage Gating
+guide.adversity.crt.stage_gating.item=setItemStage(<item>, "stage") - Require stage to craft item in sanctuary
+guide.adversity.crt.stage_gating.enchant=setEnchantmentStage("mod:enchant", "stage") - Require stage for enchantment
+guide.adversity.crt.example=Example
+
+# Rituals Page
+guide.adversity.rituals.title=Ritual System
+guide.adversity.rituals.intro=Rituals are powerful magical effects executed at a Sanctuary Altar by consuming items and Entropy fuel.
+guide.adversity.rituals.how_to=How to Perform Rituals
+guide.adversity.rituals.how_to.desc=Place the required item in the ritual input slot of the Sanctuary GUI. Ensure sufficient Entropy fuel is available, then click the Execute button.
+guide.adversity.rituals.list=Ritual List
+guide.adversity.rituals.cleanse=§bCleanse Flesh§r: Rotten Flesh ×16 → Leather ×8 (100 Entropy)
+guide.adversity.rituals.awakening=§6Awakening§r: Golden Apple → Sanctuary Compass (500 Entropy) - Unlocks Awakened stage
+guide.adversity.rituals.stages=Stage Unlock Rituals
+guide.adversity.rituals.scholar=§6Scholar Ascension§r: Diamond Block → XP Bottles ×16 (2000 Entropy) - Requires Awakened
+guide.adversity.rituals.warden=§6Warden Ascension§r: Nether Star → Totem of Undying (5000 Entropy) - Requires Scholar
+guide.adversity.rituals.champion=§6Champion Ascension§r: Dragon Breath ×8 → Beacon (10000 Entropy) - Requires Warden
+guide.adversity.rituals.utility=Utility Rituals
+guide.adversity.rituals.cleanse_flesh=§bCleanse Flesh§r: Rotten Flesh ×16 → Leather ×8 (100 Entropy)
+guide.adversity.rituals.refine_iron=§bIron Refining§r: Iron Ingot ×8 → Gold Ingot ×4 (300 Entropy)
+guide.adversity.rituals.bless_apple=§bBlessed Fruit§r: Apple ×4 → Golden Apple (500 Entropy)
+guide.adversity.rituals.purge_curse=§aPurge Curse§r: Milk Bucket → Clears all negative effects (1000 Entropy)
+guide.adversity.rituals.resurrection=§aResurrection Water§r: Glass Bottle ×8 → Totem of Undying (3000 Entropy)
+guide.adversity.rituals.difficulty=Difficulty Adjustment Rituals
+guide.adversity.rituals.prayer_peace=§dPrayer of Peace§r: Calm Dust ×4 (200 Entropy) - Difficulty -1
+guide.adversity.rituals.peace_offering=§dPeace Offering§r: Entropy Crystal (500 Entropy) - Difficulty -2
+guide.adversity.rituals.tranquility=§dTranquility Ritual§r: Entropy Core (1500 Entropy) - Difficulty -5
+guide.adversity.rituals.realm_cleansing=§5Realm Cleansing§r: Nether Star (5000 Entropy) - Reset difficulty
+
+# Progression Page
+guide.adversity.progression.title=Game Progression
+guide.adversity.progression.intro=The core gameplay revolves around difficulty growth and acquiring countermeasures. Here is the recommended progression flow.
+guide.adversity.progression.stages=Progression Stages
+guide.adversity.progression.stage.0=Stage 0 - Early Game: Gather resources near spawn, prepare basic equipment
+guide.adversity.progression.stage.1=Stage 1 - First Exploration: Expand outward, find your first Natural Sanctuary (~1000 blocks)
+guide.adversity.progression.stage.2=Stage 2 - Build Network: Activate multiple sanctuaries, collect Entropy, craft first baubles
+guide.adversity.progression.stage.3=Stage 3 - Hunt Elites: Use baubles and enchantments to purposefully hunt elites for resources
+guide.adversity.progression.stage.4=Stage 4 - Deep Expedition: Challenge T8+ zones for ultimate rewards
+
+# Permanent Curses
+guide.adversity.curses.title=Permanent Curse System
+guide.adversity.curses.intro=At very high difficulty (8+), elite mobs may carry permanent curse affixes. These apply irreversible penalties that persist across death.
+guide.adversity.curses.warning=§c⚠ Warning: Permanent curses cannot be removed by normal means! Only the Purge Curse ritual at a Sanctuary can help.
+guide.adversity.curses.black_swan=§4Black Swan§r: Each hit permanently reduces your attack damage. Stacks infinitely.
+guide.adversity.curses.black_friday=§4Black Friday§r: Each hit permanently reduces your max health. Stacks infinitely.
+guide.adversity.curses.black_coffin=§4Black Coffin§r: Each hit permanently seals one inventory slot. Sealed slots cannot be used.
+guide.adversity.curses.counter=§aCountermeasure§r: Use the Purge Curse ritual (牛奶桶/1000 Entropy) or reach a Sanctuary to suppress effects.
+
+# Nightmare System
+guide.adversity.nightmare.title=Nightmare System
+guide.adversity.nightmare.intro=The Nightmare system spawns elite mobs near players who sleep in beds, representing the horrors of dreams.
+guide.adversity.nightmare.trigger=§cTrigger§r: Sleeping in a bed. Mobs spawn upon waking.
+guide.adversity.nightmare.scaling=§eScaling§r: Nightmare mob difficulty scales with player kill count and distance.
+guide.adversity.nightmare.tip=§aTip§r: Sleeping in a Sanctuary greatly reduces nightmare intensity.
 
 # Overview Page
 guide.adversity.overview.title=Welcome to Adversity
@@ -325,13 +453,46 @@ guide.adversity.sanctuary.artificial=Artificial Sanctuary
 guide.adversity.sanctuary.artificial.desc=Artificial sanctuaries are player-built structures that provide moderate protection.
 guide.adversity.sanctuary.artificial.build=Construction: 3x3x3 stone brick structure with Sanctuary Core in center
 guide.adversity.sanctuary.artificial.materials=Materials: Sanctuary Core crafted with obsidian + chiseled stone brick + Entropy Core
-guide.adversity.sanctuary.artificial.effect=Effect: Reduces elite spawn chance by 50%%, bauble effects at 80%%
+guide.adversity.sanctuary.artificial.effect=Effect: Reduces elite spawn chance by 30%%, bauble effects at 50%%. Outside sanctuary, effects drop to base value.
+
+guide.adversity.sanctuary.structure=Multiblock Structure
+guide.adversity.sanctuary.structure.desc=The artificial sanctuary requires a specific 3-layer structure to be built correctly:
+guide.adversity.sanctuary.structure.layer1=Layer 1 (Base): 5x5 Quartz Block platform as foundation
+guide.adversity.sanctuary.structure.layer2=Layer 2 (Middle): 3x3 ring of Cobblestone/Stone Bricks with Sanctuary Altar in center
+guide.adversity.sanctuary.structure.layer3=Layer 3 (Top): Quartz Stairs facing outward at each corner
+guide.adversity.sanctuary.structure.tip=Tip: Right-click altar to check structure validity. Invalid parts shown in red particles.
 
 guide.adversity.sanctuary.entropy=Entropy Fuel
 guide.adversity.sanctuary.entropy.desc=Sanctuaries require entropy items as fuel to operate. Entropy items drop from elite mobs.
 guide.adversity.sanctuary.entropy.shard=Entropy Shard: Basic fuel (10 points), drops from T1-T4 elites
 guide.adversity.sanctuary.entropy.crystal=Entropy Crystal: Medium fuel (50 points), drops from T5-T7 elites or crafted from shards
 guide.adversity.sanctuary.entropy.core=Entropy Core: High fuel (200 points), drops from T8-T10 elites or crafted from crystals
+
+guide.adversity.sanctuary.protection=Protection Effects
+guide.adversity.sanctuary.protection.desc=Sanctuaries provide multiple layers of protection for players within their range. Protection scales with sanctuary tier (T1-T5).
+guide.adversity.sanctuary.protection.elite=Elite Suppression: Reduces elite spawn rate by 30-95%% based on tier
+guide.adversity.sanctuary.protection.affix=Affix Damage Reduction: Reduces affix damage by 30-50%% based on tier
+guide.adversity.sanctuary.protection.bauble=Bauble Boost: 100%% bauble effectiveness (50%% outside sanctuary)
+guide.adversity.sanctuary.protection.craft=Crafting/Enchanting: Unlocks special recipes and enchantments within range
+
+# Sanctuary Modes
+guide.adversity.sanctuary.modes=Operating Modes
+guide.adversity.sanctuary.modes.desc=Right-click the altar to cycle between 3 operating modes:
+guide.adversity.sanctuary.modes.safe=§aSAFE§r (Default): Blocks elite spawns within radius. Best for base building.
+guide.adversity.sanctuary.modes.farm=§eFARM§r: Allows elites but caps their tier (T1-T4). Good for controlled farming.
+guide.adversity.sanctuary.modes.ease=§bEASE§r: Reduces overall difficulty multiplier in the zone. Fuel cost increased.
+
+# Affix Damage Suppression
+guide.adversity.sanctuary.suppress=Affix Damage Suppression
+guide.adversity.sanctuary.suppress.natural=§aNatural Sanctuary§r: T1=30%%, T2=35%%, T3=40%%, T4=45%% affix damage reduction (formula: 25%%+5%%/tier)
+guide.adversity.sanctuary.suppress.artificial=§7Artificial Sanctuary§r: Uses base formula at tier 0 = 25%% affix damage reduction
+
+# Sanctuary Upgrade
+guide.adversity.sanctuary.upgrade=Tier Upgrades
+guide.adversity.sanctuary.upgrade.desc=Natural sanctuaries can be upgraded by performing upgrade rituals at the altar. Higher tiers expand radius and improve all protection effects.
+guide.adversity.sanctuary.upgrade.t1=§aT1§r: 50%% elite suppression, 30%% affix suppression
+guide.adversity.sanctuary.upgrade.t2=§eT2§r: 75%% elite suppression, 35%% affix suppression
+guide.adversity.sanctuary.upgrade.t3=§6T3§r: 90%% elite suppression, 40%% affix suppression
 
 # Baubles Page
 guide.adversity.baubles.title=Ward Baubles
@@ -353,24 +514,48 @@ guide.adversity.baubles.anchor_stone=Anchor Stone: Protects against Gravity pull
 guide.adversity.baubles.clarity_lens=Clarity Lens: Protects against Blinding vision loss, trade-off: position shared
 guide.adversity.baubles.courage_charm=Courage Charm: Protects against Horror fear, trade-off: increased fear damage
 
+guide.adversity.baubles.counter=Counter Baubles
+guide.adversity.baubles.balance_charm=Balance Charm: Counters Reversal affix - normalizes damage output
+guide.adversity.baubles.immunity_badge=Immunity Badge: Counters Tetanus affix - slows debuff stack buildup
+guide.adversity.baubles.memory_crystal=Memory Crystal: Counters Oblivion affix - protects experience from being drained
+guide.adversity.baubles.soul_seal_dust=Soul Seal Dust: Counters Ascension affix - prevents enemy resurrection
+guide.adversity.baubles.light_amulet=Light Amulet: Counters Avarice/Greed - reduces damage penalties from items/baubles
+guide.adversity.baubles.anchor_heart=Anchor Heart: Counters Teleporting affix - prevents enemy teleportation near you
+guide.adversity.baubles.armor_pierce=Armor Pierce: Counters Fortified affix - ignores bonus armor from elite mobs
+guide.adversity.baubles.barrier_ward=Barrier Ward: Counters Aura affixes - reduces damage from aura effects
+guide.adversity.baubles.guardian_soul=Guardian Soul: Enhanced Shackle counter - extends protection to nearby allies
+guide.adversity.baubles.purify_badge=Purify Badge: Counters Stack affixes - clears debuff stacks periodically
+guide.adversity.baubles.true_crystal=True Crystal: Counters Reflect/Adaptive - reveals true damage vulnerabilities
+
+guide.adversity.baubles.offensive=Offensive Baubles
+guide.adversity.baubles.bloodrage_emblem=Bloodrage Emblem: 5%% lifesteal, attack speed boost at low HP, heal on kill
+guide.adversity.baubles.phantom_cloak=Phantom Cloak: Invisibility while sneaking, +40%% backstab damage, -50%% aggro
+guide.adversity.baubles.thunder_ring=Thunder Ring: Chain lightning on hit, +20%% damage in rain, lightning immunity
+guide.adversity.baubles.aegis_medal=Aegis Medal: -15%% damage to nearby allies, revival buffs on teammate death
+
+guide.adversity.baubles.utility=Utility Baubles
+guide.adversity.baubles.void_heart=Void Heart: No ender pearl damage, enhanced End dimension effects, void protection
+guide.adversity.baubles.temporal_watch=Temporal Watch: -20%% attack speed for enemies within 8 blocks, triggers 2s time stop on fatal damage (3min CD)
+guide.adversity.baubles.wither_mark=Wither Mark: Counters Lifesteal/Regen affixes - reduces enemy healing effects by 50%%
+
 guide.adversity.baubles.sanctuary_bonus=Sanctuary Bonus
-guide.adversity.baubles.sanctuary_bonus.desc=Within sanctuary zones, all bauble protection effects are amplified based on sanctuary type. Natural sanctuaries provide 100%% effect (full immunity), artificial sanctuaries provide 80%%. Outside sanctuary, effects drop to base value (~30-50%%).
+guide.adversity.baubles.sanctuary_bonus.desc=Within sanctuary zones, all bauble protection effects are amplified based on sanctuary type. Natural sanctuaries provide 100%% effect (full immunity), artificial sanctuaries provide 50%%. Outside sanctuary, effects drop to base value (~30-50%%).
 
 # Enchantments Page
 guide.adversity.enchants.title=Anti-Adversity Enchants
 guide.adversity.enchants.intro=These special enchantments help you combat elite mobs and affix effects. Obtainable at enchanting tables or through other means.
 
 guide.adversity.enchants.list=Enchantment List
-guide.adversity.enchants.soulbound=Soulbound: Keep item on death, won't drop
-guide.adversity.enchants.breaker=Breaker: Attacks may remove one affix buff from elites
-guide.adversity.enchants.entropy_affinity=Entropy Affinity: Increases entropy item drops from elites
-guide.adversity.enchants.purifying_touch=Purifying Touch: Attacks reduce remaining seal token duration
-guide.adversity.enchants.resolute_will=Resolute Will: Chance to gain brief invincibility when hit by elites
+guide.adversity.enchants.soulbound=Soulbound: Protects equipment from Shackle seal. Lv1: 33%% / Lv2: 66%% / Lv3: 100%% block chance
+guide.adversity.enchants.breaker=Breaker: Attacks have 10/20/30%% chance to remove one random affix from elites
+guide.adversity.enchants.entropy_affinity=Entropy Affinity: +25%%/+50%% entropy drops from elites (armor enchant)
+guide.adversity.enchants.purifying_touch=Purifying Touch: Reduces seal duration by 30%%/50%%/70%% (armor enchant)
+guide.adversity.enchants.resolute_will=Resolute Will: Immune to Purifier affix's potion theft effect
 
 # Tips Page
 guide.adversity.tips.title=Survival Tips
 guide.adversity.tips.beginner=Beginner Tips
-guide.adversity.tips.beginner.1=Don't venture too far early! Stay within 500 blocks of spawn for safety
+guide.adversity.tips.beginner.1=Early game difficulty is low - safe distance is 15000 blocks from origin. Establish a base before exploring further.
 guide.adversity.tips.beginner.2=Prioritize collecting entropy shards - they're key resources for progression
 guide.adversity.tips.beginner.3=Activate natural sanctuaries immediately - they become forward bases for exploration
 
@@ -390,6 +575,13 @@ adversity.sanctuary.teleporting=§dTeleporting to target dimension...
 adversity.sanctuary.activated=§aSanctuary Activated! Tier: T%d
 adversity.sanctuary.activation_failed=§cActivation Failed! Check conditions.
 adversity.sanctuary.info=Tier: T%d | Fuel: %d/%d (%d%%)
+
+# ==================== Ritual Messages ====================
+adversity.ritual.not_enough_fuel=§cNot enough fuel to perform this ritual!
+adversity.ritual.not_enough_input=§cNot enough input items!
+adversity.ritual.no_match=§cNo matching ritual found for this item.
+adversity.ritual.stage_locked=§cThis ritual requires the "%s" stage!
+adversity.ritual.purge_curse.success=§aAll curses and negative effects have been purged!
 
 # ==================== Ward Baubles ====================
 
@@ -592,3 +784,46 @@ adversity.gui.talisman.title=Talisman Case
 # Keybinds
 key.categories.adversity=Adversity
 key.adversity.open_talisman=Open Talisman Case
+
+# JEI Integration
+jei.adversity.ritual.title=Sanctuary Ritual
+jei.adversity.ritual.cost=Cost: %d Entropy
+jei.adversity.ritual.requires=Requires: %s stage
+jei.adversity.ritual.unlocks=Unlocks: %s stage
+
+# Ritual GUI
+adversity.gui.ritual=Execute
+adversity.gui.ritual_area=Ritual
+adversity.gui.cost=Cost
+adversity.gui.upgrade=Upgrade
+adversity.gui.activate=Activate
+adversity.gui.sanctuary_ritual=Sanctuary - Ritual
+adversity.gui.sanctuary_control=Sanctuary - Control
+adversity.ritual.no_match=No matching ritual found
+adversity.ritual.not_enough_input=Not enough input items
+adversity.ritual.not_enough_fuel=Not enough entropy for ritual
+adversity.ritual.stage_locked=Requires stage: %s
+
+# Teleport GUI
+adversity.gui.teleport=Teleport
+adversity.gui.teleport_title=Sanctuary Teleport
+adversity.gui.teleport_subtitle=%d sanctuaries available
+adversity.gui.no_sanctuary=No other sanctuaries available
+adversity.sanctuary.teleport.not_in_sanctuary=You must be in a sanctuary to teleport
+adversity.sanctuary.teleport.invalid=Invalid teleport target
+adversity.sanctuary.teleport.same=Cannot teleport to current sanctuary
+adversity.sanctuary.teleport.no_fuel=Not enough entropy for teleportation
+adversity.sanctuary.teleport.success=Teleportation successful!
+adversity.dimension.overworld=Overworld
+adversity.dimension.nether=Nether
+adversity.dimension.end=The End
+
+# Sanctuary Boundary
+adversity.sanctuary.boundary.leaving=§c Warning: Leaving sanctuary protection!
+adversity.sanctuary.boundary.entering=§a Entering sanctuary protection zone
+
+# Crafting Restrictions
+adversity.crafting.need_sanctuary=Must be near a sanctuary to craft this item
+adversity.crafting.too_far=Too far from sanctuary altar (max %d blocks)
+adversity.crafting.tier_too_low=Requires sanctuary tier %d (current: %d)
+adversity.crafting.stage_required=Requires %s stage to craft this item

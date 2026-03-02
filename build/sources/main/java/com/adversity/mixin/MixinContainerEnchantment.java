@@ -53,7 +53,7 @@ public abstract class MixinContainerEnchantment {
             if (nearSanctuary) {
                 // 在圣所附近时，尝试注入 Adversity 附魔
                 Adversity.LOGGER.info("[Enchant Mixin] Attempting to inject Adversity enchantments...");
-                injectAdversityEnchantments();
+                injectAdversityEnchantments(player);
             } else if (AdversityConfig.sanctuarySettings.removeEnchantsFromTable) {
                 // 不在圣所附近且启用过滤时，移除 Adversity 附魔
                 filterAdversityEnchantments();
@@ -92,15 +92,19 @@ public abstract class MixinContainerEnchantment {
     }
 
     /**
-     * 注入 Adversity 附魔到附魔选项中
+     * 注入 Adversity 附魔到附魔选项中 (带阶段检查)
      */
-    private void injectAdversityEnchantments() {
+    private void injectAdversityEnchantments(EntityPlayer player) {
         try {
             int[] enchantClue = getIntArrayField("enchantClue");
             int[] worldClue = getIntArrayField("worldClue");
 
             if (enchantClue == null || worldClue == null)
                 return;
+
+            // 获取玩家阶段能力
+            com.adversity.capability.IAdversityCapability.IProgression progression = player
+                    .getCapability(com.adversity.capability.CapabilityHandler.PROGRESSION_CAPABILITY, null);
 
             Enchantment[] adversityEnchants = {
                     EnchantmentRegistry.SOULBOUND,
@@ -114,6 +118,14 @@ public abstract class MixinContainerEnchantment {
                 if (RANDOM.nextFloat() < 0.25f) {
                     Enchantment selectedEnchant = adversityEnchants[RANDOM.nextInt(adversityEnchants.length)];
                     if (selectedEnchant != null) {
+                        // 检查阶段要求
+                        String requiredStage = com.adversity.sanctuary.StageGatingRegistry
+                                .getEnchantmentStageRequirement(selectedEnchant);
+                        if (requiredStage != null && (progression == null || !progression.hasStage(requiredStage))) {
+                            // 玩家不满足阶段要求，跳过此附魔
+                            continue;
+                        }
+
                         int enchId = Enchantment.getEnchantmentID(selectedEnchant);
                         int level = 1 + RANDOM.nextInt(selectedEnchant.getMaxLevel());
 

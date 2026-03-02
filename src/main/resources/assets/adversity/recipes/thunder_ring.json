@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GIG",
+    "IEI",
+    "GIG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_block"
+    },
+    "I": {
+      "item": "minecraft:iron_block"
+    },
+    "E": {
+      "item": "adversity:entropy",
+      "data": 2
+    }
+  },
+  "result": {
+    "item": "adversity:thunder_ring",
+    "count": 1
+  }
+}

@@ -3,9 +3,11 @@ package com.adversity.item.bauble;
 import com.adversity.Adversity;
 import com.adversity.capability.CapabilityHandler;
 import com.adversity.capability.talisman.ITalismanCapability;
+import com.adversity.compat.BaublesCompat;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Loader;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -17,10 +19,18 @@ import java.util.Random;
 public class BaubleHelper {
 
     public static final Random RANDOM = new Random();
+    private static Boolean baublesLoaded = null;
+
+    private static boolean isBaublesLoaded() {
+        if (baublesLoaded == null) {
+            baublesLoaded = Loader.isModLoaded("baubles");
+        }
+        return baublesLoaded;
+    }
 
     /**
      * 检查玩家是否携带了特定物品
-     * 检查: 主背包 -> 副手 -> 护符盒
+     * 检查: 主背包 -> 副手 -> 护符盒 -> Baubles饰品栏
      */
     public static boolean hasBauble(EntityPlayer player, net.minecraft.item.Item item) {
         if (item == null)
@@ -45,6 +55,17 @@ public class BaubleHelper {
         if (talisman != null) {
             for (int i = 0; i < talisman.getSlotCount(); i++) {
                 ItemStack stack = talisman.getStackInSlot(i);
+                if (!stack.isEmpty() && stack.getItem() == item) {
+                    return true;
+                }
+            }
+        }
+
+        // 检查Baubles饰品栏
+        if (isBaublesLoaded()) {
+            int slotCount = BaublesCompat.getSlotCount(player);
+            for (int i = 0; i < slotCount; i++) {
+                ItemStack stack = BaublesCompat.getStackInSlot(player, i);
                 if (!stack.isEmpty() && stack.getItem() == item) {
                     return true;
                 }
@@ -112,7 +133,7 @@ public class BaubleHelper {
 
     /**
      * 查找玩家装备的特定类型守护饰品
-     * 检查: 主背包 -> 副手 -> 护符盒
+     * 检查: 主背包 -> 副手 -> 护符盒 -> Baubles饰品栏
      */
     @Nullable
     private static AbstractWardBauble findWardBauble(EntityPlayer player, String wardType) {
@@ -156,6 +177,22 @@ public class BaubleHelper {
             }
         }
 
+        // 检查Baubles饰品栏
+        if (isBaublesLoaded()) {
+            int slotCount = BaublesCompat.getSlotCount(player);
+            for (int i = 0; i < slotCount; i++) {
+                ItemStack stack = BaublesCompat.getStackInSlot(player, i);
+                if (stack.isEmpty())
+                    continue;
+                if (stack.getItem() instanceof AbstractWardBauble) {
+                    AbstractWardBauble bauble = (AbstractWardBauble) stack.getItem();
+                    if (bauble.wardType.equals(wardType)) {
+                        return bauble;
+                    }
+                }
+            }
+        }
+
         return null;
     }
 
@@ -180,6 +217,12 @@ public class BaubleHelper {
         public static final String DAMAGE_CONVERSION = "damage_conversion"; // 反制反射
         public static final String AURA = "aura"; // 反制光环效果
         public static final String STACK_SYSTEM = "stack_system"; // 反制叠层系统
+        // 新增反制类型
+        public static final String REVERSAL = "reversal"; // 反制逆转
+        public static final String TETANUS = "tetanus"; // 反制破伤风
+        public static final String OBLIVION = "oblivion"; // 反制遗忘
+        public static final String ASCENSION = "ascension"; // 反制飞升
+        public static final String AVARICE = "avarice"; // 反制强欲/贪婪
     }
 
 }

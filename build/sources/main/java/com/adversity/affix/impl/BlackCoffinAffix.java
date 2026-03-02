@@ -59,6 +59,15 @@ public class BlackCoffinAffix extends AbstractAffix {
         EntityPlayer player = (EntityPlayer) target;
         int tier = getTier(attacker);
 
+        // 检查守护之心饰品反制（curse类型）
+        if (com.adversity.item.bauble.BaubleHelper.tryBlockEffect(player, "curse", attacker)) {
+            return damage;
+        }
+        // 检查守护之魂饰品反制（equipment_seal类型 - 黑棺也涉及装备封印）
+        if (com.adversity.item.bauble.BaubleHelper.tryBlockEffect(player, "equipment_seal", attacker)) {
+            return damage;
+        }
+
         // 计算触发概率
         float chance = BASE_CHANCE + (tier * 0.01f);
 

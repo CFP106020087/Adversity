@@ -90,15 +90,53 @@ public class RitualManager {
                 new ItemStack(Items.TOTEM_OF_UNDYING),
                 3000, "champion", null);
 
+        // ==================== 命令执行仪式 ====================
+
+        // 10. 安宁祈祷 (Prayer of Peace): 降低全局难度1点
+        // 输入: 平静之尘 -> 无输出（执行命令）
+        registerCommandRite("prayer_of_peace",
+                        new ItemStack(ItemRegistry.CALM_DUST, 4),
+                        200, null, "advdiff sub 1");
+
+        // 11. 和平献祭 (Peace Offering): 降低全局难度2点
+        // 输入: 熵能结晶 -> 无输出（执行命令）
+        registerCommandRite("peace_offering",
+                        new ItemStack(ItemRegistry.ENTROPY, 1, 1), // CRYSTAL
+                        500, "awakened", "advdiff sub 2");
+
+        // 12. 宁静仪式 (Tranquility Ritual): 降低全局难度5点
+        // 输入: 熵能核心 -> 无输出（执行命令）
+        registerCommandRite("tranquility_ritual",
+                        new ItemStack(ItemRegistry.ENTROPY, 1, 2), // CORE
+                        1500, "scholar", "advdiff sub 5");
+
+        // 13. 净界仪式 (Realm Cleansing): 重置全局难度设置
+        // 输入: 下界之星 -> 无输出（执行命令）
+        registerCommandRite("realm_cleansing",
+                        new ItemStack(Items.NETHER_STAR),
+                        5000, "warden", "advdiff reset");
+
         Adversity.LOGGER.info("Ritual System initialized with {} rituals", RITES.size());
     }
 
     public static void registerRite(String name, ItemStack input, ItemStack output, int cost, String reqStage,
             String rewardStage) {
+            registerRite(name, input, output, cost, reqStage, rewardStage, null);
+    }
+
+    public static void registerRite(String name, ItemStack input, ItemStack output, int cost, String reqStage,
+                    String rewardStage, String command) {
         ResourceLocation id = new ResourceLocation(Adversity.MODID, name);
-        RITES.put(id, new Rite(id, input, output, cost, reqStage, rewardStage));
-        Adversity.LOGGER.debug("Registered ritual: {} (cost={}, req={}, reward={})",
-                name, cost, reqStage, rewardStage);
+        RITES.put(id, new Rite(id, input, output, cost, reqStage, rewardStage, command));
+        Adversity.LOGGER.debug("Registered ritual: {} (cost={}, req={}, reward={}, cmd={})",
+                        name, cost, reqStage, rewardStage, command != null ? "yes" : "no");
+}
+
+/**
+ * 注册纯命令仪式（无物品输出，仅执行命令）
+ */
+public static void registerCommandRite(String name, ItemStack input, int cost, String reqStage, String command) {
+        registerRite(name, input, ItemStack.EMPTY, cost, reqStage, null, command);
     }
 
     public static void registerRite(Rite rite) {
@@ -124,5 +162,38 @@ public class RitualManager {
 
     public static int getRiteCount() {
         return RITES.size();
+    }
+
+    /**
+     * 移除指定仪式 (用于CRT集成)
+     * 
+     * @param ritualId 完整仪式ID，如 "adversity:awakening"
+     * @return 是否成功移除
+     */
+    public static boolean removeRite(String ritualId) {
+            ResourceLocation id;
+            if (ritualId.contains(":")) {
+                    id = new ResourceLocation(ritualId);
+            } else {
+                    id = new ResourceLocation(Adversity.MODID, ritualId);
+            }
+            Rite removed = RITES.remove(id);
+            if (removed != null) {
+                    Adversity.LOGGER.info("Removed ritual: {}", ritualId);
+                    return true;
+            }
+            return false;
+    }
+
+    /**
+     * 移除所有仪式 (用于CRT集成)
+     * 
+     * @return 移除的仪式数量
+     */
+    public static int removeAllRites() {
+            int count = RITES.size();
+            RITES.clear();
+            Adversity.LOGGER.info("Removed all {} rituals", count);
+            return count;
     }
 }

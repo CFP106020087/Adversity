@@ -33,9 +33,45 @@ public class ProgressionCapability implements IProgression {
     private final Set<String> stages = new HashSet<>();
     private boolean dirty = false;
 
+    // 阶段层级定义 (索引越大等级越高): champion > warden > scholar > awakened
+    private static final String[] STAGE_HIERARCHY = { "awakened", "scholar", "warden", "champion" };
+
     @Override
     public boolean hasStage(String stage) {
-        return stages.contains(stage.toLowerCase());
+        if (stage == null || stage.isEmpty())
+            return true;
+
+        String normalizedStage = stage.toLowerCase();
+
+        // 直接检查是否拥有该阶段
+        if (stages.contains(normalizedStage)) {
+            return true;
+        }
+
+        // 检查是否拥有更高层级的阶段
+        int requiredLevel = getStageLevel(normalizedStage);
+        if (requiredLevel < 0) {
+            // 非层级阶段，只检查精确匹配
+            return false;
+        }
+
+        // 检查玩家是否拥有任何更高层级的阶段
+        for (String playerStage : stages) {
+            int playerLevel = getStageLevel(playerStage);
+            if (playerLevel >= requiredLevel) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static int getStageLevel(String stage) {
+        for (int i = 0; i < STAGE_HIERARCHY.length; i++) {
+            if (STAGE_HIERARCHY[i].equals(stage)) {
+                return i;
+            }
+        }
+        return -1; // 非层级阶段
     }
 
     @Override

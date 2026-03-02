@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EPE",
+    "PAP",
+    "EPE"
+  ],
+  "key": {
+    "E": {
+      "item": "minecraft:ender_pearl"
+    },
+    "P": {
+      "item": "minecraft:chorus_fruit_popped"
+    },
+    "A": {
+      "item": "adversity:anchor_stone"
+    }
+  },
+  "result": {
+    "item": "adversity:anchor_heart",
+    "count": 1
+  }
+}

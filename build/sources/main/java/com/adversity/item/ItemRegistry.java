@@ -34,6 +34,9 @@ public class ItemRegistry {
     @GameRegistry.ObjectHolder(Adversity.MODID + ":affix_guide")
     public static final Item AFFIX_GUIDE = null;
 
+    @GameRegistry.ObjectHolder(Adversity.MODID + ":affix_lens")
+    public static final Item AFFIX_LENS = null;
+
     // ==================== 赎罪道具 ====================
 
     @GameRegistry.ObjectHolder(Adversity.MODID + ":redemption_tear")
@@ -126,6 +129,23 @@ public class ItemRegistry {
     @GameRegistry.ObjectHolder(Adversity.MODID + ":guardian_soul")
     public static final Item GUARDIAN_SOUL = null;
 
+    // ==================== 新增反制饰品 ====================
+
+    @GameRegistry.ObjectHolder(Adversity.MODID + ":balance_charm")
+    public static final Item BALANCE_CHARM = null;
+
+    @GameRegistry.ObjectHolder(Adversity.MODID + ":immunity_badge")
+    public static final Item IMMUNITY_BADGE = null;
+
+    @GameRegistry.ObjectHolder(Adversity.MODID + ":memory_crystal")
+    public static final Item MEMORY_CRYSTAL = null;
+
+    @GameRegistry.ObjectHolder(Adversity.MODID + ":soul_seal_dust")
+    public static final Item SOUL_SEAL_DUST = null;
+
+    @GameRegistry.ObjectHolder(Adversity.MODID + ":light_amulet")
+    public static final Item LIGHT_AMULET = null;
+
     // ==================== 材料物品 ====================
 
     @GameRegistry.ObjectHolder(Adversity.MODID + ":affix_essence")
@@ -150,6 +170,7 @@ public class ItemRegistry {
                 new ItemDifficultyDetector(),
                 new ItemSealedToken(),
                 new ItemAffixGuide(),
+                new ItemAffixLens(),
 
                 // 赎罪道具 - 用于减少永久诅咒
                 new ItemRedemptionTear(),
@@ -196,6 +217,13 @@ public class ItemRegistry {
 
                 // 圣所指南针
                 new ItemSanctuaryCompass(),
+
+                // 新增反制饰品
+                new ItemBalanceCharm(), // 逆转反制
+                new ItemImmunityBadge(), // 破伤风反制
+                new ItemMemoryCrystal(), // 遗忘反制
+                new ItemSoulSealDust(), // 飞升反制
+                new ItemLightAmulet(), // 强欲/贪婪反制
 
                 // 材料物品
                 new ItemAffixEssence(),
@@ -262,6 +290,14 @@ public class ItemRegistry {
         registerItemModel(AFFIX_ESSENCE);
         registerItemModel(AFFIX_CRYSTAL);
         registerItemModel(VOID_SHARD);
+
+        // 新增反制饰品
+        registerItemModel(AFFIX_LENS);
+        registerItemModel(BALANCE_CHARM);
+        registerItemModel(IMMUNITY_BADGE);
+        registerItemModel(MEMORY_CRYSTAL);
+        registerItemModel(SOUL_SEAL_DUST);
+        registerItemModel(LIGHT_AMULET);
     }
 
     @SideOnly(Side.CLIENT)

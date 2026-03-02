@@ -12,6 +12,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.adversity.config.AdversityConfig;
+
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -20,9 +22,9 @@ import java.util.List;
  * 从精英怪物掉落，用于维护圣所运作
  * 
  * 有3个等级（通过metadata区分）：
- * - 0: 熵能碎片 (10燃料)
- * - 1: 熵能结晶 (50燃料)
- * - 2: 熵能核心 (200燃料)
+ * - 0: 熵能碎片 (默认10燃料，可通过CFG调整)
+ * - 1: 熵能结晶 (默认50燃料，可通过CFG调整)
+ * - 2: 熵能核心 (默认200燃料，可通过CFG调整)
  */
 public class ItemEntropy extends Item {
 
@@ -30,6 +32,7 @@ public class ItemEntropy extends Item {
     public static final int CRYSTAL = 1;
     public static final int CORE = 2;
 
+    // 保留常量作为代码内引用的默认值
     public static final int SHARD_FUEL = 10;
     public static final int CRYSTAL_FUEL = 50;
     public static final int CORE_FUEL = 200;
@@ -75,13 +78,13 @@ public class ItemEntropy extends Item {
         }
         switch (stack.getMetadata()) {
             case SHARD:
-                return SHARD_FUEL;
+                return AdversityConfig.sanctuarySettings.entropyShardFuel;
             case CRYSTAL:
-                return CRYSTAL_FUEL;
+                return AdversityConfig.sanctuarySettings.entropyCrystalFuel;
             case CORE:
-                return CORE_FUEL;
+                return AdversityConfig.sanctuarySettings.entropyCoreFuel;
             default:
-                return SHARD_FUEL;
+                return AdversityConfig.sanctuarySettings.entropyShardFuel;
         }
     }
 

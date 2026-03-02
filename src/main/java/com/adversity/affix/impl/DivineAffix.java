@@ -45,6 +45,24 @@ public class DivineAffix extends AbstractAffix {
     public float onHurt(EntityLiving entity, DamageSource source, float damage, IAffixData data) {
         if (damage <= 0) return damage;
 
+        // 检查攻击者是否有反制饰品（雷霆指环 - holy / 破甲符文 - armor_reduction）
+        if (source.getTrueSource() instanceof net.minecraft.entity.player.EntityPlayer) {
+            net.minecraft.entity.player.EntityPlayer player = (net.minecraft.entity.player.EntityPlayer) source
+                    .getTrueSource();
+            float holyReduction = com.adversity.item.bauble.BaubleHelper.getReduction(player, "holy");
+            float armorReduction = com.adversity.item.bauble.BaubleHelper.getReduction(player, "armor_reduction");
+            float pierceReduction = Math.max(holyReduction, armorReduction);
+            if (pierceReduction >= 1.0f) {
+                return damage; // 完全穿透，不应用立方根
+            }
+            if (pierceReduction > 0) {
+                // 部分穿透：在原始伤害和立方根伤害之间插值
+                float reducedDamage = (float) Math.cbrt(damage);
+                reducedDamage = Math.max(reducedDamage, MIN_DAMAGE);
+                return reducedDamage + (damage - reducedDamage) * pierceReduction;
+            }
+        }
+
         // 应用立方根
         float reducedDamage = (float) Math.cbrt(damage);
 

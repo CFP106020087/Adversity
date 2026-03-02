@@ -21,7 +21,7 @@ import java.util.Random;
 
 /**
  * 附魔事件处理器
- * 处理主动反制逻辑 (灵魂绑定打破枷锁, 净化之触移除词条)
+ * 处理主动反制逻辑
  */
 @Mod.EventBusSubscriber(modid = Adversity.MODID)
 public class EnchantmentHandler {
@@ -43,8 +43,8 @@ public class EnchantmentHandler {
         if (cap == null || cap.getTier() <= 0)
             return;
 
-        // 1. 灵魂绑定 (Soulbound) -> 打破枷锁 (Shackle)
-        // 既然已经有附魔在身上，攻击即有概率触发"破甲"效果，移除怪物的枷锁词条
+        // 1. 灵魂绑定 (Soulbound) -> 阻止装备被封印
+        // 攻击时有几率移除目标的枷锁词条
         int soulboundLevel = EnchantmentHelper.getMaxEnchantmentLevel(EnchantmentRegistry.SOULBOUND, player);
         if (soulboundLevel > 0) {
             ResourceLocation shackleId = new ResourceLocation("adversity:shackle");
@@ -54,11 +54,14 @@ public class EnchantmentHandler {
             }
         }
 
-        // 2. 净化之触 (Purifying Touch) -> 移除随机BUFF/词条
-        int purifyingLevel = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.PURIFYING_TOUCH,
+        // 2. 破咒者 (Breaker) -> 移除精英词条buff
+        // 攻击时有几率移除一个随机词条
+        int breakerLevel = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.BREAKER,
                 player.getHeldItemMainhand());
-        if (purifyingLevel > 0) {
-            if (RANDOM.nextFloat() < 0.15f * purifyingLevel) {
+        if (breakerLevel > 0) {
+            // Lv1: 10%, Lv2: 20%, Lv3: 30%
+            float chance = 0.10f * breakerLevel;
+            if (RANDOM.nextFloat() < chance) {
                 // 尝试移除一个随机词条
                 List<IAffix> affixes = new ArrayList<>();
                 for (com.adversity.affix.AffixData data : cap.getAllAffixData()) {
@@ -68,9 +71,14 @@ public class EnchantmentHandler {
                 if (!affixes.isEmpty()) {
                     IAffix toRemove = affixes.get(RANDOM.nextInt(affixes.size()));
                     removeAffix(target, cap, toRemove.getId());
+                    Adversity.LOGGER.debug("Breaker removed affix: {} from {}",
+                            toRemove.getId(), target.getName());
                 }
             }
         }
+
+        // 注意：净化之触(PurifyingTouch)已改为缩短封印时间，不再移除词条
+        // 其效果在受到封印时的Handler中处理
     }
 
     private static void removeAffix(EntityLiving mob, IAdversityCapability cap, ResourceLocation id) {

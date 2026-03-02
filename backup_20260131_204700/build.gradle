@@ -1,0 +1,72 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "https://files.minecraftforge.net/maven" }
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "1.0.0"
+group = "com.adversity"
+archivesBaseName = "Adversity"
+
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+    options.encoding = 'UTF-8'
+}
+
+minecraft {
+    version = "1.12.2-14.23.5.2847"
+    runDir = "run"
+    mappings = "stable_39"
+    makeObfSourceJar = false
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "CurseForge"
+        url = "https://www.cursemaven.com"
+       
+
+    }
+    flatDir { dirs 'libs' }
+}
+
+dependencies {
+    // Baubles API (soft dependency)
+    compileOnly "curse.maven:baubles-227083:2518667"  // Baubles 1.5.2 for 1.12.2
+    // CraftTweaker (soft dependency)
+    compileOnly name:"CraftTweaker2-1.12-4.1.20.703" // CraftTweaker 2 for 1.12.2
+    // FermiumBooter (mixin support)
+    compileOnly name:"`FermiumBooter-1.2.0"
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+            'FMLAT': 'adversity_at.cfg',
+            'FMLCorePlugin': 'com.adversity.asm.AdversityLoadingPlugin',
+            'FMLCorePluginContainsFMLMod': 'true'
+        )
+    }
+}

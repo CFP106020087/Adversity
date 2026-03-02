@@ -1,0 +1,594 @@
+# Adversity Language File - English
+
+# Creative Tab
+itemGroup.adversity=Adversity
+
+# Item Names
+item.adversity.affix_essence.name=Affix Essence
+item.adversity.affix_crystal.name=Affix Crystal
+item.adversity.void_shard.name=Void Shard
+item.adversity.calm_dust.name=Calm Dust
+item.adversity.difficulty_detector.name=Difficulty Detector
+
+# Item Tooltips
+item.adversity.affix_essence.tooltip=Residue containing affix energy
+item.adversity.affix_essence.source=Drops from T1-T4 elite mobs
+
+item.adversity.affix_crystal.tooltip=Crystallized affix energy
+item.adversity.affix_crystal.source=Drops from T5-T7 elite mobs
+
+item.adversity.void_shard.tooltip=A mysterious fragment from the abyss
+item.adversity.void_shard.source=Drops from T8-T10 elite mobs
+
+item.adversity.calm_dust.tooltip=Temporarily suppresses elite spawns in the area
+item.adversity.calm_dust.effect=Range: %d blocks | Duration: %d minutes
+item.adversity.calm_dust.hint=Right-click to use
+item.adversity.calm_dust.activated=Calm Dust activated! Range %d blocks, duration %d minutes
+
+item.adversity.difficulty_detector.tooltip=Detect difficulty information at current location
+item.adversity.difficulty_detector.usage=Right-click to view difficulty report
+
+# Affix Names
+adversity.affix.none=None
+adversity.affix.fiery=Fiery
+adversity.affix.frosty=Frosty
+adversity.affix.vampiric=Vampiric
+adversity.affix.reflective=Reflective
+adversity.affix.regenerating=Regenerating
+adversity.affix.teleporting=Teleporting
+adversity.affix.splitting=Splitting
+adversity.affix.withering=Withering
+adversity.affix.haste=Haste
+adversity.affix.blinding=Blinding
+adversity.affix.gravity=Gravity
+adversity.affix.horror=Horror
+adversity.affix.reaper=Reaper
+adversity.affix.blunt=Blunt
+adversity.affix.giant_slayer=Giant Slayer
+adversity.affix.shield_breaker=Shield Breaker
+adversity.affix.bloodthirst=Bloodthirst
+adversity.affix.avarice=Avarice
+adversity.affix.hero=Hero
+adversity.affix.divine=Divine
+adversity.affix.outer_god=Outer God
+adversity.affix.tetanus=Tetanus
+adversity.affix.reversal=Reversal
+adversity.affix.oblivion=Oblivion
+adversity.affix.unclean=Unclean
+adversity.affix.ascension=Ascension
+adversity.affix.purifier=Purifier
+adversity.affix.disenchant=Disenchant
+adversity.affix.shackle=Shackle
+adversity.affix.divest=Divest
+adversity.affix.annihilate=Annihilate
+adversity.affix.black_swan=Black Swan
+adversity.affix.black_friday=Black Friday
+adversity.affix.black_coffin=Black Coffin
+adversity.affix.nightmare=Nightmare
+adversity.affix.greed=Greed
+
+# Permanent Curse Messages
+adversity.curse.black_swan.applied=Your attack power has been permanently weakened...
+adversity.curse.black_friday.applied=Your life force has been permanently drained...
+adversity.curse.black_coffin.applied=Your inventory slot has been permanently sealed...
+adversity.curse.banned=You have been permanently cursed by Adversity and cannot enter this save
+adversity.curse.banned.black_swan=Your attack power has been completely consumed by Black Swan! This save is permanently sealed.
+adversity.curse.banned.black_friday=Your life force has been completely taken by Black Friday! This save is permanently sealed.
+adversity.curse.banned.black_coffin=Your inventory has been completely sealed by Black Coffin! This save is permanently sealed.
+adversity.curse.banned.default=You have been permanently cursed! This save is permanently sealed.
+adversity.curse.warning.black_swan=[Black Swan] Your attack power has been reduced by %d%%! Use a redemption item to mitigate the curse!
+adversity.curse.warning.black_friday=[Black Friday] Your health is dangerously low! Use a redemption item to mitigate the curse!
+adversity.curse.warning.black_coffin=[Black Coffin] Your inventory is %d%% sealed! Use a redemption item to mitigate the curse!
+adversity.curse.redemption=Curse has been partially redeemed
+
+# Tier Names (10-tier system)
+adversity.tier.1=Elite
+adversity.tier.2=Rare
+adversity.tier.3=Veteran
+adversity.tier.4=Epic
+adversity.tier.5=Legendary
+adversity.tier.6=Mythic
+adversity.tier.7=Ancient
+adversity.tier.8=Void
+adversity.tier.9=Abyssal
+adversity.tier.10=Terminus
+
+# Difficulty
+adversity.difficulty.normal=Normal
+adversity.difficulty.hard=Hard
+adversity.difficulty.nightmare=Nightmare
+
+# GUI
+adversity.gui.difficulty=Difficulty Level
+
+# Affix Guide
+item.adversity.affix_guide.name=Affix Guide
+item.adversity.affix_guide.tooltip=A compendium of all elite affixes
+item.adversity.affix_guide.hint=Right-click to open
+item.adversity.affix_guide.hint_shift=Shift+Right-click: Open Survival Guide
+
+# Calm Dust (updated)
+item.adversity.calm_dust.tooltip_new=Rare Item - Permanently reduces difficulty
+item.adversity.calm_dust.effect_new=Reduces difficulty by %d%%
+item.adversity.calm_dust.source=Drops from elite mobs (very rare)
+item.adversity.calm_dust.activated_new=Difficulty reduced! Current reduction: %d%%
+item.adversity.calm_dust.already_min=Difficulty is already at minimum
+
+# Redemption Items
+item.adversity.redemption_tear.name=Tear of Redemption
+item.adversity.redemption_heart.name=Heart of Redemption
+item.adversity.redemption_key.name=Key of Redemption
+
+# GUI Labels
+gui.adversity.guide.title=Affix Guide
+gui.adversity.guide.subtitle=%d Affixes Total
+gui.adversity.guide.all=All
+gui.adversity.guide.type.offensive=Offense
+gui.adversity.guide.type.defensive=Defense
+gui.adversity.guide.type.utility=Utility
+gui.adversity.guide.type.special=Special
+gui.adversity.guide.min_diff=Diff %.1f+
+
+# Affix Descriptions (36 affixes)
+affix.adversity.fiery.name=Fiery
+affix.adversity.fiery.desc=Attacks apply burning stacks, full stacks cause explosion
+affix.adversity.frosty.name=Frosty
+affix.adversity.frosty.desc=Attacks apply freeze stacks, full stacks briefly immobilize
+affix.adversity.vampiric.name=Vampiric
+affix.adversity.vampiric.desc=Attacks drain life from targets to heal self
+affix.adversity.withering.name=Withering
+affix.adversity.withering.desc=Attacks apply corrosion, dealing penetrating damage
+affix.adversity.blinding.name=Blinding
+affix.adversity.blinding.desc=Attacks apply darkness, reducing vision and accuracy
+affix.adversity.horror.name=Horror
+affix.adversity.horror.desc=Attacks apply fear, forcing targets to retreat
+affix.adversity.gravity.name=Gravity
+affix.adversity.gravity.desc=Creates gravity field pulling players toward it
+affix.adversity.regenerating.name=Regenerating
+affix.adversity.regenerating.desc=Continuously regenerates health
+affix.adversity.teleporting.name=Teleporting
+affix.adversity.teleporting.desc=Chance to teleport when hit
+affix.adversity.splitting.name=Splitting
+affix.adversity.splitting.desc=Splits into weaker copies on death
+affix.adversity.reflective.name=Reflective
+affix.adversity.reflective.desc=Reflects some melee damage to attackers
+affix.adversity.haste.name=Haste
+affix.adversity.haste.desc=Greatly increased movement and attack speed
+affix.adversity.reaper.name=Reaper
+affix.adversity.reaper.desc=Attacks deal bonus damage based on target's missing health
+affix.adversity.blunt.name=Blunt
+affix.adversity.blunt.desc=Attacks ignore armor and deal true damage
+affix.adversity.giant_slayer.name=Giant Slayer
+affix.adversity.giant_slayer.desc=Deals bonus damage based on target's max health
+affix.adversity.shield_breaker.name=Shield Breaker
+affix.adversity.shield_breaker.desc=Attacks bypass shields and blocking
+affix.adversity.bloodthirst.name=Bloodthirst
+affix.adversity.bloodthirst.desc=Gains attack speed when attacking wounded targets
+affix.adversity.avarice.name=Avarice
+affix.adversity.avarice.desc=Drops extra loot on death
+affix.adversity.hero.name=Hero
+affix.adversity.hero.desc=Inspires nearby allies, granting buffs
+affix.adversity.divine.name=Divine
+affix.adversity.divine.desc=Protected by divine power, reduces all damage
+affix.adversity.outer_god.name=Outer God
+affix.adversity.outer_god.desc=Warps reality around it, unpredictable effects
+affix.adversity.tetanus.name=Tetanus
+affix.adversity.tetanus.desc=Attacks apply poison that increases over time
+affix.adversity.reversal.name=Reversal
+affix.adversity.reversal.desc=Reflects a portion of damage back to attackers
+affix.adversity.oblivion.name=Oblivion
+affix.adversity.oblivion.desc=Attacks cause memory loss, clearing beneficial effects
+affix.adversity.unclean.name=Unclean
+affix.adversity.unclean.desc=Spreads disease to nearby players
+affix.adversity.ascension.name=Ascension
+affix.adversity.ascension.desc=Becomes stronger as health decreases
+affix.adversity.progression.unlocked=Stage Unlocked: %s
+adversity.sanctuary.protected=This structure is protected by ancient magic.
+affix.adversity.purifier.name=Purifier
+affix.adversity.purifier.desc=Removes debuffs from itself periodically
+affix.adversity.disenchant.name=Disenchant
+affix.adversity.disenchant.desc=Attacks reduce target's enchantment effectiveness
+affix.adversity.shackle.name=Shackle
+affix.adversity.shackle.desc=Roots players in place temporarily
+affix.adversity.divest.name=Divest
+affix.adversity.divest.desc=Attacks strip armor effectiveness temporarily
+affix.adversity.annihilate.name=Annihilate
+affix.adversity.annihilate.desc=Massive damage attacks with long cooldown
+affix.adversity.nightmare.name=Nightmare
+affix.adversity.nightmare.desc=Distorts vision and spawns illusions
+affix.adversity.greed.name=Greed
+affix.adversity.greed.desc=Steals items from player's inventory on hit
+affix.adversity.black_swan.name=Black Swan
+affix.adversity.black_swan.desc=Permanently reduces player attack, requires Tear of Redemption
+affix.adversity.black_friday.name=Black Friday
+affix.adversity.black_friday.desc=Permanently reduces max health, requires Heart of Redemption
+affix.adversity.black_coffin.name=Black Coffin
+affix.adversity.black_coffin.desc=Permanently seals inventory slots, requires Key of Redemption
+
+# ==================== Sanctuary System ====================
+
+# Block Names
+tile.adversity.sanctuary_altar.name=Sanctuary Altar
+tile.adversity.sanctuary_core.name=Artificial Sanctuary Core
+
+# Entropy Items
+item.adversity.entropy.shard.name=Entropy Shard
+item.adversity.entropy.crystal.name=Entropy Crystal
+item.adversity.entropy.core.name=Entropy Core
+adversity.entropy.fuel_value=Fuel Value: %d
+adversity.entropy.usage_hint=Right-click sanctuary to add fuel
+
+# Sanctuary Messages
+adversity.sanctuary.activated=Natural sanctuary activated! Tier: T%d
+adversity.sanctuary.artificial_activated=Artificial sanctuary activated!
+adversity.sanctuary.activation_failed=Activation failed!
+adversity.sanctuary.structure_incomplete=Multiblock structure incomplete! Need 3x3x3 stone brick + chiseled
+adversity.sanctuary.info=Natural Sanctuary [T%d] | Fuel: %d/%d (%d%%)
+adversity.sanctuary.info_artificial=Artificial Sanctuary | Fuel: %d/%d (%d%%)
+adversity.sanctuary.fuel_added=Added %d fuel! Current: %d/%d
+
+# ==================== Ward Baubles ====================
+
+# Bauble Names
+item.adversity.soul_chain.name=Soul Chain
+item.adversity.spatial_anchor.name=Spatial Anchor
+item.adversity.flame_ward.name=Flame Ward
+item.adversity.frost_ward.name=Frost Ward
+item.adversity.corrosion_bane.name=Corrosion Bane
+item.adversity.guardian_heart.name=Guardian's Heart
+item.adversity.anchor_stone.name=Anchor Stone
+item.adversity.clarity_lens.name=Clarity Lens
+item.adversity.courage_charm.name=Courage Charm
+
+# Sanctuary Compass
+item.adversity.sanctuary_compass.name=Sanctuary Compass
+item.adversity.sanctuary_compass.tooltip=Points to the nearest natural sanctuary
+item.adversity.sanctuary_compass.hint=Right-click to refresh location
+item.adversity.sanctuary_compass.target=Target: %d, %d, %d
+item.adversity.sanctuary_compass.no_target=No nearby sanctuary detected
+item.adversity.sanctuary_compass.found=Found sanctuary at %d, %d, %d (Distance: %d blocks)
+item.adversity.sanctuary_compass.not_found=No natural sanctuary found within range
+item.adversity.enchant_guardian.name=Enchant Guardian
+
+# Bauble Tooltips
+adversity.bauble.ward_type=Ward Type: %s
+adversity.bauble.in_sanctuary=In Sanctuary: %s effect
+adversity.bauble.outside_sanctuary=Outside Sanctuary: %s effect
+
+# Ward Types
+adversity.ward.shackle=Shackle
+adversity.ward.divest=Divest
+adversity.ward.fiery=Fiery
+adversity.ward.frosty=Frosty
+adversity.ward.withering=Withering
+adversity.ward.curse=Permanent Curse
+adversity.ward.gravity=Gravity
+adversity.ward.blinding=Blinding
+adversity.ward.horror=Horror
+adversity.ward.disenchant=Disenchant
+
+# Bauble Special Effects
+adversity.bauble.soul_chain.special=§7Special: Stuns attacker for 2s on block
+adversity.bauble.spatial_anchor.special=§7Special: Gain +10% attack for 5s on block
+adversity.bauble.flame_ward.special=§7Special: Auto-clears all fire stacks at max
+adversity.bauble.frost_ward.special=§7Special: 3s invincibility for 2s after freeze
+adversity.bauble.corrosion_bane.special=§7Special: Reflects %d%% corrosion at max stacks
+adversity.bauble.guardian_heart.special=§7Special: Shield allies after %d blocks
+adversity.bauble.anchor_stone.tradeoff=§cTrade-off: -%d%% movement speed
+adversity.bauble.clarity_lens.tradeoff=§cTrade-off: Mobs within %d blocks share your vision
+adversity.bauble.courage_charm.tradeoff=§cTrade-off: +%d%% damage from horror attacks
+adversity.bauble.enchant_guardian.special=§7Special: Restore %d XP on block
+
+# ==================== Enchantments ====================
+
+enchantment.adversity.soulbound=Soulbound
+enchantment.adversity.breaker=Breaker
+enchantment.adversity.entropy_affinity=Entropy Affinity
+enchantment.adversity.purifying_touch=Purifying Touch
+enchantment.adversity.resolute_will=Resolute Will
+
+# ==================== Comprehensive Guide ====================
+
+# Tab Names
+guide.adversity.title=Adversity Guide
+guide.adversity.tab.overview=Overview
+guide.adversity.tab.sanctuary=Sanctuary
+guide.adversity.tab.baubles=Baubles
+guide.adversity.tab.enchants=Enchants
+guide.adversity.tab.rituals=Rituals
+guide.adversity.tab.progression=Progression
+guide.adversity.tab.tips=Tips
+
+# Overview Page
+guide.adversity.overview.title=Welcome to Adversity
+guide.adversity.overview.intro=Adversity adds progressive challenges to Minecraft. As you explore further and survive longer, monsters become stronger and more dangerous. This guide will help you understand the mechanics and find counterplay strategies.
+guide.adversity.overview.difficulty=Difficulty System
+guide.adversity.overview.difficulty.desc=Difficulty is based on two factors: distance from spawn and play time. The further you go and the longer you survive, the harder it gets. Difficulty ranges from 1.0 to 10.0.
+guide.adversity.overview.elites=Elite Mobs
+guide.adversity.overview.elites.desc=Mobs in high-difficulty areas may become "elites". Elite mobs have more health, deal more damage, and carry special affix abilities. Killing elites yields rare drops.
+guide.adversity.overview.affixes=Affix System
+guide.adversity.overview.affixes.desc=Elite mobs carry Affixes - special abilities like Fiery (burning attacks), Frosty (freeze effect), Teleporting, etc. Affixes are categorized as Offensive, Defensive, Utility, or Special.
+guide.adversity.overview.counterplay=Counterplay Options
+guide.adversity.overview.counterplay.desc=This mod provides multiple counterplay options: Sanctuaries provide safe zones, Baubles offer passive protection, Enchantments enhance equipment. Using these mechanics wisely is key to survival!
+
+# Sanctuary Page
+guide.adversity.sanctuary.title=Sanctuary System
+guide.adversity.sanctuary.intro=Sanctuaries are safe zones that significantly reduce elite spawns and enhance your bauble effects. There are two types: Natural and Artificial.
+
+guide.adversity.sanctuary.natural=Natural Sanctuary
+guide.adversity.sanctuary.natural.desc=Natural sanctuaries are underground quartz shrines with indestructible altars and surrounding blocks, providing strong protection.
+guide.adversity.sanctuary.natural.find=Location: Natural sanctuaries generate every ~1000 blocks at Y=32 in underground quartz shrines
+guide.adversity.sanctuary.natural.activate=Activation: Right-click the Sanctuary Altar, requires entropy items as fuel
+guide.adversity.sanctuary.natural.effect=Effect: Completely blocks elite spawns, bauble effects at 100%%
+
+guide.adversity.sanctuary.artificial=Artificial Sanctuary
+guide.adversity.sanctuary.artificial.desc=Artificial sanctuaries are player-built structures that provide moderate protection.
+guide.adversity.sanctuary.artificial.build=Construction: 3x3x3 stone brick structure with Sanctuary Core in center
+guide.adversity.sanctuary.artificial.materials=Materials: Sanctuary Core crafted with obsidian + chiseled stone brick + Entropy Core
+guide.adversity.sanctuary.artificial.effect=Effect: Reduces elite spawn chance by 50%%, bauble effects at 80%%
+
+guide.adversity.sanctuary.entropy=Entropy Fuel
+guide.adversity.sanctuary.entropy.desc=Sanctuaries require entropy items as fuel to operate. Entropy items drop from elite mobs.
+guide.adversity.sanctuary.entropy.shard=Entropy Shard: Basic fuel (10 points), drops from T1-T4 elites
+guide.adversity.sanctuary.entropy.crystal=Entropy Crystal: Medium fuel (50 points), drops from T5-T7 elites or crafted from shards
+guide.adversity.sanctuary.entropy.core=Entropy Core: High fuel (200 points), drops from T8-T10 elites or crafted from crystals
+
+# Baubles Page
+guide.adversity.baubles.title=Ward Baubles
+guide.adversity.baubles.intro=Ward baubles are special equipment items that protect you from specific affix effects. Their effects are significantly enhanced within sanctuary zones!
+
+guide.adversity.baubles.equipment=Equipment Ward
+guide.adversity.baubles.soul_chain=Soul Chain: Protects against Shackle (armor seal), 100%% immunity in sanctuary
+guide.adversity.baubles.spatial_anchor=Spatial Anchor: Protects against Divest (bauble seal), grants attack boost on block
+guide.adversity.baubles.enchant_guardian=Enchant Guardian: Protects against Disenchant, restores XP on block
+
+guide.adversity.baubles.elemental=Elemental Ward
+guide.adversity.baubles.flame_ward=Flame Ward: Protects against Fiery burn stacks, auto-clears at max
+guide.adversity.baubles.frost_ward=Frost Ward: Protects against Frosty freeze, brief invincibility on trigger
+guide.adversity.baubles.corrosion_bane=Corrosion Bane: Protects against Withering corrosion, reflects damage at max
+
+guide.adversity.baubles.special=Special Ward
+guide.adversity.baubles.guardian_heart=Guardian Heart: Protects against permanent curses (Black Swan/Friday/Coffin)
+guide.adversity.baubles.anchor_stone=Anchor Stone: Protects against Gravity pull, trade-off: reduced move speed
+guide.adversity.baubles.clarity_lens=Clarity Lens: Protects against Blinding vision loss, trade-off: position shared
+guide.adversity.baubles.courage_charm=Courage Charm: Protects against Horror fear, trade-off: increased fear damage
+
+guide.adversity.baubles.sanctuary_bonus=Sanctuary Bonus
+guide.adversity.baubles.sanctuary_bonus.desc=Within sanctuary zones, all bauble protection effects are amplified based on sanctuary type. Natural sanctuaries provide 100%% effect (full immunity), artificial sanctuaries provide 80%%. Outside sanctuary, effects drop to base value (~30-50%%).
+
+# Enchantments Page
+guide.adversity.enchants.title=Anti-Adversity Enchants
+guide.adversity.enchants.intro=These special enchantments help you combat elite mobs and affix effects. Obtainable at enchanting tables or through other means.
+
+guide.adversity.enchants.list=Enchantment List
+guide.adversity.enchants.soulbound=Soulbound: Keep item on death, won't drop
+guide.adversity.enchants.breaker=Breaker: Attacks may remove one affix buff from elites
+guide.adversity.enchants.entropy_affinity=Entropy Affinity: Increases entropy item drops from elites
+guide.adversity.enchants.purifying_touch=Purifying Touch: Attacks reduce remaining seal token duration
+guide.adversity.enchants.resolute_will=Resolute Will: Chance to gain brief invincibility when hit by elites
+
+# Tips Page
+guide.adversity.tips.title=Survival Tips
+guide.adversity.tips.beginner=Beginner Tips
+guide.adversity.tips.beginner.1=Don't venture too far early! Stay within 500 blocks of spawn for safety
+guide.adversity.tips.beginner.2=Prioritize collecting entropy shards - they're key resources for progression
+guide.adversity.tips.beginner.3=Activate natural sanctuaries immediately - they become forward bases for exploration
+
+guide.adversity.tips.advanced=Advanced Strategies
+guide.adversity.tips.advanced.1=Combine baubles and enchantments to counter most affix combinations
+guide.adversity.tips.advanced.2=Build an artificial sanctuary network in high-difficulty areas for safe retreat
+guide.adversity.tips.advanced.3=Watch for dangerous affix combos (Fiery+Frosty, Shackle+Divest)
+
+guide.adversity.tips.danger=Danger Warnings
+guide.adversity.tips.danger.1=Permanent curses (Black Swan/Friday/Coffin) are most dangerous - always carry Guardian Heart!
+guide.adversity.tips.danger.2=T8+ elites are extremely dangerous - don't challenge without full preparation
+
+# ==================== Crafting Restrictions ====================
+
+adversity.sanctuary.not_active=§cSanctuary is not active!
+adversity.sanctuary.teleporting=§dTeleporting to target dimension...
+adversity.sanctuary.activated=§aSanctuary Activated! Tier: T%d
+adversity.sanctuary.activation_failed=§cActivation Failed! Check conditions.
+adversity.sanctuary.info=Tier: T%d | Fuel: %d/%d (%d%%)
+
+# ==================== Ward Baubles ====================
+
+# Core
+item.adversity.guardian_heart.name=Guardian Heart
+item.adversity.spatial_anchor.name=Spatial Anchor
+item.adversity.soul_chain.name=Soul Chain
+
+# Elemental
+item.adversity.flame_ward.name=Flame Ward
+item.adversity.frost_ward.name=Frost Ward
+item.adversity.corrosion_bane.name=Corrosion Bane
+
+# Utility
+item.adversity.anchor_stone.name=Anchor Stone
+item.adversity.clarity_lens.name=Clarity Lens
+item.adversity.courage_charm.name=Courage Charm
+item.adversity.enchant_guardian.name=Enchant Guardian
+
+# Advanced
+item.adversity.void_heart.name=Void Heart
+item.adversity.bloodrage_emblem.name=Bloodrage Emblem
+item.adversity.temporal_watch.name=Temporal Watch
+item.adversity.phantom_cloak.name=Phantom Cloak
+item.adversity.thunder_ring.name=Thunder Ring
+item.adversity.aegis_medal.name=Aegis Medal
+
+# Bauble common tooltips
+adversity.bauble.ward_type=§7Wards: §a%s
+adversity.bauble.in_sanctuary=§7In Sanctuary: §a%s effect
+adversity.bauble.outside_sanctuary=§7Outside: §e%s effect
+
+# Ward types
+adversity.ward.curse=Curse
+adversity.ward.shackle=Shackle
+adversity.ward.divest=Divest
+adversity.ward.fiery=Flame
+adversity.ward.frosty=Frost
+adversity.ward.withering=Wither
+adversity.ward.gravity=Gravity
+adversity.ward.blinding=Blinding
+adversity.ward.horror=Horror
+adversity.ward.disenchant=Disenchant
+adversity.ward.teleport=Teleport
+adversity.ward.lifesteal=Lifesteal
+adversity.ward.swift=Swift
+adversity.ward.split=Split
+adversity.ward.holy=Holy
+adversity.ward.giantslayer=Giant Slayer
+
+# Guardian Heart
+adversity.bauble.guardian_heart.special=§d[Passive] §7Trigger shield after blocking %d curses
+adversity.bauble.guardian_heart.effect1=§9+4 Max Health
+adversity.bauble.guardian_heart.effect2=§9-20% damage when low
+adversity.bauble.guardian_heart.effect3=§950% survive fatal hit
+
+# Spatial Anchor
+adversity.bauble.spatial_anchor.special=§d[Passive] §7Gain attack boost when blocking Divest
+adversity.bauble.spatial_anchor.effect1=§9+15% Attack
+adversity.bauble.spatial_anchor.effect2=§9+25% Crit Damage
+adversity.bauble.spatial_anchor.effect3=§9Heal on kill
+
+# Soul Chain
+adversity.bauble.soul_chain.special=§d[Passive] §7Stun attacker when blocking Shackle
+adversity.bauble.soul_chain.effect1=§9+4 Armor +2 Toughness
+adversity.bauble.soul_chain.effect2=§9-10% physical damage
+adversity.bauble.soul_chain.effect3=§9No armor durability loss
+
+# Elemental
+adversity.bauble.flame_ward.effect1=§9Fire immune
+adversity.bauble.flame_ward.effect2=§9Attacks ignite
+adversity.bauble.flame_ward.effect3=§9+20% Nether attack
+
+adversity.bauble.frost_ward.effect1=§9Slowness immune
+adversity.bauble.frost_ward.effect2=§9+15% Speed
+adversity.bauble.frost_ward.effect3=§9Attacks slow
+
+adversity.bauble.corrosion_bane.effect1=§9Poison/Wither halved
+adversity.bauble.corrosion_bane.effect2=§9Auto-cleanse debuffs
+adversity.bauble.corrosion_bane.effect3=§9+50% regen
+
+# Utility
+adversity.bauble.anchor_stone.effect1=§9Knockback immune
+adversity.bauble.anchor_stone.effect2=§9-75% fall damage
+adversity.bauble.anchor_stone.effect3=§9+25% mining speed
+
+adversity.bauble.clarity_lens.effect1=§9Permanent night vision
+adversity.bauble.clarity_lens.effect2=§9See through walls
+adversity.bauble.clarity_lens.effect3=§9+30% bow damage
+
+adversity.bauble.courage_charm.effect1=§9+25% Attack Speed
+adversity.bauble.courage_charm.effect2=§9+50% attack when low
+adversity.bauble.courage_charm.effect3=§9+15% vs elites
+
+adversity.bauble.enchant_guardian.effect1=§9+50% XP
+adversity.bauble.enchant_guardian.effect2=§9+50% Mending
+adversity.bauble.enchant_guardian.effect3=§9Return XP on hit
+
+# Advanced
+adversity.bauble.void_heart.effect1=§9No pearl damage
+adversity.bauble.void_heart.effect2=§9+25% End attack
+adversity.bauble.void_heart.effect3=§9Void edge save
+
+adversity.bauble.bloodrage_emblem.effect1=§95% Lifesteal
+adversity.bauble.bloodrage_emblem.effect2=§9Low HP = +attack speed
+adversity.bauble.bloodrage_emblem.effect3=§9Heal on kill
+
+adversity.bauble.temporal_watch.effect1=§9-40% debuff duration
+adversity.bauble.temporal_watch.effect2=§9+30% buff duration
+adversity.bauble.temporal_watch.effect3=§9-25% hunger
+
+adversity.bauble.phantom_cloak.effect1=§9Sneak = invisible
+adversity.bauble.phantom_cloak.effect2=§9+40% backstab
+adversity.bauble.phantom_cloak.effect3=§9-50% aggro
+
+adversity.bauble.thunder_ring.effect1=§910% lightning on hit
+adversity.bauble.thunder_ring.effect2=§9+20% in rain
+adversity.bauble.thunder_ring.effect3=§9Lightning immune
+
+adversity.bauble.aegis_medal.effect1=§9-15% team damage taken
+adversity.bauble.aegis_medal.effect2=§9Warn allies on hit
+adversity.bauble.aegis_medal.effect3=§9+20% attack after revive
+
+# New Defensive Affixes
+adversity.affix.fortified=Fortified
+adversity.affix.thorny=Thorny
+adversity.affix.hardened=Hardened
+adversity.affix.shedding=Shedding
+adversity.affix.symbiotic=Symbiotic
+adversity.affix.antimagic=Antimagic
+adversity.affix.adaptive=Adaptive
+
+affix.adversity.fortified.name=Fortified
+affix.adversity.fortified.desc=Armor increases as health decreases, up to +150%
+affix.adversity.thorny.name=Thorny
+affix.adversity.thorny.desc=Melee attacks stack thorns, 5 stacks deal piercing damage
+affix.adversity.hardened.name=Hardened
+affix.adversity.hardened.desc=Immune to knockback, 30% damage reduction after taking damage
+affix.adversity.shedding.name=Shedding
+affix.adversity.shedding.desc=25% chance to survive lethal damage, heal 30%, once per mob
+affix.adversity.symbiotic.name=Symbiotic
+affix.adversity.symbiotic.desc=30% damage shared with nearby mobs within 8 blocks
+affix.adversity.antimagic.name=Antimagic
+affix.adversity.antimagic.desc=Immune to magic, 6-block aura removes player buffs
+affix.adversity.adaptive.name=Adaptive
+affix.adversity.adaptive.desc=Gains +15% resistance per repeated damage type, max 60%
+
+# Counter Baubles
+item.adversity.purify_badge.name=Purify Badge
+item.adversity.armor_pierce.name=Armor Pierce Rune
+item.adversity.anchor_heart.name=Anchor Heart
+item.adversity.barrier_ward.name=Barrier Ward
+item.adversity.wither_mark.name=Wither Mark
+item.adversity.true_crystal.name=True Crystal
+item.adversity.guardian_soul.name=Guardian Soul
+
+adversity.ward.stack_system=Stack System
+adversity.ward.armor_reduction=Armor/Reduction
+adversity.ward.evasion=Evasion/Revival
+adversity.ward.aura=Aura
+adversity.ward.healing=Healing/Lifesteal
+adversity.ward.damage_conversion=Damage Conversion
+adversity.ward.equipment_seal=Equipment Seal
+
+adversity.bauble.purify_badge.desc1=Reduces debuff stack accumulation
+adversity.bauble.purify_badge.desc2=Counters: Fiery, Frosty, Withering, Blinding, Horror, Vampiric, Thorny
+adversity.bauble.armor_pierce.desc1=Ignores armor bonuses and damage reduction
+adversity.bauble.armor_pierce.desc2=Counters: Fortified, Hardened, Hero, Divine, Outer God
+adversity.bauble.anchor_heart.desc1=Prevents enemy evasion and revival
+adversity.bauble.anchor_heart.desc2=Counters: Teleporting, Shedding
+adversity.bauble.barrier_ward.desc1=Reduces aura effects
+adversity.bauble.barrier_ward.desc2=Counters: Fiery, Blinding, Horror, Gravity, Antimagic, Symbiotic
+adversity.bauble.wither_mark.desc1=Reduces enemy healing and lifesteal
+adversity.bauble.wither_mark.desc2=Counters: Vampiric, Regenerating
+adversity.bauble.true_crystal.desc1=Damage cannot be converted or absorbed
+adversity.bauble.true_crystal.desc2=Counters: Reflective, Adaptive
+adversity.bauble.guardian_soul.desc1=Reduces sealing chance and duration
+adversity.bauble.guardian_soul.desc2=Counters: Shackle, Divest, Black Coffin, Disenchant
+
+# Sanctuary GUI
+adversity.gui.upgrade=Upgrade
+adversity.gui.activate=Activate
+adversity.gui.fuel_slot=Fuel
+adversity.sanctuary.active=Active
+adversity.sanctuary.inactive=Inactive
+adversity.sanctuary.mode.safe=SAFE
+adversity.sanctuary.mode.farm=FARM
+adversity.sanctuary.mode.ease=EASE
+
+# Sanctuary Teleport Messages
+adversity.sanctuary.teleport.same=Cannot teleport to the same sanctuary
+adversity.sanctuary.teleport.invalid=Target sanctuary does not exist
+adversity.sanctuary.teleport.inactive=Target sanctuary is not activated
+adversity.sanctuary.teleport.no_fuel=Not enough entropy for teleportation (500 required)
+adversity.sanctuary.teleport.success=Teleported successfully
+adversity.sanctuary.need_activation_item=Hold %s to activate the sanctuary
+# Talisman GUI
+adversity.gui.talisman.title=Talisman Case
+
+# Keybinds
+key.categories.adversity=Adversity
+key.adversity.open_talisman=Open Talisman Case

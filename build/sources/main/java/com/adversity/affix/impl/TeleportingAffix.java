@@ -76,6 +76,10 @@ public class TeleportingAffix extends AbstractAffix {
                 if (com.adversity.item.bauble.BaubleHelper.tryBlockEffect(player, "evasion", entity)) {
                     return damage; // 传送被阻止
                 }
+                // 检查虚空之心饰品反制（teleport类型）
+                if (com.adversity.item.bauble.BaubleHelper.tryBlockEffect(player, "teleport", entity)) {
+                    return damage; // 传送被阻止
+                }
             }
 
             // 计算传送距离

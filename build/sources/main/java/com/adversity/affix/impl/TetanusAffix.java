@@ -92,6 +92,13 @@ public class TetanusAffix extends AbstractAffix {
         // 计算所需命中次数（tier越高所需次数越少）
         int requiredHits = Math.max(3, HITS_REQUIRED - (tier / 3));
 
+        // 检查免疫徽章反制
+        float immunityReduction = com.adversity.item.bauble.BaubleHelper.getReduction(player, "tetanus");
+        if (immunityReduction > 0) {
+            // 增加所需命中次数
+            requiredHits = (int) (requiredHits / (1.0f - immunityReduction * 0.5f));
+        }
+
         // 发送进度提示
         if (counter[0] < requiredHits) {
             // 发送警告视觉效果

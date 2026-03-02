@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GLG",
+    "LCL",
+    "GLG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "L": {
+      "item": "minecraft:glass_pane"
+    },
+    "C": {
+      "item": "adversity:affix_crystal"
+    }
+  },
+  "result": {
+    "item": "adversity:clarity_lens",
+    "count": 1
+  }
+}

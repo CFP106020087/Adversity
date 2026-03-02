@@ -108,7 +108,7 @@ public class SanctuaryProtectionHandler {
     private static final int REPEL_RADIUS = 50;
 
     /**
-     * 阻止怪物在圣所50格内生成
+     * 阻止怪物在圣所范围内生成（FARM模式除外）
      */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onMobSpawn(LivingSpawnEvent.CheckSpawn event) {
@@ -119,18 +119,16 @@ public class SanctuaryProtectionHandler {
 
         BlockPos spawnPos = new BlockPos(event.getX(), event.getY(), event.getZ());
 
-        // 检查是否在任何活跃圣所50格内
-        for (TileEntity te : event.getWorld().loadedTileEntityList) {
-            if (te instanceof TileEntitySanctuary) {
-                TileEntitySanctuary sanctuary = (TileEntitySanctuary) te;
-                if (sanctuary.isActive()) {
-                    double distSq = spawnPos.distanceSq(te.getPos());
-                    if (distSq <= REPEL_RADIUS * REPEL_RADIUS) {
-                        event.setResult(Event.Result.DENY);
-                        return;
-                    }
-                }
+        // 检查是否在任何活跃圣所范围内
+        com.adversity.sanctuary.SanctuaryZone zone = com.adversity.sanctuary.SanctuaryManager
+                .getActiveSanctuaryAt(event.getWorld(), spawnPos);
+        if (zone != null) {
+            // FARM模式允许怪物生成
+            if (zone.mode == com.adversity.sanctuary.SanctuaryMode.FARM) {
+                return;
             }
+            // SAFE和EASE模式阻止怪物生成
+            event.setResult(Event.Result.DENY);
         }
     }
 

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    "CNC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "adversity:entropy",
+      "data": 1
+    },
+    "N": {
+      "item": "minecraft:nether_star"
+    }
+  },
+  "result": {
+    "item": "adversity:entropy",
+    "data": 2,
+    "count": 1
+  }
+}

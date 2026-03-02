@@ -1,0 +1,58 @@
+[AbstractWardBauble]  抽象守护饰品基类 所有反制词条的饰品继承此类 /
+[BaubleHelper]  饰品工具类 提供饰品保护效果的检查和触发接口 /
+[ItemAegisMedal]  圣盾勋章 - 团队专精 通用效果: - 8格内队友受伤-15% - 被攻击时队友获知 - 复活队友后双方+20%攻击30秒 词条抵抗: 巨人杀手、破盾、强欲 /
+[ItemAnchorHeart]  锚定之心 - 反制闪避/复活系统 反制词条：传送、蜕皮 机制：阻止敌人闪避和复活 /
+[ItemAnchorStone]  锚石项链 - 防止重力(Gravity)拉扯 圣所内：完全免疫重力拉扯 圣所外：50%减少拉扯力度 Trade-off：-10%移动速度 /
+[ItemArmorPierce]  破甲符文 - 反制护甲/减伤系统 反制词条：铁壁、硬化、英雄、神明、外神 机制：穿透敌人额外护甲和减伤 /
+[ItemBalanceCharm]  平衡护符 - 对抗逆转(Reversal)词条 逆转词条使低伤害变高、高伤害变低 此饰品使伤害计算正常化 圣所内：完全无效化逆转效果 圣所外：50%减少逆转影响 /
+[ItemBarrierWard]  结界护符 - 反制范围光环系统 反制词条：烈焰(光环)、致盲、恐惧、引力、魔免、共生 机制：减少所有范围光环效果 /
+[ItemBloodrageEmblem]  血怒徽章 - 吸血专精 通用效果: - 攻击吸血5% - 血量越低攻速越快(最高+30%) - 击杀回复半心 词条抵抗: 吸血、渴血、死神 /
+[ItemClarityLens]  澄明之眼 - 防止致盲(Blinding)效果 圣所内：完全免疫致盲 圣所外：50%减少致盲持续时间 Trade-off：周围5格内怪物获得你的视野（可能更精准追踪你） /
+[ItemCorrosionBane]  腐蚀克星 - 防止凋零(Withering)词条伤害 圣所内：完全免疫凋零词条 圣所外：50%减少腐蚀层叠速度 特殊效果：满层时反弹50%腐蚀伤害给攻击者 /
+[ItemCourageCharm]  勇气护符 - 防止恐惧(Horror)击退 圣所内：完全免疫恐惧击退 圣所外：50%减少恐惧效果 Trade-off：受到恐惧攻击时+30%伤害（风险与回报） /
+[ItemEnchantGuardian]  附魔守护者 - 防止消魔(Disenchant)效果 圣所内：完全免疫消魔 圣所外：50%阻止消魔 特殊效果：被触发时恢复一定经验值 /
+[ItemFlameWard]  净焰之环 - 防止火焰(Fiery)词条伤害 圣所内：完全免疫火焰词条 圣所外：50%减少火焰层叠速度 特殊效果：满层时自动消耗饰品耐久清除所有火层 /
+[ItemFrostWard]  霜心坠 - 防止冰霜(Frosty)词条伤害 圣所内：完全免疫冰霜词条 圣所外：50%减少冰霜层叠速度 特殊效果：被冻结后2秒内再次受击获得3秒无敌 /
+[ItemGuardianHeart]  守护之心 - 防止永久诅咒(BlackSwan/BlackFriday/BlackCoffin) 圣所内：完全免疫永久诅咒 圣所外：75%减少诅咒触发率 特殊效果：每阻止1次诅咒积累1层"守护"，10层后可触发群体护盾 /
+[ItemGuardianSoul]  守护者之魂 - 反制装备封印系统 反制词条：枷锁、褫夺、黑棺、祛魔 机制：减少封印几率和时间 /
+[ItemImmunityBadge]  免疫徽章 - 对抗破伤风(Tetanus)词条 破伤风词条：累计5次命中后扣50%当前生命 此饰品：降低命中计数速度，延长触发间隔 圣所内：命中计数减半（10次才触发） 圣所外：命中计数减30%（约7次触发） /
+[ItemLightAmulet]  轻装护身符 - 对抗强欲(Avarice)和贪婪(Greed)词条 强欲：背包槽位占用越多受伤越多 贪婪：饰品越多受伤越多 此饰品：降低这些惩罚 圣所内：完全免疫惩罚 圣所外：减少50%惩罚 /
+[ItemMemoryCrystal]  记忆水晶 - 对抗遗忘(Oblivion)词条 遗忘词条：攻击扣除玩家经验值 此饰品：保护经验不被扣除 圣所内：完全保护经验 圣所外：保护50%经验 /
+[ItemPhantomCloak]  幽灵斗篷 - 隐匿专精 通用效果: - 潜行时完全隐身 - 背刺伤害+40% - 仇恨降低50% 词条抵抗: 分裂(不触发)、反射(免疫)、英雄(不被发现) /
+[ItemPurifyBadge]  净化徽章 - 反制叠层系统 反制词条：烈焰、冰霜、凋零、致盲、恐惧、吸血、荆刺 机制：减少所有负面叠层的增长速度 /
+[ItemSoulChain]  灵魂锁链 - 防止装备被枷锁(Shackle)封印 圣所内：完全免疫枷锁 圣所外：50%几率阻止 特殊效果：成功阻止时，反向眩晕攻击者2秒 /
+[ItemSoulSealDust]  封魂之尘 - 对抗飞升(Ascension)词条 飞升词条：死亡时30%+几率复活并升阶 此饰品：降低复活几率 圣所内：完全阻止复活 圣所外：降低50%复活几率 /
+[ItemSpatialAnchor]  空间锚点 - 防止饰品被褫夺(Divest)封印 圣所内：完全免疫褫夺 圣所外：50%几率阻止 特殊效果：每次成功阻止获得5秒+10%攻击力 /
+[ItemTemporalWatch]  时光怀表 - 时间专精 通用效果: - 8格内敌人攻速-20% - 受致死伤害时触发2秒时间停止(3分钟CD) 词条抵抗: 迅捷(Swift)、狂暴(Berserk)、遗忘(Oblivion) /
+[ItemThunderRing]  雷霆指环 - 雷电专精 通用效果: - 攻击10%触发闪电 - 雨天攻击+20% - 免疫闪电伤害 词条抵抗: 神圣、飞升、外神 /
+[ItemTrueCrystal]  真伤水晶 - 反制伤害转换系统 反制词条：反射、适应 机制：伤害无法被转换或吸收 /
+[ItemVoidHeart]  虚空之心 - 末地专精 通用效果: - 末影珍珠无伤害 - 末地攻击+25%/移速+20% - 虚空边缘3秒无敌(5分CD) 词条抵抗: 传送、空间扭曲、湮灭 /
+[ItemWitherMark]  凋零印记 - 反制吸血/回复系统 反制词条：吸血、再生 机制：减少敌人的回复效果 /
+[EnchantmentBreaker]  破咒者附魔 - 移除精英词条buff 等级 I: 10%几率移除一个随机词条 等级 II: 20%几率移除一个随机词条 等级 III: 30%几率移除一个随机词条 /
+[EnchantmentEntropyAffinity]  熵能亲和附魔 - 增加熵能掉落 等级 I: +25%熵能掉落 等级 II: +50%熵能掉落 /
+[EnchantmentHandler]  附魔事件处理器 处理主动反制逻辑 /
+[EnchantmentPurifyingTouch]  净化之触附魔 - 缩短封印(Shackle/Divest/Disenchant)效果持续时间 等级 I: 封印持续时间-30% 等级 II: 封印持续时间-50% 等级 III: 封印持续时间-70% /
+[EnchantmentRegistry]  附魔注册表 /
+[EnchantmentResoluteWill]  坚定意志附魔 - 免疫Purifier（净化者）的药水窃取 等级 I: 完全免疫药水效果被移除 /
+[EnchantmentSoulbound]  灵魂锁定附魔 - 防止装备被封印 等级 I: 33%阻止封印 等级 II: 66%阻止封印 等级 III: 100%阻止封印（完全免疫） /
+[BlockSanctuaryAltar]  天然圣所祭坛方块 世界生成时放置，玩家右键激活 /
+[BlockSanctuaryCore]  人造圣所核心方块 玩家放置并搭建3x3x3多方块结构后激活 /
+[BlockSanctuaryStone]  圣所石 - 不可破坏的结构方块 /
+[ContainerSanctuary] 
+[ContainerSanctuaryControl]  圣所控制面板Container - 只包含燃料槽和玩家背包，无仪式槽位 /
+[Rite]  圣所仪式定义 支持物品转换和命令执行 /
+[RitualManager]  仪式管理器 管理所有圣所仪式的注册和查找 /
+[SanctuaryData]  圣所数据持久化 存储所有激活的圣所信息（天然+人造） /
+[SanctuaryGenerator]  圣所世界生成器 在特定坐标生成天然圣所结构： - 每隔1000格的网格交点 - 地底石英神殿结构 - 祭坛和周围方块不可破坏 /
+[SanctuaryManager]  圣所管理器 提供静态API供其他系统查询和操作圣所 /
+[SanctuaryMode]  圣所模式 /
+[SanctuaryProtectionHandler]  圣所保护处理器 阻止玩家破坏天然圣所结构中的方块 /
+[SanctuaryStructureGenerator]  圣所结构生成器 根据等级生成不同规模的圣所建筑结构 /
+[SanctuaryType]  圣所类型 /
+[SanctuaryZone]  圣所区域数据 /
+[StageGatingRegistry]  阶段门控注册表 存储物品和附魔的阶段要求 用于限制玩家在圣所范围内的合成和附魔能力 /
+[TileEntitySanctuary]  圣所祭坛/核心方块实体 管理圣所的燃料存储和状态显示 /
+[IProgression]  进度阶段接口 用于追踪玩家的游戏进度阶段 /
+[ProgressionCapability]  进度能力实现 /
+[ProgressionEventHandler]  进度事件处理器 负责进度同步（不负责注册，已由 CapabilityHandler 处理） /
+[ProgressionSyncMessage]  进度同步网络消息 服务器 -> 客户端 /

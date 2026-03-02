@@ -46,6 +46,8 @@ dependencies {
     compileOnly name:"CraftTweaker2-1.12-4.1.20.703" // CraftTweaker 2 for 1.12.2
     // FermiumBooter (mixin support)
     compileOnly name:"`FermiumBooter-1.2.0"
+    // JEI (soft dependency)
+    compileOnly "curse.maven:jei-238222:2803400"  // JEI 4.16.1 for 1.12.2
 }
 
 processResources {

@@ -64,6 +64,16 @@ public class OblivionAffix extends AbstractAffix {
         // 计算经验扣除量
         int xpDrain = calculateXpDrain(player, tier);
 
+        // 检查记忆水晶反制
+        float memoryReduction = com.adversity.item.bauble.BaubleHelper.getReduction(player, "oblivion");
+        if (memoryReduction >= 1.0f) {
+            // 完全保护，不扣除经验
+            return damage;
+        } else if (memoryReduction > 0) {
+            // 部分保护，减少扣除量
+            xpDrain = (int) (xpDrain * (1.0f - memoryReduction));
+        }
+
         // 扣除经验
         drainExperience(player, xpDrain);
 

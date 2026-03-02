@@ -70,25 +70,17 @@ public class BlockSanctuaryAltar extends Block implements ITileEntityProvider {
 
         TileEntitySanctuary sanctuary = (TileEntitySanctuary) te;
 
-        // Shift+右键 (空手): 跨维度传送
+        // Shift+右键 (空手): 打开传送选择GUI
         if (playerIn.isSneaking() && playerIn.getHeldItem(hand).isEmpty()) {
             if (!sanctuary.isActive()) {
                 playerIn.sendMessage(new TextComponentTranslation("adversity.sanctuary.not_active"));
                 return true;
             }
 
-            // 维度循环: 主世界(0) -> 下界(-1) -> 末地(1) -> 主世界(0)
-            int currentDim = worldIn.provider.getDimension();
-            int targetDim = 0;
-            if (currentDim == 0)
-                targetDim = -1;
-            else if (currentDim == -1)
-                targetDim = 1;
-            else
-                targetDim = 0;
-
-            // 执行传送
-            teleportPlayerToSanctuary(playerIn, targetDim, pos);
+            // 通过 IGuiHandler 打开传送选择GUI (因为需要获取圣所列表)
+            playerIn.openGui(com.adversity.Adversity.instance,
+                    com.adversity.client.gui.AdversityGuiHandler.GUI_SANCTUARY_TELEPORT, worldIn, pos.getX(),
+                    pos.getY(), pos.getZ());
             return true;
         }
 

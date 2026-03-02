@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -20,8 +21,14 @@ import java.util.List;
 /**
  * 抽象守护饰品基类
  * 所有反制词条的饰品继承此类
+ * 
+ * 同时支持:
+ * - Baubles饰品栏 (通过@Optional.Interface，Baubles不存在时不崩溃)
+ * - 护符盒 (TalismanCapability)
+ * - 普通背包/副手
  */
-public abstract class AbstractWardBauble extends Item {
+@Optional.Interface(iface = "baubles.api.IBauble", modid = "baubles")
+public abstract class AbstractWardBauble extends Item implements baubles.api.IBauble {
 
     protected final String wardType;
 
@@ -31,6 +38,32 @@ public abstract class AbstractWardBauble extends Item {
         setTranslationKey(Adversity.MODID + "." + name);
         setMaxStackSize(1);
         setCreativeTab(AdversityTab.INSTANCE);
+    }
+
+    // ===================== Baubles API =====================
+
+    @Override
+    @Optional.Method(modid = "baubles")
+    public baubles.api.BaubleType getBaubleType(ItemStack itemStack) {
+        return baubles.api.BaubleType.TRINKET;
+    }
+
+    @Override
+    @Optional.Method(modid = "baubles")
+    public void onWornTick(ItemStack itemStack, EntityLivingBase player) {
+        // 饰品效果通过BaubleHelper被动检测，无需tick逻辑
+    }
+
+    @Override
+    @Optional.Method(modid = "baubles")
+    public void onEquipped(ItemStack itemStack, EntityLivingBase player) {
+        // 装备时无特殊逻辑
+    }
+
+    @Override
+    @Optional.Method(modid = "baubles")
+    public void onUnequipped(ItemStack itemStack, EntityLivingBase player) {
+        // 卸下时无特殊逻辑
     }
 
     /**

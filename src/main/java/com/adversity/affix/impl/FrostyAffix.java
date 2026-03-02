@@ -88,8 +88,10 @@ public class FrostyAffix extends AbstractAffix {
         EntityPlayer player = (EntityPlayer) target;
         int tier = getTier(attacker);
 
-        // 检查饰品反制（净化徽章 - 叠层系统）
+        // 检查饰品反制（净化徽章 - 叠层系统；霜心坠 - 冰霜专攻）
         float reduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "stack_system");
+        float frostyReduction = com.adversity.item.bauble.BaubleHelper.getEffectStrength(player, "frosty");
+        reduction = Math.max(reduction, frostyReduction);
         if (reduction >= 1.0f) {
             return damage; // 完全免疫
         }
