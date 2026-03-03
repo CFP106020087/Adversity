@@ -6,6 +6,7 @@ import com.adversity.capability.IAdversityCapability;
 import com.adversity.network.PacketHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -15,29 +16,20 @@ import java.util.Set;
 
 /**
  * 进度事件处理器
- * 负责进度同步（不负责注册，已由 CapabilityHandler 处理）
+ * 负责进度同步、事件触发、难度触发器检查
  */
 @Mod.EventBusSubscriber(modid = Adversity.MODID)
 public class ProgressionEventHandler {
 
-    // 阶段常量
     public static final String STAGE_AWAKENED = "awakened";
     public static final String STAGE_SCHOLAR = "scholar";
     public static final String STAGE_WARDEN = "warden";
     public static final String STAGE_CHAMPION = "champion";
 
-    /**
-     * 注册（现在不需要，因为 CapabilityHandler 已经处理了）
-     */
     public static void register() {
-        // Capability 由 CapabilityHandler.register() 注册
-        // AttachCapabilities 由 CapabilityHandler.onAttachCapabilities() 处理
-        Adversity.LOGGER.info("Progression Event Handler initialized (using existing capability)");
+        Adversity.LOGGER.info("Progression Event Handler initialized");
     }
 
-    /**
-     * 玩家登录时同步进度
-     */
     @SubscribeEvent
     public static void onPlayerLogin(PlayerLoggedInEvent event) {
         if (event.player instanceof EntityPlayerMP) {
@@ -46,7 +38,7 @@ public class ProgressionEventHandler {
     }
 
     /**
-     * 定期检查是否需要同步
+     * 定期检查 dirty 标记并同步 + 检查难度触发器
      */
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
@@ -57,9 +49,16 @@ public class ProgressionEventHandler {
         if (event.player.world.isRemote)
             return;
 
-        // 每2秒同步一次（比较轻量的检查）
-        if (event.player.ticksExisted % 40 == 0) {
-            // 仅当有变化时才同步，这里简化处理
+        EntityPlayerMP player = (EntityPlayerMP) event.player;
+
+        // 每10秒检查难度触发器
+        if (player.ticksExisted % 200 == 100) {
+            IAdversityCapability mobCap = player.getCapability(
+                    CapabilityHandler.ADVERSITY_CAPABILITY, null);
+            if (mobCap != null) {
+                double diff = mobCap.getDifficultyLevel();
+                StageTriggerRegistry.checkDifficultyTriggers(player, diff);
+            }
         }
     }
 
@@ -73,9 +72,6 @@ public class ProgressionEventHandler {
         }
     }
 
-    /**
-     * 工具方法：获取玩家进度
-     */
     public static IAdversityCapability.IProgression getProgression(EntityPlayer player) {
         if (player == null || CapabilityHandler.PROGRESSION_CAPABILITY == null) {
             return null;
@@ -83,34 +79,57 @@ public class ProgressionEventHandler {
         return player.getCapability(CapabilityHandler.PROGRESSION_CAPABILITY, null);
     }
 
-    /**
-     * 工具方法：检查玩家是否有阶段
-     */
     public static boolean hasStage(EntityPlayer player, String stage) {
         IAdversityCapability.IProgression cap = getProgression(player);
         return cap != null && cap.hasStage(stage);
     }
 
     /**
-     * 工具方法：添加阶段并同步
+     * 添加阶段并同步 + 触发 StageChangeEvent
      */
     public static boolean addStage(EntityPlayer player, String stage) {
         IAdversityCapability.IProgression cap = getProgression(player);
-        if (cap != null) {
-            if (!cap.hasStage(stage)) {
-                cap.addStage(stage);
-                if (player instanceof EntityPlayerMP) {
-                    syncToClient((EntityPlayerMP) player);
-                }
-                return true;
+        if (cap != null && !cap.hasStage(stage)) {
+            // Pre event (cancelable)
+            StageChangeEvent.Pre preEvent = new StageChangeEvent.Pre(player, stage, true);
+            if (MinecraftForge.EVENT_BUS.post(preEvent)) {
+                return false;
             }
+
+            cap.addStage(stage);
+            if (player instanceof EntityPlayerMP) {
+                syncToClient((EntityPlayerMP) player);
+            }
+
+            // Post event
+            MinecraftForge.EVENT_BUS.post(new StageChangeEvent.Post(player, stage, true));
+            return true;
         }
         return false;
     }
 
     /**
-     * 获取最高等级
+     * 移除阶段并同步 + 触发 StageChangeEvent
      */
+    public static boolean removeStage(EntityPlayer player, String stage) {
+        IAdversityCapability.IProgression cap = getProgression(player);
+        if (cap != null && cap.hasStage(stage)) {
+            StageChangeEvent.Pre preEvent = new StageChangeEvent.Pre(player, stage, false);
+            if (MinecraftForge.EVENT_BUS.post(preEvent)) {
+                return false;
+            }
+
+            cap.removeStage(stage);
+            if (player instanceof EntityPlayerMP) {
+                syncToClient((EntityPlayerMP) player);
+            }
+
+            MinecraftForge.EVENT_BUS.post(new StageChangeEvent.Post(player, stage, false));
+            return true;
+        }
+        return false;
+    }
+
     public static int getHighestTier(EntityPlayer player) {
         IAdversityCapability.IProgression cap = getProgression(player);
         if (cap == null)

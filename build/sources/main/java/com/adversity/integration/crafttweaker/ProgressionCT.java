@@ -3,6 +3,8 @@ package com.adversity.integration.crafttweaker;
 import com.adversity.capability.CapabilityHandler;
 import com.adversity.capability.IAdversityCapability;
 import com.adversity.progression.ProgressionEventHandler;
+import com.adversity.progression.StageTriggerRegistry;
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
@@ -16,92 +18,62 @@ import stanhebben.zenscript.annotations.ZenMethod;
  *
  * ZenScript 用法:
  * import mods.adversity.Progression;
- * 
- * Progression.hasStage(player, "awakened"); // 检查阶段
- * Progression.addStage(player, "custom_stage"); // 添加阶段
- * Progression.removeStage(player, "old_stage"); // 移除阶段
- * Progression.getTier(player); // 获取等级 (0-4)
- * Progression.getStages(player); // 获取所有阶段
+ *
+ * Progression.hasStage(player, "awakened");
+ * Progression.addStage(player, "custom_stage");
+ * Progression.removeStage(player, "old_stage");
+ * Progression.getTier(player);
+ * Progression.getStages(player);
+ * Progression.clearStages(player);
+ *
+ * // Auto triggers
+ * Progression.addKillTrigger("dragon_slayer", "minecraft:ender_dragon", 1,
+ * "champion");
+ * Progression.addDifficultyTrigger("hardened", 30.0, "warden");
+ * Progression.clearTriggers();
  */
 @ZenRegister
 @ZenClass("mods.adversity.Progression")
 public class ProgressionCT {
 
-    /**
-     * 检查玩家是否有指定阶段
-     */
     @ZenMethod
     public static boolean hasStage(IPlayer player, String stage) {
         EntityPlayer mcPlayer = CraftTweakerMC.getPlayer(player);
         if (mcPlayer == null)
             return false;
-
         IAdversityCapability.IProgression cap = mcPlayer.getCapability(CapabilityHandler.PROGRESSION_CAPABILITY, null);
         return cap != null && cap.hasStage(stage);
     }
 
-    /**
-     * 为玩家添加阶段
-     */
     @ZenMethod
     public static boolean addStage(IPlayer player, String stage) {
         EntityPlayer mcPlayer = CraftTweakerMC.getPlayer(player);
         if (mcPlayer == null)
             return false;
-
-        IAdversityCapability.IProgression cap = mcPlayer.getCapability(CapabilityHandler.PROGRESSION_CAPABILITY, null);
-        if (cap != null && !cap.hasStage(stage)) {
-            cap.addStage(stage);
-            if (mcPlayer instanceof EntityPlayerMP) {
-                ProgressionEventHandler.syncToClient((EntityPlayerMP) mcPlayer);
-            }
-            return true;
-        }
-        return false;
+        return ProgressionEventHandler.addStage(mcPlayer, stage);
     }
 
-    /**
-     * 从玩家移除阶段
-     */
     @ZenMethod
     public static boolean removeStage(IPlayer player, String stage) {
         EntityPlayer mcPlayer = CraftTweakerMC.getPlayer(player);
         if (mcPlayer == null)
             return false;
-
-        IAdversityCapability.IProgression cap = mcPlayer.getCapability(CapabilityHandler.PROGRESSION_CAPABILITY, null);
-        if (cap != null && cap.hasStage(stage)) {
-            cap.removeStage(stage);
-            if (mcPlayer instanceof EntityPlayerMP) {
-                ProgressionEventHandler.syncToClient((EntityPlayerMP) mcPlayer);
-            }
-            return true;
-        }
-        return false;
+        return ProgressionEventHandler.removeStage(mcPlayer, stage);
     }
 
-    /**
-     * 获取玩家当前最高等级 (0-4)
-     * 0=Uninitiated, 1=Awakened, 2=Scholar, 3=Warden, 4=Champion
-     */
     @ZenMethod
     public static int getTier(IPlayer player) {
         EntityPlayer mcPlayer = CraftTweakerMC.getPlayer(player);
         if (mcPlayer == null)
             return 0;
-
         return ProgressionEventHandler.getHighestTier(mcPlayer);
     }
 
-    /**
-     * 获取玩家所有阶段（逗号分隔字符串）
-     */
     @ZenMethod
     public static String getStages(IPlayer player) {
         EntityPlayer mcPlayer = CraftTweakerMC.getPlayer(player);
         if (mcPlayer == null)
             return "";
-
         IAdversityCapability.IProgression cap = mcPlayer.getCapability(CapabilityHandler.PROGRESSION_CAPABILITY, null);
         if (cap != null) {
             return String.join(",", cap.getStages());
@@ -109,15 +81,11 @@ public class ProgressionCT {
         return "";
     }
 
-    /**
-     * 清除玩家所有阶段
-     */
     @ZenMethod
     public static void clearStages(IPlayer player) {
         EntityPlayer mcPlayer = CraftTweakerMC.getPlayer(player);
         if (mcPlayer == null)
             return;
-
         IAdversityCapability.IProgression cap = mcPlayer.getCapability(CapabilityHandler.PROGRESSION_CAPABILITY, null);
         if (cap != null) {
             cap.clear();
@@ -125,5 +93,34 @@ public class ProgressionCT {
                 ProgressionEventHandler.syncToClient((EntityPlayerMP) mcPlayer);
             }
         }
+    }
+
+    // ==================== 自动触发器 ====================
+
+    /**
+     * 注册击杀触发器
+     */
+    @ZenMethod
+    public static void addKillTrigger(String id, String entityId, int killCount, String stage) {
+        StageTriggerRegistry.registerKillTrigger(id, entityId, killCount, stage);
+        CraftTweakerAPI.logInfo("[Adversity] Registered kill trigger: " + id);
+    }
+
+    /**
+     * 注册难度触发器
+     */
+    @ZenMethod
+    public static void addDifficultyTrigger(String id, double minDifficulty, String stage) {
+        StageTriggerRegistry.registerDifficultyTrigger(id, minDifficulty, stage);
+        CraftTweakerAPI.logInfo("[Adversity] Registered difficulty trigger: " + id);
+    }
+
+    /**
+     * 清除所有触发器
+     */
+    @ZenMethod
+    public static void clearTriggers() {
+        StageTriggerRegistry.clearAll();
+        CraftTweakerAPI.logInfo("[Adversity] Cleared all stage triggers");
     }
 }

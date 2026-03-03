@@ -78,6 +78,32 @@ public interface IPlayerDifficulty {
      */
     void setDamageScalingMode(ScalingMode mode);
 
+    // ==================== 玩家个人难度偏移/锁定/上限 ====================
+
+    /** 获取玩家个人难度偏移 */
+    float getPersonalOffset();
+
+    /** 设置玩家个人难度偏移 */
+    void setPersonalOffset(float offset);
+
+    /** 增加玩家个人难度偏移 */
+    void addPersonalOffset(float amount);
+
+    /** 获取玩家个人难度锁定值 (-1 = 未锁定) */
+    float getPersonalLock();
+
+    /** 锁定玩家个人难度 */
+    void setPersonalLock(float value);
+
+    /** 解除玩家个人难度锁定 */
+    void clearPersonalLock();
+
+    /** 获取玩家个人难度上限 (0 = 无上限) */
+    float getPersonalCap();
+
+    /** 设置玩家个人难度上限 */
+    void setPersonalCap(float cap);
+
     /**
      * 序列化
      */

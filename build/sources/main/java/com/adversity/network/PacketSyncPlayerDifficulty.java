@@ -19,24 +19,36 @@ public class PacketSyncPlayerDifficulty implements IMessage {
 
     private float difficultyMultiplier;
     private boolean difficultyDisabled;
+    private float personalOffset;
+    private float personalLock;
+    private float personalCap;
 
     public PacketSyncPlayerDifficulty() {}
 
     public PacketSyncPlayerDifficulty(IPlayerDifficulty cap) {
         this.difficultyMultiplier = cap.getDifficultyMultiplier();
         this.difficultyDisabled = cap.isDifficultyDisabled();
+        this.personalOffset = cap.getPersonalOffset();
+        this.personalLock = cap.getPersonalLock();
+        this.personalCap = cap.getPersonalCap();
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         difficultyMultiplier = buf.readFloat();
         difficultyDisabled = buf.readBoolean();
+        personalOffset = buf.readFloat();
+        personalLock = buf.readFloat();
+        personalCap = buf.readFloat();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeFloat(difficultyMultiplier);
         buf.writeBoolean(difficultyDisabled);
+        buf.writeFloat(personalOffset);
+        buf.writeFloat(personalLock);
+        buf.writeFloat(personalCap);
     }
 
     /**
@@ -55,12 +67,17 @@ public class PacketSyncPlayerDifficulty implements IMessage {
         private void handleMessage(PacketSyncPlayerDifficulty message) {
             EntityPlayer player = Minecraft.getMinecraft().player;
             if (player == null) return;
-            
+
             IPlayerDifficulty cap = CapabilityHandler.getPlayerDifficulty(player);
             if (cap == null) return;
-            
+
             cap.setDifficultyMultiplier(message.difficultyMultiplier);
             cap.setDifficultyDisabled(message.difficultyDisabled);
+            cap.setPersonalOffset(message.personalOffset);
+            cap.setPersonalLock(message.personalLock >= 0 ? message.personalLock : -1);
+            if (message.personalLock < 0)
+                cap.clearPersonalLock();
+            cap.setPersonalCap(message.personalCap);
         }
     }
 }

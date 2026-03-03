@@ -40,8 +40,8 @@ public class GuiAdversityGuide extends GuiScreen {
 
     // 当前页签
     private int currentTab = 0;
-    private static final String[] TAB_NAMES = { "overview", "affixes", "sanctuary", "baubles", "enchants", "rituals",
-            "progression", "tips", "crt" };
+    private static final String[] TAB_NAMES = { "overview", "difficulty", "affixes", "sanctuary", "baubles", "enchants",
+            "rituals", "progression", "tips", "crt" };
 
     // 滚动
     private int scrollOffset = 0;
@@ -95,27 +95,30 @@ public class GuiAdversityGuide extends GuiScreen {
                 addOverviewContent();
                 break;
             case 1:
-                addAffixContent();
+                addDifficultyContent();
                 break;
             case 2:
-                addSanctuaryContent();
+                addAffixContent();
                 break;
             case 3:
-                addBaublesContent();
+                addSanctuaryContent();
                 break;
             case 4:
-                addEnchantmentsContent();
+                addBaublesContent();
                 break;
             case 5:
-                addRitualsContent();
+                addEnchantmentsContent();
                 break;
             case 6:
-                addProgressionContent();
+                addRitualsContent();
                 break;
             case 7:
-                addTipsContent();
+                addProgressionContent();
                 break;
             case 8:
+                addTipsContent();
+                break;
+            case 9:
                 addCRTContent();
                 break;
         }
@@ -206,6 +209,168 @@ public class GuiAdversityGuide extends GuiScreen {
         addLine("");
         addSubtitle("guide.adversity.overview.counterplay");
         addWrappedText("guide.adversity.overview.counterplay.desc");
+    }
+
+    private void addDifficultyContent() {
+        addTitle("guide.adversity.difficulty.title");
+        addLine("");
+        addWrappedText("guide.adversity.difficulty.intro");
+        addLine("");
+
+        // ========== 难度来源 ==========
+        addSubtitle("guide.adversity.difficulty.source");
+        addLine("");
+
+        com.adversity.config.AdversityConfig.DifficultySource src = com.adversity.config.AdversityConfig.difficultySource;
+
+        addLine("§7公式: §f最终难度 = 距离难度×" + String.format("%.1f", src.distanceWeight)
+                + " + 时间难度×" + String.format("%.1f", src.timeWeight));
+        addLine("");
+        addLine("§e⬡ 距离难度");
+        addLine("§7  安全距离: §f" + (int) src.safeDistance + " §7格 (范围内难度=0)");
+        addLine("§7  每 §f" + (int) src.blocksPerDifficulty + " §7格 = +1 难度");
+        addLine("§7  上限: §f" + (int) src.maxDistanceDifficulty + " §7(0=无上限)");
+        addLine("§7  权重: §f" + String.format("%.1f", src.distanceWeight));
+        addLine("");
+        addLine("§e⬡ 时间难度");
+        addLine("§7  每 §f" + String.format("%.1f", src.daysPerDifficulty) + " §7游戏日 = +1 难度");
+        addLine("§7  上限: §f" + (int) src.maxTimeDifficulty + " §7(0=无上限)");
+        addLine("§7  权重: §f" + String.format("%.1f", src.timeWeight));
+        addLine("§7  模式: §f" + (src.usePerPlayerTime ? "个人游玩时间" : "全局世界时间"));
+        addLine("§8  (1真实小时 = 3游戏日)");
+        addLine("");
+
+        // ========== 真实时间 → 难度对照 ==========
+        addSubtitle("§e⧉ 时间→难度对照 (仅时间维度)");
+        addLine("§7  小时    天数    时间难度    加权后");
+        addLine("§7  ──────────────────────────────");
+        int[] hours = { 5, 10, 20, 30, 50, 100 };
+        for (int h : hours) {
+            int days = h * 3;
+            double timeDiff = days / src.daysPerDifficulty;
+            double weighted = timeDiff * src.timeWeight;
+            if (src.maxTimeDifficulty > 0)
+                timeDiff = Math.min(timeDiff, src.maxTimeDifficulty);
+            addLine("§7  " + String.format("%3d", h) + "h    "
+                    + String.format("%3d", days) + "d    "
+                    + "§f" + String.format("%5.1f", timeDiff) + "     "
+                    + "§e" + String.format("%5.1f", weighted));
+        }
+        addLine("");
+
+        // ========== 属性缩放 ==========
+        addSubtitle("guide.adversity.difficulty.scaling");
+        addLine("");
+
+        com.adversity.config.AdversityConfig.StatScaling stat = com.adversity.config.AdversityConfig.statScaling;
+
+        addLine("§e⬡ 生命值缩放");
+        addLine("§7  模式: §f" + stat.healthScalingMode
+                + " §7| 基础: §f" + String.format("%.1f", stat.healthBase)
+                + " §7| 增长率: §f" + String.format("%.2f", stat.healthRate)
+                + (stat.healthMax > 0 ? " §7| 上限: §f" + String.format("%.0f", stat.healthMax) + "x" : ""));
+        addLine("");
+        addLine("§e⬡ 攻击力缩放");
+        addLine("§7  模式: §f" + stat.damageScalingMode
+                + " §7| 基础: §f" + String.format("%.1f", stat.damageBase)
+                + " §7| 增长率: §f" + String.format("%.2f", stat.damageRate)
+                + (stat.damageMax > 0 ? " §7| 上限: §f" + String.format("%.0f", stat.damageMax) + "x" : ""));
+        addLine("");
+        addLine("§e⬡ 盔甲值");
+        addLine("§7  模式: §f" + stat.armorScalingMode
+                + " §7| 基础: §f" + String.format("%.0f", stat.armorBase)
+                + " §7| 增长率: §f" + String.format("%.1f", stat.armorRate)
+                + " §7| 上限: §f" + String.format("%.0f", stat.armorMax));
+        addLine("");
+        addLine("§e⬡ 减伤 (DR)");
+        addLine("§7  模式: §f" + stat.damageReductionScalingMode
+                + " §7| 基础: §f" + String.format("%.0f%%", stat.damageReductionBase * 100)
+                + " §7| 增长率: §f" + String.format("%.2f", stat.damageReductionRate)
+                + " §7| 上限: §f" + String.format("%.0f%%", stat.damageReductionMax * 100));
+        addLine("");
+
+        // ========== 属性预览表 ==========
+        addSubtitle("§e⧉ 各难度属性预览");
+        addLine("§7  难度   HP倍率    DMG倍率   盔甲   减伤");
+        addLine("§7  ──────────────────────────────────");
+
+        com.adversity.difficulty.ScalingFormula.ScalingMode hpMode = com.adversity.difficulty.ScalingFormula
+                .parseMode(stat.healthScalingMode);
+        com.adversity.difficulty.ScalingFormula.ScalingMode dmgMode = com.adversity.difficulty.ScalingFormula
+                .parseMode(stat.damageScalingMode);
+        com.adversity.difficulty.ScalingFormula.ScalingMode armorMode = com.adversity.difficulty.ScalingFormula
+                .parseMode(stat.armorScalingMode);
+        com.adversity.difficulty.ScalingFormula.ScalingMode drMode = com.adversity.difficulty.ScalingFormula
+                .parseMode(stat.damageReductionScalingMode);
+
+        int[] diffs = { 5, 10, 20, 30, 50 };
+        for (int d : diffs) {
+            double hp = com.adversity.difficulty.ScalingFormula.calculate(hpMode, stat.healthBase, d, stat.healthRate,
+                    stat.healthPower, stat.healthMax);
+            double dmg = com.adversity.difficulty.ScalingFormula.calculate(dmgMode, stat.damageBase, d, stat.damageRate,
+                    stat.damagePower, stat.damageMax);
+            double armor = com.adversity.difficulty.ScalingFormula.calculate(armorMode, stat.armorBase, d,
+                    stat.armorRate, stat.armorPower, stat.armorMax);
+            double dr = com.adversity.difficulty.ScalingFormula.calculate(drMode, stat.damageReductionBase, d,
+                    stat.damageReductionRate, stat.damageReductionPower, stat.damageReductionMax);
+
+            addLine("§7  " + String.format("%2d", d)
+                    + "     §f" + String.format("%5.2fx", hp)
+                    + "    §f" + String.format("%5.2fx", dmg)
+                    + "   §f" + String.format("%+.1f", armor)
+                    + "   §f" + String.format("%.0f%%", dr * 100));
+        }
+        addLine("");
+
+        // ========== 精英等级阈值 ==========
+        addSubtitle("guide.adversity.difficulty.tiers");
+        addLine("");
+
+        com.adversity.config.AdversityConfig.EliteSettings elite = com.adversity.config.AdversityConfig.eliteSettings;
+
+        addLine("§7  基础精英概率: §f" + String.format("%.0f%%", elite.eliteChance * 100)
+                + " §7+ §f" + String.format("%.0f%%", elite.eliteChancePerDifficulty * 100) + "§7/难度"
+                + " §7(上限 §f" + String.format("%.0f%%", elite.maxEliteChance * 100) + "§7)");
+        addLine("§7  最低难度: §f" + String.format("%.1f", elite.minDifficultyForElite));
+        addLine("");
+
+        addLine("§7  等级  难度阈值  词条数");
+        addLine("§7  ──────────────────────");
+
+        String[] tierNames = { "精英", "稀有", "老兵", "史诗", "传奇",
+                "神话", "远古", "虚空", "深渊", "终焉" };
+        for (int i = 0; i < Math.min(elite.tierThresholds.length, tierNames.length); i++) {
+            String affixNote = "";
+            if (i < elite.affixCountPerTier.length) {
+                int baseCount = elite.affixCountPerTier[i];
+                affixNote = baseCount + (i % 2 == 1 ? "~" + (baseCount + 1) : "");
+            }
+            addLine("§7  T" + (i + 1) + " §e" + tierNames[i]
+                    + " §7≥§f" + String.format("%.1f", elite.tierThresholds[i])
+                    + "  §7词条:§f" + affixNote);
+        }
+        addLine("");
+
+        // ========== CFG 参数 ==========
+        addSubtitle("§e⚙ 配置参数 (adversity.cfg)");
+        addLine("");
+        addLine("§7  § 难度来源");
+        addLine("§f  safeDistance §7= " + (int) src.safeDistance + " §8[0~100000]");
+        addLine("§f  blocksPerDifficulty §7= " + (int) src.blocksPerDifficulty + " §8[50~10000]");
+        addLine("§f  daysPerDifficulty §7= " + String.format("%.1f", src.daysPerDifficulty) + " §8[0.5~100]");
+        addLine("§f  distanceWeight §7= " + String.format("%.1f", src.distanceWeight) + " §8[0~10]");
+        addLine("§f  timeWeight §7= " + String.format("%.1f", src.timeWeight) + " §8[0~10]");
+        addLine("§f  usePerPlayerTime §7= " + src.usePerPlayerTime);
+        addLine("");
+        addLine("§7  § 属性缩放");
+        addLine("§f  healthScalingMode §7= " + stat.healthScalingMode);
+        addLine("§f  healthRate §7= " + String.format("%.2f", stat.healthRate) + " §8[0~2]");
+        addLine("§f  damageScalingMode §7= " + stat.damageScalingMode);
+        addLine("§f  damageRate §7= " + String.format("%.2f", stat.damageRate) + " §8[0~2]");
+        addLine("§f  armorRate §7= " + String.format("%.1f", stat.armorRate) + " §7| max §f"
+                + String.format("%.0f", stat.armorMax));
+        addLine("§f  damageReductionRate §7= " + String.format("%.2f", stat.damageReductionRate) + " §7| max §f"
+                + String.format("%.0f%%", stat.damageReductionMax * 100));
     }
 
     private void addAffixContent() {

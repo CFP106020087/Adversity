@@ -5,6 +5,7 @@ import com.adversity.item.bauble.BaubleHelper;
 import com.adversity.item.ItemRegistry;
 import com.adversity.sanctuary.SanctuaryManager;
 import com.adversity.sanctuary.SanctuaryZone;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -13,8 +14,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -24,7 +27,9 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -81,6 +86,15 @@ public class BaubleEffectHandler {
 
         // 净焰之环: 火焰免疫 (通过药水效果)
         updateFireResistance(player);
+
+        // 腐蚀克星: 自动净化debuff (每10秒清除一个负面效果)
+        updateAutoDebuffPurify(player, tierMultiplier);
+
+        // 腐蚀克星: 生命恢复+50% (通过再生效果)
+        updateRegenBoost(player, tierMultiplier);
+
+        // 澄明之眼: 透视实体 (16格内敌对生物发光)
+        updateEntityGlowing(player);
     }
 
     /**
@@ -190,6 +204,23 @@ public class BaubleEffectHandler {
             if (player.world.rand.nextFloat() < 0.25f) { // 简化的暴击判定
                 float bonus = 0.25f * tierMultiplier;
                 event.setAmount(event.getAmount() * (1.0f + bonus));
+            }
+        }
+
+        // 净焰之环: 攻击附带点燃 (5秒)
+        if (hasBauble(player, ItemRegistry.FLAME_WARD)) {
+            if (event.getEntityLiving() != null) {
+                int fireDuration = (int) (5 * tierMultiplier);
+                event.getEntityLiving().setFire(fireDuration);
+            }
+        }
+
+        // 霜心坠: 攻击附带减速 (缓慢I 3秒)
+        if (hasBauble(player, ItemRegistry.FROST_WARD)) {
+            if (event.getEntityLiving() != null) {
+                int slowDuration = (int) (60 * tierMultiplier); // 3秒基础
+                event.getEntityLiving().addPotionEffect(
+                        new PotionEffect(MobEffects.SLOWNESS, slowDuration, 0));
             }
         }
     }
@@ -307,6 +338,76 @@ public class BaubleEffectHandler {
                     player.getActivePotionEffect(MobEffects.FIRE_RESISTANCE).getDuration() < 400) {
                 player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 600, 0, true, false));
             }
+        }
+    }
+
+    /**
+     * 腐蚀克星: 每10秒自动清除一个负面药水效果
+     */
+    private static void updateAutoDebuffPurify(EntityPlayer player, float tierMultiplier) {
+        if (!hasBauble(player, ItemRegistry.CORROSION_BANE))
+            return;
+
+        // 每10秒检查一次 (onPlayerTick已是每秒, 再除以10)
+        if (player.ticksExisted % 200 != 0)
+            return;
+
+        // 找到一个负面效果并清除
+        List<PotionEffect> negativeEffects = new ArrayList<>();
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            Potion potion = effect.getPotion();
+            if (potion.isBadEffect()) {
+                negativeEffects.add(effect);
+            }
+        }
+
+        if (!negativeEffects.isEmpty()) {
+            // 清除第一个负面效果
+            PotionEffect toRemove = negativeEffects.get(0);
+            player.removePotionEffect(toRemove.getPotion());
+        }
+    }
+
+    /**
+     * 腐蚀克星: 生命恢复+50% (通过持续低等级再生)
+     */
+    private static void updateRegenBoost(EntityPlayer player, float tierMultiplier) {
+        if (!hasBauble(player, ItemRegistry.CORROSION_BANE))
+            return;
+
+        // 如果玩家血量未满，给予再生I效果 (模拟+50%自然恢复)
+        if (player.getHealth() < player.getMaxHealth()) {
+            if (!player.isPotionActive(MobEffects.REGENERATION) ||
+                    player.getActivePotionEffect(MobEffects.REGENERATION).getDuration() < 40) {
+                // 再生I持续3秒, 隐藏粒子
+                player.addPotionEffect(
+                        new PotionEffect(MobEffects.REGENERATION, 60, 0, true, false));
+            }
+        }
+    }
+
+    /**
+     * 澄明之眼: 16格内敌对生物发光 (透视实体)
+     */
+    private static void updateEntityGlowing(EntityPlayer player) {
+        if (!hasBauble(player, ItemRegistry.CLARITY_LENS))
+            return;
+
+        // 每2秒刷新一次发光效果
+        if (player.ticksExisted % 40 != 0)
+            return;
+
+        double range = 16.0;
+        AxisAlignedBB aabb = player.getEntityBoundingBox().grow(range);
+        // 给所有16格内的活物添加发光效果
+        List<EntityLiving> allMobs = player.world.getEntitiesWithinAABB(
+                EntityLiving.class, aabb,
+                e -> e != null && e.isEntityAlive());
+
+        for (EntityLiving mob : allMobs) {
+            // 发光效果持续3秒
+            mob.addPotionEffect(
+                    new PotionEffect(MobEffects.GLOWING, 60, 0, true, false));
         }
     }
 

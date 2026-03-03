@@ -43,16 +43,9 @@ public class EnchantmentHandler {
         if (cap == null || cap.getTier() <= 0)
             return;
 
-        // 1. 灵魂绑定 (Soulbound) -> 阻止装备被封印
-        // 攻击时有几率移除目标的枷锁词条
-        int soulboundLevel = EnchantmentHelper.getMaxEnchantmentLevel(EnchantmentRegistry.SOULBOUND, player);
-        if (soulboundLevel > 0) {
-            ResourceLocation shackleId = new ResourceLocation("adversity:shackle");
-            IAffix shackleAffix = AffixRegistry.getAffix(shackleId);
-            if (shackleAffix != null && cap.hasAffix(shackleAffix) && RANDOM.nextFloat() < 0.25f * soulboundLevel) {
-                removeAffix(target, cap, shackleId);
-            }
-        }
+        // 1. 灵魂绑定 (Soulbound) -> 被动保护，阻止装备被封印
+        // 效果在 EnchantmentSoulbound.shouldBlockSeal() 中处理
+        // Lv1: 33%, Lv2: 66%, Lv3: 100% 阻止封印
 
         // 2. 破咒者 (Breaker) -> 移除精英词条buff
         // 攻击时有几率移除一个随机词条

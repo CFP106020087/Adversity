@@ -377,12 +377,6 @@ public class TileEntitySanctuary extends TileEntity implements ITickable, IInven
         com.adversity.capability.IAdversityCapability.IProgression progression = player
                 .getCapability(com.adversity.capability.CapabilityHandler.PROGRESSION_CAPABILITY, null);
 
-        // 调试日志 - 直接发送到聊天
-        if (progression != null) {
-            player.sendMessage(new net.minecraft.util.text.TextComponentString(
-                    "§e[DEBUG] Required: " + rite.getRequiredStage() + " | Your stages: " + progression.getStages()));
-        }
-
         if (rite.getRequiredStage() != null && progression != null && !progression.hasStage(rite.getRequiredStage())) {
             player.sendMessage(new net.minecraft.util.text.TextComponentTranslation("adversity.ritual.stage_locked",
                     rite.getRequiredStage()));
@@ -403,13 +397,9 @@ public class TileEntitySanctuary extends TileEntity implements ITickable, IInven
             world.spawnEntity(entityItem);
         }
 
-        // 给予阶段奖励
-        if (rite.getRewardStage() != null && progression != null) {
-            if (!progression.hasStage(rite.getRewardStage())) {
-                progression.addStage(rite.getRewardStage());
-                player.sendMessage(new net.minecraft.util.text.TextComponentTranslation(
-                        "adversity.progression.unlocked", rite.getRewardStage()));
-            }
+        // 给予阶段奖励 (通过 EventHandler 触发事件)
+        if (rite.getRewardStage() != null) {
+            com.adversity.progression.ProgressionEventHandler.addStage(player, rite.getRewardStage());
         }
 
         // 播放音效
@@ -463,16 +453,22 @@ public class TileEntitySanctuary extends TileEntity implements ITickable, IInven
         com.adversity.capability.IAdversityCapability.IProgression progression = player
                 .getCapability(com.adversity.capability.CapabilityHandler.PROGRESSION_CAPABILITY, null);
 
-        // 调试：显示玩家阶段
-        if (progression != null) {
-            player.sendMessage(new net.minecraft.util.text.TextComponentString(
-                    "§e[DEBUG] Required: " + rite.getRequiredStage() + " | Your stages: " + progression.getStages()));
-        }
-
         if (rite.getRequiredStage() != null && progression != null && !progression.hasStage(rite.getRequiredStage())) {
             player.sendMessage(new net.minecraft.util.text.TextComponentTranslation("adversity.ritual.stage_locked",
                     rite.getRequiredStage()));
             return false;
+        }
+
+        // 检查冷却
+        if (rite.hasCooldown()) {
+            long remaining = com.adversity.sanctuary.ritual.RitualManager.getRemainingCooldown(
+                    player.getName(), rite, world.getTotalWorldTime());
+            if (remaining > 0) {
+                int seconds = (int) (remaining / 20);
+                player.sendMessage(new net.minecraft.util.text.TextComponentTranslation(
+                        "adversity.ritual.cooldown", seconds));
+                return false;
+            }
         }
 
         // 消耗燃料
@@ -487,13 +483,15 @@ public class TileEntitySanctuary extends TileEntity implements ITickable, IInven
             ritualOutputSlot = rite.getOutput().copy();
         }
 
-        // 给予阶段奖励
-        if (rite.getRewardStage() != null && progression != null) {
-            if (!progression.hasStage(rite.getRewardStage())) {
-                progression.addStage(rite.getRewardStage());
-                player.sendMessage(new net.minecraft.util.text.TextComponentTranslation(
-                        "adversity.progression.unlocked", rite.getRewardStage()));
-            }
+        // 给予阶段奖励 (通过 EventHandler 触发事件)
+        if (rite.getRewardStage() != null) {
+            com.adversity.progression.ProgressionEventHandler.addStage(player, rite.getRewardStage());
+        }
+
+        // 设置冷却
+        if (rite.hasCooldown()) {
+            com.adversity.sanctuary.ritual.RitualManager.setCooldown(
+                    player.getName(), rite, world.getTotalWorldTime());
         }
 
         // 执行仪式命令（静默执行）

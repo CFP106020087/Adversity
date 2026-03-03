@@ -113,7 +113,7 @@ public class CommandAdversity extends CommandBase {
             if (cap == null) {
                 throw new CommandException("Failed to get difficulty data");
             }
-            executeSubcommand(sender, player, cap, args, 0, false);
+            executeSubcommand(server, sender, player, cap, args, 0, false);
         } else {
             // 调整他人 - 需要 OP 权限
             if (!hasOpPermission(server, sender)) {
@@ -131,20 +131,23 @@ public class CommandAdversity extends CommandBase {
                 throw new CommandException("Failed to get difficulty data for " + targetPlayer.getName());
             }
 
-            executeSubcommand(sender, targetPlayer, cap, args, 1, true);
+            executeSubcommand(server, sender, targetPlayer, cap, args, 1, true);
         }
     }
 
     /**
      * 执行子命令
-     * @param sender 命令发送者
-     * @param target 目标玩家
-     * @param cap 目标玩家的能力数据
-     * @param args 参数数组
+     * 
+     * @param server          服务器实例
+     * @param sender          命令发送者
+     * @param target          目标玩家
+     * @param cap             目标玩家的能力数据
+     * @param args            参数数组
      * @param subcommandIndex 子命令在参数中的索引
-     * @param isAdmin 是否管理员操作
+     * @param isAdmin         是否管理员操作
      */
-    private void executeSubcommand(ICommandSender sender, EntityPlayer target, IPlayerDifficulty cap,
+    private void executeSubcommand(MinecraftServer server, ICommandSender sender, EntityPlayer target,
+            IPlayerDifficulty cap,
                                    String[] args, int subcommandIndex, boolean isAdmin) throws CommandException {
         String subcommand = args[subcommandIndex].toLowerCase();
         int valueIndex = subcommandIndex + 1;
@@ -210,6 +213,10 @@ public class CommandAdversity extends CommandBase {
                 break;
 
             case "reset":
+                // 需要OP权限
+                if (!hasOpPermission(server, sender)) {
+                    throw new CommandException("reset 子命令需要管理员权限");
+                }
                 cap.setDifficultyMultiplier(1.0f);
                 cap.setDifficultyDisabled(false);
                 cap.resetKillCount();
@@ -220,6 +227,10 @@ public class CommandAdversity extends CommandBase {
                 break;
 
             case "health":
+                // 需要OP权限
+                if (!hasOpPermission(server, sender)) {
+                    throw new CommandException("health 子命令需要管理员权限");
+                }
                 if (args.length <= valueIndex) {
                     throw new CommandException("Usage: /adversity " + (isAdmin ? "<player> " : "") + "health <" + String.join("|", SCALING_MODES) + ">");
                 }
@@ -230,6 +241,10 @@ public class CommandAdversity extends CommandBase {
                 break;
 
             case "damage":
+                // 需要OP权限
+                if (!hasOpPermission(server, sender)) {
+                    throw new CommandException("damage 子命令需要管理员权限");
+                }
                 if (args.length <= valueIndex) {
                     throw new CommandException("Usage: /adversity " + (isAdmin ? "<player> " : "") + "damage <" + String.join("|", SCALING_MODES) + ">");
                 }

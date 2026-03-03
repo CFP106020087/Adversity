@@ -306,7 +306,15 @@ guide.adversity.tab.rituals=Rituals
 guide.adversity.tab.progression=Progression
 guide.adversity.tab.tips=Tips
 guide.adversity.tab.affixes=Affixes
+guide.adversity.tab.difficulty=Difficulty
 guide.adversity.tab.crt=CRT API
+
+# Difficulty Page
+guide.adversity.difficulty.title=Difficulty System
+guide.adversity.difficulty.intro=Difficulty is determined by two factors: distance from spawn and play time. The further you go and the longer you survive, the stronger monsters become. Elite mobs spawn in high-difficulty areas with affixes and stat bonuses.
+guide.adversity.difficulty.source=⬡ Difficulty Sources
+guide.adversity.difficulty.scaling=⬡ Stat Scaling
+guide.adversity.difficulty.tiers=⬡ Elite Tiers
 
 # Affixes Page
 guide.adversity.affixes.title=Affix Encyclopedia

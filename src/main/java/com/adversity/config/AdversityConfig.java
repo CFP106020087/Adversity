@@ -159,7 +159,7 @@ public class AdversityConfig {
             "每过多少天增加 1 点难度"
         })
         @Config.RangeDouble(min = 0.5, max = 100)
-        public double daysPerDifficulty = 5; // 适度增长 (每5天+1难度)
+        public double daysPerDifficulty = 2; // 加速增长 (每2天+1难度，配合词条系统平衡)
 
         @Config.Comment({
             "Maximum difficulty from time (0 = no limit)",
@@ -180,7 +180,7 @@ public class AdversityConfig {
             "时间难度在最终计算中的权重"
         })
         @Config.RangeDouble(min = 0, max = 10)
-        public double timeWeight = 0.7;
+        public double timeWeight = 0.8;
 
         @Config.Comment({
                 "Use per-player play time instead of global world time for time difficulty",
@@ -239,7 +239,7 @@ public class AdversityConfig {
             "  0.30 = diff20 → 190x, diff50 → 497929x"
         })
         @Config.RangeDouble(min = 0, max = 2)
-        public double healthRate = 0.06;
+        public double healthRate = 0.08;
 
         @Config.Comment({
             "Power exponent for POLYNOMIAL mode",
@@ -277,7 +277,7 @@ public class AdversityConfig {
             "Typically lower than health to keep fights challenging but fair"
         })
         @Config.RangeDouble(min = 0, max = 2)
-        public double damageRate = 0.03;
+        public double damageRate = 0.05;
 
         @Config.Comment("Power exponent for POLYNOMIAL mode")
         @Config.RangeDouble(min = 1, max = 5)
@@ -355,7 +355,7 @@ public class AdversityConfig {
             "0.99 = 接近免疫（仅限极端模组包）"
         })
         @Config.RangeDouble(min = 0, max = 0.99)
-        public double damageReductionMax = 0.4;
+        public double damageReductionMax = 0.5;
 
         @Config.Comment({
             "=== ADVANCED: ARMOR PENETRATION RESISTANCE ===",
@@ -811,14 +811,14 @@ public class AdversityConfig {
                 "天然圣所基础半径（格）"
         })
         @Config.RangeInt(min = 100, max = 10000)
-        public int naturalBaseRadius = 2000;
+        public int naturalBaseRadius = 500;
 
         @Config.Comment({
                 "Natural sanctuary radius per tier (blocks)",
                 "天然圣所每级增加的半径（格）"
         })
         @Config.RangeInt(min = 100, max = 5000)
-        public int naturalRadiusPerTier = 2000;
+        public int naturalRadiusPerTier = 500;
 
         @Config.Comment({
                 "Artificial sanctuary radius (blocks)",

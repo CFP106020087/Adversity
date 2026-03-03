@@ -168,7 +168,13 @@ public class DifficultyManager {
     }
 
     /**
-     * 应用玩家的难度倍率
+     * 应用玩家的个人难度修正（倍率 + 偏移 + 锁定 + 上限）
+     *
+     * 计算流程:
+     * 1. 如果个人锁定 >= 0，直接返回锁定值
+     * 2. 否则: 基础 × 玩家倍率 + 个人偏移
+     * 3. 如果设了个人上限，取 min
+     * 4. 最终值不低于 0
      */
     public static float applyPlayerMultiplier(float baseDifficulty, @Nullable EntityPlayer player) {
         if (player == null) {
@@ -180,7 +186,24 @@ public class DifficultyManager {
             return baseDifficulty;
         }
 
-        return baseDifficulty * playerDiff.getDifficultyMultiplier();
+        // 1. 个人难度锁定：直接返回固定值
+        float personalLock = playerDiff.getPersonalLock();
+        if (personalLock >= 0) {
+            return personalLock;
+        }
+
+        // 2. 应用玩家倍率 + 个人偏移
+        float result = baseDifficulty * playerDiff.getDifficultyMultiplier()
+                + playerDiff.getPersonalOffset();
+
+        // 3. 个人难度上限
+        float personalCap = playerDiff.getPersonalCap();
+        if (personalCap > 0 && result > personalCap) {
+            result = personalCap;
+        }
+
+        // 4. 不低于0
+        return Math.max(0, result);
     }
 
     // ==================== 属性缩放计算 ====================
