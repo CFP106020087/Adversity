@@ -63,6 +63,20 @@ public class CommonProxy {
         // 注册圣所保护处理器 (使祭坛和周围方块不可破坏)
         MinecraftForge.EVENT_BUS.register(new com.adversity.sanctuary.SanctuaryProtectionHandler());
 
+        // 注册藥水免疫攔截器
+        MinecraftForge.EVENT_BUS.register(new com.adversity.potion.PotionImmunityHandler());
+
+        // 注册內建特殊儀式效果（獨立於 enableBuiltinRituals）
+        if (com.adversity.config.AdversityConfig.sanctuarySettings.enableBuiltinSpecialRituals) {
+            com.adversity.sanctuary.ritual.RitualEffectRegistry.register("purge_curse",
+                    new com.adversity.sanctuary.ritual.effect.PurgeCurseEffect());
+            com.adversity.sanctuary.ritual.RitualEffectRegistry.register("awakening",
+                    new com.adversity.sanctuary.ritual.effect.AwakeningEffect());
+            Adversity.LOGGER.info("Built-in special ritual effects registered (purge_curse, awakening)");
+        } else {
+            Adversity.LOGGER.info("Built-in special ritual effects disabled by config");
+        }
+
         Adversity.LOGGER.info("Event handlers registered");
     }
 

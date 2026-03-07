@@ -88,12 +88,9 @@ public class CommandProgression extends CommandBase {
                 }
                 String stageToAdd = args[1].toLowerCase();
                 if (!cap.hasStage(stageToAdd)) {
-                    cap.addStage(stageToAdd);
+                    ProgressionEventHandler.addStage(player, stageToAdd);
                     sender.sendMessage(new TextComponentString(
                             TextFormatting.GREEN + "[Adversity] Added stage: " + TextFormatting.GOLD + stageToAdd));
-                    if (player instanceof EntityPlayerMP) {
-                        ProgressionEventHandler.syncToClient((EntityPlayerMP) player);
-                    }
                 } else {
                     sender.sendMessage(new TextComponentString(
                             TextFormatting.YELLOW + "[Adversity] Stage already exists: " + stageToAdd));

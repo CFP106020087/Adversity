@@ -7,7 +7,8 @@
   ],
   "key": {
     "L": {
-      "item": "minecraft:lapis_lazuli"
+      "item": "minecraft:dye",
+      "data": 4
     },
     "E": {
       "item": "minecraft:experience_bottle"

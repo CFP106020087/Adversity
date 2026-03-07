@@ -7,7 +7,9 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 圣所仪式定义
@@ -24,6 +26,8 @@ public class Rite {
     private final String command;
     private final RitualCategory category;
     private final int cooldownTicks;
+    private final ResourceLocation effectId;
+    private final Map<String, Object> effectParams;
 
     // ==================== 旧版兼容构造器 ====================
 
@@ -35,7 +39,8 @@ public class Rite {
     public Rite(ResourceLocation id, ItemStack input, ItemStack output, int entropyCost,
             String requiredStage, String rewardStage, String command) {
         this(id, Collections.singletonList(input.copy()), output, entropyCost,
-                requiredStage, rewardStage, command, guessCategory(rewardStage, command), 0);
+                requiredStage, rewardStage, command, guessCategory(rewardStage, command), 0,
+                null, null);
     }
 
     // ==================== 完整构造器 ====================
@@ -43,6 +48,16 @@ public class Rite {
     public Rite(ResourceLocation id, List<ItemStack> inputs, ItemStack output, int entropyCost,
             String requiredStage, String rewardStage, String command,
             RitualCategory category, int cooldownTicks) {
+        this(id, inputs, output, entropyCost, requiredStage, rewardStage, command,
+                category, cooldownTicks, null, null);
+    }
+
+    // ==================== 含效果的完整构造器 ====================
+
+    public Rite(ResourceLocation id, List<ItemStack> inputs, ItemStack output, int entropyCost,
+            String requiredStage, String rewardStage, String command,
+            RitualCategory category, int cooldownTicks,
+            ResourceLocation effectId, Map<String, Object> effectParams) {
         this.id = id;
         this.inputs = new ArrayList<>();
         for (ItemStack s : inputs) {
@@ -56,6 +71,8 @@ public class Rite {
         this.command = command;
         this.category = category;
         this.cooldownTicks = cooldownTicks;
+        this.effectId = effectId;
+        this.effectParams = effectParams != null ? new HashMap<>(effectParams) : new HashMap<>();
     }
 
     private static RitualCategory guessCategory(String rewardStage, String command) {
@@ -122,6 +139,18 @@ public class Rite {
 
     public boolean hasCommand() {
         return command != null && !command.isEmpty();
+    }
+
+    public ResourceLocation getEffectId() {
+        return effectId;
+    }
+
+    public Map<String, Object> getEffectParams() {
+        return effectParams;
+    }
+
+    public boolean hasEffect() {
+        return effectId != null;
     }
 
     /**

@@ -6,6 +6,9 @@ import com.adversity.capability.IAdversityCapability;
 import com.adversity.network.PacketHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -51,6 +54,11 @@ public class ProgressionEventHandler {
 
         EntityPlayerMP player = (EntityPlayerMP) event.player;
 
+        // 每5秒检查外部模组是否写入了新阶段到 PlayerPersisted NBT
+        if (player.ticksExisted % 100 == 50) {
+            importExternalStages(player);
+        }
+
         // 每10秒检查难度触发器
         if (player.ticksExisted % 200 == 100) {
             IAdversityCapability mobCap = player.getCapability(
@@ -62,13 +70,83 @@ public class ProgressionEventHandler {
         }
     }
 
-    /**
-     * 同步进度到客户端
-     */
     public static void syncToClient(EntityPlayerMP player) {
+        syncToClient(player, null);
+    }
+
+    /**
+     * 同步进度到客户端，并触发可能的UI更新
+     */
+    public static void syncToClient(EntityPlayerMP player, String newStage) {
         IAdversityCapability.IProgression cap = getProgression(player);
         if (cap != null) {
-            PacketHandler.INSTANCE.sendTo(new ProgressionSyncMessage(cap.getStages()), player);
+            PacketHandler.INSTANCE.sendTo(new ProgressionSyncMessage(cap.getStages(), newStage), player);
+            syncToPersistedNBT(player, cap);
+        }
+    }
+
+    /**
+     * 将阶段数据同步写入 PlayerPersisted NBT
+     * 路径: PlayerPersisted.AdversityProgression.Stages (NBTTagList<String>)
+     * 
+     * 这允许其他模组（如 ChocoTweak）在不依赖 Adversity 的情况下
+     * 通过 PlayerPersisted NBT 读取玩家 GS 数据
+     */
+    private static void syncToPersistedNBT(EntityPlayer player, IAdversityCapability.IProgression cap) {
+        try {
+            NBTTagCompound playerData = player.getEntityData();
+            NBTTagCompound persisted = playerData.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+
+            NBTTagCompound progData = new NBTTagCompound();
+            NBTTagList stageList = new NBTTagList();
+            for (String stage : cap.getStages()) {
+                stageList.appendTag(new NBTTagString(stage));
+            }
+            progData.setTag("Stages", stageList);
+            progData.setInteger("Tier", getHighestTier(player));
+
+            persisted.setTag("AdversityProgression", progData);
+            playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, persisted);
+        } catch (Exception e) {
+            Adversity.LOGGER.debug("Failed to sync progression to persisted NBT: {}", e.getMessage());
+        }
+    }
+
+    /**
+     * 从 PlayerPersisted NBT 导入外部模组添加的阶段
+     * ChocoTweak 的 DialogActionAddStage 直接写 NBT，这里读取并导入到 Capability
+     */
+    private static void importExternalStages(EntityPlayerMP player) {
+        try {
+            NBTTagCompound persisted = player.getEntityData()
+                    .getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+            if (!persisted.hasKey("AdversityProgression")) {
+                return;
+            }
+
+            NBTTagCompound progData = persisted.getCompoundTag("AdversityProgression");
+            if (!progData.hasKey("Stages", net.minecraftforge.common.util.Constants.NBT.TAG_LIST)) {
+                return;
+            }
+
+            NBTTagList nbtStages = progData.getTagList("Stages",
+                    net.minecraftforge.common.util.Constants.NBT.TAG_STRING);
+            IAdversityCapability.IProgression cap = getProgression(player);
+            if (cap == null) {
+                return;
+            }
+
+            for (int i = 0; i < nbtStages.tagCount(); i++) {
+                String stage = nbtStages.getStringTagAt(i);
+                if (!cap.hasStage(stage)) {
+                    // 通过 addStage 添加，会触发 StageChangeEvent
+                    addStage(player, stage);
+                    Adversity.LOGGER.info("Imported external stage '{}' for player {}",
+                            stage, player.getName());
+                }
+            }
+        } catch (Exception e) {
+            Adversity.LOGGER.debug("Failed to import external stages: {}", e.getMessage());
         }
     }
 
@@ -98,7 +176,7 @@ public class ProgressionEventHandler {
 
             cap.addStage(stage);
             if (player instanceof EntityPlayerMP) {
-                syncToClient((EntityPlayerMP) player);
+                syncToClient((EntityPlayerMP) player, stage);
             }
 
             // Post event

@@ -23,6 +23,11 @@ public class RitualManager {
     public static void init() {
         Adversity.LOGGER.info("Initializing Ritual System...");
 
+        if (!com.adversity.config.AdversityConfig.sanctuarySettings.enableBuiltinRituals) {
+                Adversity.LOGGER.info(
+                                "Built-in rituals disabled by config. Ritual registration delegated to CRT/external mods.");
+                return;
+        }
         // ==================== 阶段解锁仪式 ====================
 
         registerRite("awakening",
@@ -163,6 +168,14 @@ public class RitualManager {
 
     public static Rite getRiteById(ResourceLocation id) {
         return RITES.get(id);
+    }
+
+    public static int getMaxInputCount() {
+            int max = 0;
+            for (Rite rite : RITES.values()) {
+                    max = Math.max(max, rite.getInputs().size());
+            }
+            return max;
     }
 
     public static int getRiteCount() {

@@ -174,69 +174,54 @@ public class SanctuaryCraftingHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onItemCrafted(PlayerEvent.ItemCraftedEvent event) {
-        // 确保初始化
         ensureInitialized();
-        
-        // 检查配置是否启用
+
+        EntityPlayer player = event.player;
+        if (player == null || player.world.isRemote)
+            return;
+
+        ItemStack result = event.crafting;
+        if (result.isEmpty()) return;
+
+        Item item = result.getItem();
+
+        // Stage 門控已由 MixinCraftingManager 在 findMatchingRecipe 層攔截
+        // （合成結果直接為空，不需要事後退還材料）
+
+        // ===== 2. 聖所限制檢查（僅適用飾品 SANCTUARY_ITEMS） =====
         if (!AdversityConfig.sanctuarySettings.enableCraftingRestrictions) {
             return;
         }
 
-        ItemStack result = event.crafting;
-        if (result.isEmpty()) return;
-        
-        Item item = result.getItem();
-        
-        // 检查是否是需要限制的物品
         if (!SANCTUARY_ITEMS.contains(item)) {
             return;
         }
 
-        EntityPlayer player = event.player;
-        if (player == null || player.world.isRemote) return;
-        
-        // 检查玩家是否在圣所附近
+        // 検查是否在聖所附近
         SanctuaryZone zone = SanctuaryManager.getPlayerSanctuary(player);
-        
+
         if (zone == null || !zone.isActive()) {
-            // 不在圣所范围内
             cancelCrafting(event, player, "adversity.crafting.need_sanctuary");
             return;
         }
-        
-        // 检查距离祭坛的距离
+
         double dist = Math.sqrt(player.getDistanceSq(zone.center));
         int maxDist = AdversityConfig.sanctuarySettings.craftingProximity;
-        
+
         if (dist > maxDist) {
-            // 距离太远
             cancelCrafting(event, player, "adversity.crafting.too_far", maxDist);
             return;
         }
-        
-        // 检查 Tier 要求
+
+        // Tier 要求
         Integer requiredTier = TIER_REQUIREMENTS.get(item);
         if (requiredTier != null && requiredTier > 0) {
             int zoneTier = zone.tier;
             if (zoneTier < requiredTier) {
-                // Tier 不足
                 cancelCrafting(event, player, "adversity.crafting.tier_too_low", requiredTier, zoneTier);
                 return;
             }
         }
-        
-        // 检查阶段要求
-        String requiredStage = com.adversity.sanctuary.StageGatingRegistry.getItemStageRequirement(result);
-        if (requiredStage != null) {
-            com.adversity.capability.IAdversityCapability.IProgression progression = player
-                    .getCapability(com.adversity.capability.CapabilityHandler.PROGRESSION_CAPABILITY, null);
-            if (progression == null || !progression.hasStage(requiredStage)) {
-                cancelCrafting(event, player, "adversity.crafting.stage_required", requiredStage);
-                return;
-            }
-        }
-
-        // 合成成功！
     }
     
     /**

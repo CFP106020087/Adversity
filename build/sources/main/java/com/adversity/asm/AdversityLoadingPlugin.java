@@ -23,6 +23,10 @@ public class AdversityLoadingPlugin implements IFMLLoadingPlugin {
             // Early mixin - 原版 Minecraft 类 (ContainerEnchantment 等)
             FermiumRegistryAPI.enqueueMixin(false, "adversity.early.mixins.json");
             System.out.println("[Adversity] Early mixins queued via FermiumBooter");
+
+            // Late mixin - 第三方 Mod 类 (JEI RecipeRegistry 等)
+            FermiumRegistryAPI.enqueueMixin(true, "adversity.late.mixins.json");
+            System.out.println("[Adversity] Late mixins queued via FermiumBooter");
         } catch (Throwable e) {
             System.err.println("[Adversity] FermiumBooter registration failed: " + e);
             e.printStackTrace();
@@ -31,11 +35,7 @@ public class AdversityLoadingPlugin implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] {
-                "com.adversity.asm.ContainerTransformer",
-                "com.adversity.asm.GuiContainerTransformer", // Client-side slot rendering block
-                "com.adversity.asm.ContainerEnchantmentTransformer" // Enchantment injection
-        };
+        return new String[] {}; // Sealed slot blocking handled by MixinSlot
     }
 
     @Override

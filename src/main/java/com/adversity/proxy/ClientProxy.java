@@ -30,8 +30,13 @@ public class ClientProxy extends CommonProxy {
         // 注册视觉效果覆盖层渲染器
         MinecraftForge.EVENT_BUS.register(new VisualOverlayRenderer());
 
+        // 注册阶段解锁动画覆盖层
+        MinecraftForge.EVENT_BUS.register(new com.adversity.client.gui.StageUnlockOverlay());
+
         // 注册难度HUD
         MinecraftForge.EVENT_BUS.register(new DifficultyHUD());
+
+        // GS HUD 已改由 Mixin 注入各 GUI（MixinGuiEnchantment, MixinGuiRepair 等）
 
         // 注册快捷键处理器
         MinecraftForge.EVENT_BUS.register(new AdversityKeyBindings());

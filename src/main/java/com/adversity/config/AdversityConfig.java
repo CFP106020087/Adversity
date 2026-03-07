@@ -785,6 +785,28 @@ public class AdversityConfig {
 
     public static class SanctuarySettings {
         @Config.Comment({
+                "Enable built-in rituals (stage unlock, utility, difficulty adjustment)",
+                "启用内建仪式（阶段解锁、实用仪式、难度调整）",
+                "",
+                "Set to false to delegate all ritual registration to CraftTweaker / external mods.",
+                "设为 false 则完全由 CraftTweaker / 外部模组控制仪式注册。",
+                "Default: false (recommended for modpack authors)",
+                "默认: false（模组包作者推荐）"
+        })
+        public boolean enableBuiltinRituals = false;
+
+        @Config.Comment({
+                "Enable built-in special ritual effects (purge_curse, awakening).",
+                "启用内建特殊仪式效果（净化诅咒、觉醒）。",
+                "",
+                "Independent from enableBuiltinRituals.",
+                "与 enableBuiltinRituals 独立，可以单独关闭特殊效果。",
+                "When disabled, these effects can be registered via CRT using setRitualEffect().",
+                "Default: true"
+        })
+        public boolean enableBuiltinSpecialRituals = true;
+
+        @Config.Comment({
                 "Enable sanctuary system",
                 "启用圣所系统"
         })
@@ -962,6 +984,12 @@ public class AdversityConfig {
                 "从村民交易移除 Adversity 附魔"
         })
         public boolean removeEnchantsFromVillagers = true;
+
+        @Config.Comment({
+                "Skip CRT stage gating for Adversity enchantments (they use sanctuary proximity instead)",
+                "跳過 CRT 階段門控對 Adversity 附魔的影響（它們由聖所系統獨立管理）"
+        })
+        public boolean skipAdversityEnchantmentGating = true;
 
         // ==================== Tier 限制 ====================
 

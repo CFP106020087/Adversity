@@ -5,19 +5,20 @@ import com.adversity.network.PacketSanctuaryAction;
 import com.adversity.network.PacketSwitchSanctuaryGui;
 import com.adversity.sanctuary.TileEntitySanctuary;
 import com.adversity.sanctuary.inventory.ContainerSanctuary;
+import com.adversity.sanctuary.inventory.SlotRitualInput;
 import com.adversity.sanctuary.ritual.Rite;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
 
 /**
- * 圣所仪式GUI - 专注于仪式功能
- * 控制面板功能移至 GuiSanctuaryControl
+ * 圣所仪式GUI - 動態繪製同心圓輸入槽位
  */
 public class GuiSanctuaryAltar extends GuiContainer {
 
@@ -25,27 +26,31 @@ public class GuiSanctuaryAltar extends GuiContainer {
             "textures/gui/container/generic_54.png");
 
     private final TileEntitySanctuary te;
+    private final ContainerSanctuary container;
 
-    private GuiButton switchButton; // 切换到控制面板
-    private GuiButton ritualButton; // 执行仪式
+    private GuiButton switchButton;
+    private GuiButton ritualButton;
 
     public GuiSanctuaryAltar(InventoryPlayer playerInv, TileEntitySanctuary te) {
         super(new ContainerSanctuary(playerInv, te));
         this.te = te;
+        this.container = (ContainerSanctuary) this.inventorySlots;
         this.xSize = 176;
-        this.ySize = 166;
+        this.ySize = 230;
     }
 
     @Override
     public void initGui() {
         super.initGui();
 
-        // 右上角切换按钮 -> 切换到控制面板
+        // 右上角切換按鈕
         this.buttonList.add(switchButton = new GuiButton(4, this.guiLeft + xSize - 22, this.guiTop + 4,
                 18, 14, "⇆"));
 
-        // 执行仪式按钮
-        this.buttonList.add(ritualButton = new GuiButton(3, this.guiLeft + 80, this.guiTop + 52, 50, 14,
+        // 執行儀式按鈕 — 在儀式區域下方
+        this.buttonList.add(ritualButton = new GuiButton(3,
+                this.guiLeft + 55, this.guiTop + 130,
+                66, 14,
                 I18n.format("adversity.gui.ritual")));
     }
 
@@ -53,11 +58,13 @@ public class GuiSanctuaryAltar extends GuiContainer {
     public void updateScreen() {
         super.updateScreen();
 
-        // 仪式按钮状态
+        // 匹配儀式
         Rite matchingRite = te.getMatchingRite();
-        ritualButton.enabled = te.isActivated() && matchingRite != null
+        boolean canPerform = te.isActivated()
+                && matchingRite != null
                 && te.getFuel() >= matchingRite.getEntropyCost()
-                && te.getStackInSlot(2).isEmpty();
+                && te.getStackInSlot(TileEntitySanctuary.SLOT_OUTPUT).isEmpty();
+        ritualButton.enabled = canPerform;
         ritualButton.visible = te.isActivated();
     }
 
@@ -69,7 +76,6 @@ public class GuiSanctuaryAltar extends GuiContainer {
                         PacketSanctuaryAction.Action.PERFORM_RITUAL));
                 break;
             case 4:
-                // 切换到控制面板GUI
                 PacketHandler.INSTANCE.sendToServer(new PacketSwitchSanctuaryGui(te.getPos(),
                         AdversityGuiHandler.GUI_SANCTUARY_CONTROL));
                 break;
@@ -82,24 +88,24 @@ public class GuiSanctuaryAltar extends GuiContainer {
         int guiX = this.guiLeft;
         int guiY = this.guiTop;
 
-        // ========== 绘制主背景 ==========
+        // ========== 主背景 ==========
         drawRect(guiX, guiY, guiX + xSize, guiY + ySize, 0xFFC6C6C6);
 
-        // 3D边框
+        // 3D 邊框
         drawHorizontalLine(guiX, guiX + xSize - 1, guiY, 0xFFFFFFFF);
         drawVerticalLine(guiX, guiY, guiY + ySize - 1, 0xFFFFFFFF);
         drawHorizontalLine(guiX, guiX + xSize - 1, guiY + ySize - 1, 0xFF555555);
         drawVerticalLine(guiX + xSize - 1, guiY, guiY + ySize - 1, 0xFF555555);
 
-        // ========== 左侧燃料区域 ==========
+        // ========== 左側燃料區域 ==========
         int fuelAreaX = guiX + 7;
         int fuelAreaY = guiY + 17;
 
-        // 燃料条背景
+        // 燃料條背景
         drawRect(fuelAreaX, fuelAreaY, fuelAreaX + 18, fuelAreaY + 52, 0xFF555555);
         drawRect(fuelAreaX + 1, fuelAreaY + 1, fuelAreaX + 17, fuelAreaY + 51, 0xFF373737);
 
-        // 燃料条填充
+        // 燃料條填充
         if (te.getMaxFuel() > 0) {
             float fuelPct = te.getFuelPercentage();
             int barHeight = (int) (fuelPct * 48);
@@ -115,37 +121,83 @@ public class GuiSanctuaryAltar extends GuiContainer {
             }
         }
 
-        // 燃料槽位
+        // 燃料槽背景
         drawSlotBackground(fuelAreaX, fuelAreaY + 54);
 
-        // ========== 中间仪式区域 ==========
+        // ========== 中間儀式區域 ==========
         int ritualAreaX = guiX + 28;
         int ritualAreaY = guiY + 17;
 
-        // 仪式区域背景
-        drawRect(ritualAreaX, ritualAreaY, ritualAreaX + 140, ritualAreaY + 50, 0xFF555555);
-        drawRect(ritualAreaX + 1, ritualAreaY + 1, ritualAreaX + 139, ritualAreaY + 49, 0xFF2D2D2D);
+        // 儀式區域背景（加大以容納同心圓）
+        drawRect(ritualAreaX, ritualAreaY, ritualAreaX + 140, ritualAreaY + 110, 0xFF555555);
+        drawRect(ritualAreaX + 1, ritualAreaY + 1, ritualAreaX + 139, ritualAreaY + 109, 0xFF2D2D2D);
 
-        // 仪式输入槽位 (slot 1)
-        drawSlotBackground(guiX + 45, guiY + 34);
+        // ========== 動態繪製所有活躍槽位 ==========
+        int activeSlots = container.getActiveInputSlots();
 
-        // 箭头区域
-        int arrowX = guiX + 70;
-        int arrowY = guiY + 38;
-        for (int i = 0; i < 16; i++) {
-            drawRect(arrowX + i, arrowY + 2, arrowX + 1 + i, arrowY + 4, 0xFFFFFFFF);
+        if (activeSlots > 0) {
+            // 輸出槽位（中心位置）
+            Slot outputSlot = this.inventorySlots.getSlot(1);
+            if (outputSlot.xPos >= 0) {
+                drawSlotBackground(guiX + outputSlot.xPos - 1, guiY + outputSlot.yPos - 1);
+            }
+
+            // 輸入槽位（動態位置）
+            for (int i = 0; i < activeSlots; i++) {
+                Slot slot = this.inventorySlots.getSlot(2 + i);
+                if (slot instanceof SlotRitualInput) {
+                    SlotRitualInput ritualSlot = (SlotRitualInput) slot;
+                    if (ritualSlot.isActive() && slot.xPos >= 0) {
+                        drawSlotBackground(guiX + slot.xPos - 1, guiY + slot.yPos - 1);
+                    }
+                }
+            }
+
+            // 繪製連接線（從每個 input 到中心 output）
+            if (outputSlot.xPos >= 0) {
+                int cx = guiX + outputSlot.xPos + 8;
+                int cy = guiY + outputSlot.yPos + 8;
+                for (int i = 0; i < activeSlots; i++) {
+                    Slot slot = this.inventorySlots.getSlot(2 + i);
+                    if (slot instanceof SlotRitualInput && ((SlotRitualInput) slot).isActive() && slot.xPos >= 0) {
+                        int sx = guiX + slot.xPos + 8;
+                        int sy = guiY + slot.yPos + 8;
+                        drawDottedLine(sx, sy, cx, cy, 0x60FFFFFF);
+                    }
+                }
+            }
+        } else {
+            // 空：顯示提示
+            String noRituals = I18n.format("adversity.gui.no_rituals");
+            this.fontRenderer.drawString(noRituals,
+                    ritualAreaX + 70 - fontRenderer.getStringWidth(noRituals) / 2,
+                    ritualAreaY + 22, 0x666666);
         }
-        // 箭头尖
-        drawRect(arrowX + 14, arrowY + 1, arrowX + 15, arrowY + 5, 0xFFFFFFFF);
-        drawRect(arrowX + 15, arrowY + 2, arrowX + 16, arrowY + 4, 0xFFFFFFFF);
 
-        // 仪式输出槽位 (slot 2)
-        drawSlotBackground(guiX + 95, guiY + 34);
-
-        // ========== 绘制玩家背包 ==========
+        // ========== 繪製玩家背包（下移後的位置） ==========
         this.mc.getTextureManager().bindTexture(INVENTORY_BACKGROUND);
-        this.drawTexturedModalRect(guiX + 7, guiY + 84, 7, 17, 162, 54);
-        this.drawTexturedModalRect(guiX + 7, guiY + 142, 7, 17, 162, 18);
+        this.drawTexturedModalRect(guiX + 7, guiY + 148, 7, 17, 162, 54);
+        this.drawTexturedModalRect(guiX + 7, guiY + 206, 7, 17, 162, 18);
+    }
+
+    /**
+     * 繪製虛線連接
+     */
+    private void drawDottedLine(int x1, int y1, int x2, int y2, int color) {
+        double dist = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+        if (dist < 2)
+            return;
+        int steps = (int) (dist / 4);
+        for (int i = 0; i < steps; i += 2) {
+            float t1 = i / (float) steps;
+            float t2 = Math.min((i + 1) / (float) steps, 1.0f);
+            int px1 = (int) (x1 + (x2 - x1) * t1);
+            int py1 = (int) (y1 + (y2 - y1) * t1);
+            int px2 = (int) (x1 + (x2 - x1) * t2);
+            int py2 = (int) (y1 + (y2 - y1) * t2);
+            drawRect(Math.min(px1, px2), Math.min(py1, py2),
+                    Math.max(px1, px2) + 1, Math.max(py1, py2) + 1, color);
+        }
     }
 
     private void drawSlotBackground(int x, int y) {
@@ -159,22 +211,22 @@ public class GuiSanctuaryAltar extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        // 标题
+        // 標題
         String title = I18n.format("adversity.gui.sanctuary_ritual");
         this.fontRenderer.drawString(title, 8, 6, 0x404040);
 
-        // 仪式区域标签
+        // 儀式區域標籤
         this.fontRenderer.drawString(I18n.format("adversity.gui.ritual_area"), 30, 20, 0xAAAAAA);
 
-        // 显示匹配的仪式信息
+        // 顯示匹配儀式信息
         Rite matchingRite = te.getMatchingRite();
         if (matchingRite != null) {
             String cost = I18n.format("adversity.gui.cost") + ": " + matchingRite.getEntropyCost();
             int costColor = te.getFuel() >= matchingRite.getEntropyCost() ? 0x55FF55 : 0xFF5555;
-            this.fontRenderer.drawString(cost, 80, 68, costColor);
+            this.fontRenderer.drawString(cost, 80, 58, costColor);
         }
 
-        // 燃料条上方显示燃料值 (悬停时显示tooltip)
+        // 燃料 tooltip
         int fuelLocalX = 7;
         int fuelLocalY = 17;
         int relMouseX = mouseX - this.guiLeft;
@@ -182,7 +234,7 @@ public class GuiSanctuaryAltar extends GuiContainer {
         if (relMouseX >= fuelLocalX && relMouseX <= fuelLocalX + 18 &&
                 relMouseY >= fuelLocalY && relMouseY <= fuelLocalY + 52) {
             java.util.List<String> tooltip = new java.util.ArrayList<>();
-            tooltip.add("\u00A76\u29C9 \u71B5\u80FD\u71C3\u6599"); // §6⧉ 熵能燃料
+            tooltip.add("\u00A76\u29C9 \u71B5\u80FD\u71C3\u6599");
             tooltip.add("\u00A77" + te.getFuel() + " / " + te.getMaxFuel());
             if (te.getMaxFuel() > 0) {
                 int pct = (int) (te.getFuelPercentage() * 100);
@@ -191,7 +243,7 @@ public class GuiSanctuaryAltar extends GuiContainer {
             this.drawHoveringText(tooltip, relMouseX, relMouseY);
         }
 
-        // 玩家背包标签
+        // 玩家背包標籤
         this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 0x404040);
     }
 }

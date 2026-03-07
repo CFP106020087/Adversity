@@ -42,6 +42,12 @@ import java.util.List;
  * Sanctuary.setDimensionStage(1, "scholar");
  * Sanctuary.setEntityStage("minecraft:wither", "warden");
  * Sanctuary.setBiomeStage("minecraft:hell", "scholar");
+ *
+ * // Enchantment blacklist/whitelist gating
+ * Sanctuary.setEnchantmentGating("scholar", true, ["minecraft:sharpness"]);
+ *
+ * // Sanctuary activation items (override config)
+ * Sanctuary.setActivationItems(["minecraft:nether_star"]);
  */
 @ZenRegister
 @ZenClass("mods.adversity.Sanctuary")
@@ -128,6 +134,69 @@ public class SanctuaryCT {
         return RitualManager.getRiteCount();
     }
 
+    // ==================== 儀式效果 ====================
+
+    /**
+     * 為已註冊的儀式設置特殊效果
+     *
+     * ZenScript:
+     * Sanctuary.setRitualEffect("purge_curse", "adversity:purge_curse",
+     * {"curse_type": "black_swan", "purge_amount": 0.1, "immunity_duration":
+     * 6000});
+     */
+    @ZenMethod
+    public static void setRitualEffect(String ritualId, String effectId, crafttweaker.api.data.IData params) {
+        ResourceLocation riteId = ritualId.contains(":")
+                ? new ResourceLocation(ritualId)
+                : new ResourceLocation(Adversity.MODID, ritualId);
+
+        Rite existing = RitualManager.getRiteById(riteId);
+        if (existing == null) {
+            CraftTweakerAPI.logWarning("[Adversity] Cannot set effect: ritual '" + ritualId + "' not found");
+            return;
+        }
+
+        ResourceLocation effId = effectId.contains(":")
+                ? new ResourceLocation(effectId)
+                : new ResourceLocation(Adversity.MODID, effectId);
+
+        // 解析 IData -> Map<String, Object>
+        java.util.Map<String, Object> paramMap = new java.util.HashMap<>();
+        if (params != null && params instanceof crafttweaker.api.data.DataMap) {
+            crafttweaker.api.data.DataMap dataMap = (crafttweaker.api.data.DataMap) params;
+            for (String key : dataMap.asMap().keySet()) {
+                crafttweaker.api.data.IData val = dataMap.asMap().get(key);
+                if (val instanceof crafttweaker.api.data.DataInt) {
+                    paramMap.put(key, val.asInt());
+                } else if (val instanceof crafttweaker.api.data.DataDouble) {
+                    paramMap.put(key, val.asDouble());
+                } else if (val instanceof crafttweaker.api.data.DataFloat) {
+                    paramMap.put(key, val.asFloat());
+                } else if (val instanceof crafttweaker.api.data.DataBool) {
+                    paramMap.put(key, val.asBool());
+                } else if (val instanceof crafttweaker.api.data.DataString) {
+                    paramMap.put(key, val.asString());
+                } else if (val instanceof crafttweaker.api.data.DataList) {
+                    java.util.List<String> list = new java.util.ArrayList<>();
+                    for (crafttweaker.api.data.IData item : val.asList()) {
+                        list.add(item.asString());
+                    }
+                    paramMap.put(key, list);
+                }
+            }
+        }
+
+        // 用新的 effectId + params 重新構建 Rite
+        Rite newRite = new Rite(existing.getId(), existing.getInputs(),
+                existing.getOutput(), existing.getEntropyCost(),
+                existing.getRequiredStage(), existing.getRewardStage(),
+                existing.getCommand(), existing.getCategory(), existing.getCooldownTicks(),
+                effId, paramMap.isEmpty() ? null : paramMap);
+
+        RitualManager.registerRite(newRite);
+        CraftTweakerAPI.logInfo("[Adversity] Set ritual effect: " + ritualId + " -> " + effectId);
+    }
+
     // ==================== 物品门控 ====================
 
     @ZenMethod
@@ -144,6 +213,22 @@ public class SanctuaryCT {
     public static void setItemStages(IItemStack[] items, String stage) {
         for (IItemStack item : items) {
             setItemStage(item, stage);
+        }
+    }
+
+    /**
+     * 清除物品的所有 stage requirements（用於覆蓋重設）
+     *
+     * ZenScript:
+     * Sanctuary.clearItemStage(<minecraft:diamond_sword>);
+     * Sanctuary.setItemStage(<minecraft:diamond_sword>, "champion");
+     */
+    @ZenMethod
+    public static void clearItemStage(IItemStack item) {
+        ItemStack stack = CraftTweakerMC.getItemStack(item);
+        if (!stack.isEmpty()) {
+            StageGatingRegistry.clearItemStage(stack.getItem());
+            CraftTweakerAPI.logInfo("[Adversity] Cleared item stage: " + stack.getItem().getRegistryName());
         }
     }
 
@@ -210,5 +295,58 @@ public class SanctuaryCT {
     public static void removeBiomeStage(String biomeId) {
         StageGatingRegistry.removeBiomeStage(new ResourceLocation(biomeId));
         CraftTweakerAPI.logInfo("[Adversity] Removed biome stage: " + biomeId);
+    }
+
+    // ==================== 附魔門控黑白名單 ====================
+
+    /**
+     * 批量附魔門控（覆蓋 JSON enchant_gating 區段）
+     *
+     * ZenScript:
+     * Sanctuary.setEnchantmentGating("scholar", true, ["minecraft:sharpness",
+     * "minecraft:protection"]);
+     * // useBlacklist=true: 列表內附魔被 gate，其餘放行
+     * // useBlacklist=false: 列表內放行，其餘被 gate
+     */
+    @ZenMethod
+    public static void setEnchantmentGating(String stage, boolean useBlacklist, String[] enchantIds) {
+        java.util.Set<net.minecraft.util.ResourceLocation> set = new java.util.HashSet<>();
+        for (String id : enchantIds) {
+            if (id != null && !id.isEmpty()) {
+                set.add(new net.minecraft.util.ResourceLocation(id));
+            }
+        }
+        StageGatingRegistry.setEnchantmentGating(true, stage, useBlacklist, set);
+        CraftTweakerAPI.logInfo("[Adversity] Set enchantment gating: stage=" + stage
+                + ", blacklist=" + useBlacklist + ", entries=" + set.size());
+    }
+
+    // ==================== 聖所啟動物品 ====================
+
+    /**
+     * 設置聖所啟動物品（覆蓋 config 設定）
+     *
+     * ZenScript:
+     * Sanctuary.setActivationItems(["minecraft:nether_star", "minecraft:diamond"]);
+     */
+    @ZenMethod
+    public static void setActivationItems(String[] items) {
+        List<String> list = new java.util.ArrayList<>();
+        for (String item : items) {
+            if (item != null && !item.isEmpty()) {
+                list.add(item);
+            }
+        }
+        StageGatingRegistry.setActivationItems(list);
+        CraftTweakerAPI.logInfo("[Adversity] Set activation items: " + list);
+    }
+
+    /**
+     * 清除 CRT 啟動物品覆蓋（恢復使用 config 設定）
+     */
+    @ZenMethod
+    public static void clearActivationItems() {
+        StageGatingRegistry.setActivationItems(null);
+        CraftTweakerAPI.logInfo("[Adversity] Cleared activation items override, using config");
     }
 }

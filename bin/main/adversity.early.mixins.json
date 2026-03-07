@@ -6,7 +6,16 @@
   "target": "@env(DEFAULT)",
   "minVersion": "0.8",
   "mixins": [
-    "MixinContainerEnchantment"
+    "MixinContainerEnchantment",
+    "MixinContainerRepair",
+    "MixinSlot",
+    "MixinCraftingManager"
+  ],
+  "client": [
+    "MixinGuiCrafting",
+    "MixinGuiInventory",
+    "MixinGuiEnchantment",
+    "MixinGuiRepair"
   ],
   "injectors": {
     "maxShiftBy": 10

@@ -22,13 +22,16 @@ import java.util.Set;
 public class ProgressionSyncMessage implements IMessage {
 
     private Set<String> stages;
+    private String newStage;
 
     public ProgressionSyncMessage() {
         this.stages = new HashSet<>();
+        this.newStage = null;
     }
 
-    public ProgressionSyncMessage(Set<String> stages) {
+    public ProgressionSyncMessage(Set<String> stages, String newStage) {
         this.stages = new HashSet<>(stages);
+        this.newStage = newStage;
     }
 
     @Override
@@ -38,6 +41,11 @@ public class ProgressionSyncMessage implements IMessage {
         for (int i = 0; i < count; i++) {
             stages.add(ByteBufUtils.readUTF8String(buf));
         }
+        if (buf.readBoolean()) {
+            newStage = ByteBufUtils.readUTF8String(buf);
+        } else {
+            newStage = null;
+        }
     }
 
     @Override
@@ -45,6 +53,12 @@ public class ProgressionSyncMessage implements IMessage {
         buf.writeInt(stages.size());
         for (String stage : stages) {
             ByteBufUtils.writeUTF8String(buf, stage);
+        }
+        if (newStage != null) {
+            buf.writeBoolean(true);
+            ByteBufUtils.writeUTF8String(buf, newStage);
+        } else {
+            buf.writeBoolean(false);
         }
     }
 
@@ -62,6 +76,11 @@ public class ProgressionSyncMessage implements IMessage {
                         for (String stage : message.stages) {
                             cap.addStage(stage);
                         }
+                    }
+
+                    // 如果有新阶段，触发客户端提示和动画
+                    if (message.newStage != null && !message.newStage.isEmpty()) {
+                        com.adversity.client.gui.StageUnlockOverlay.triggerUnlock(message.newStage);
                     }
                 }
             });

@@ -157,6 +157,11 @@ public class ItemRegistry {
     @GameRegistry.ObjectHolder(Adversity.MODID + ":void_shard")
     public static final Item VOID_SHARD = null;
 
+    // ==================== 工具物品 ====================
+
+    @GameRegistry.ObjectHolder(Adversity.MODID + ":enchant_gating_tool")
+    public static final Item ENCHANT_GATING_TOOL = null;
+
     /**
      * 物品注册事件 - 在游戏启动时自动调用
      */
@@ -228,7 +233,10 @@ public class ItemRegistry {
                 // 材料物品
                 new ItemAffixEssence(),
                 new ItemAffixCrystal(),
-                new ItemVoidShard()
+                new ItemVoidShard(),
+
+                // 工具物品
+                new ItemEnchantGatingTool()
         );
 
         Adversity.LOGGER.info("Adversity items registered");
@@ -290,6 +298,9 @@ public class ItemRegistry {
         registerItemModel(AFFIX_ESSENCE);
         registerItemModel(AFFIX_CRYSTAL);
         registerItemModel(VOID_SHARD);
+
+        // 工具物品
+        registerItemModel(ENCHANT_GATING_TOOL);
 
         // 新增反制饰品
         registerItemModel(AFFIX_LENS);

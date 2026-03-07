@@ -849,3 +849,17 @@ adversity.crafting.need_sanctuary=必须在圣所附近才能合成此物品
 adversity.crafting.too_far=距离圣所祭坛太远（最远%d格）
 adversity.crafting.tier_too_low=需要圣所等级%d（当前: %d）
 adversity.crafting.stage_required=需要 %s 阶段才能合成此物品
+
+# GS 视觉反馈
+adversity.hud.stage=阶段
+adversity.stage.none=无
+adversity.stage.awakened=觉醒
+adversity.stage.scholar=学者
+adversity.stage.warden=守卫
+adversity.stage.champion=冠军
+adversity.stage.unlock=阶段解锁: %s
+adversity.gui.craft_may_require_stage=§c合成可能需要更高阶段
+adversity.gui.requires=需要
+adversity.gui.blocked_enchants=封鎖的附魔
+adversity.gui.blocked_crafting=封鎖的合成
+item.adversity.enchant_gating_tool.name=附魔门控工具

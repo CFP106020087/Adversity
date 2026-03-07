@@ -154,7 +154,7 @@ gui.adversity.guide.min_diff=难度 %.1f+
 affix.adversity.fiery.name=烈焰
 affix.adversity.fiery.desc=攻击叠加灼烧层数(5层爆发)，周围4格灼热光环，高级留下火焰痕迹
 affix.adversity.frosty.name=冰霜
-affix.adversity.frosty.desc=攻击叠加冻结层数(每层-12.5%速度)，满层完全冻结1秒，周围冰冻地面
+affix.adversity.frosty.desc=攻击叠加冻结层数(每次2层，每层-12.5%速度)，满8层完全冻结，4格寒霜光环+冰冻地面
 affix.adversity.vampiric.name=吸血
 affix.adversity.vampiric.desc=攻击吸取20%+生命，叠加血债层数(每层+25%吸血)，满4层建立持续吸血的血链
 affix.adversity.withering.name=凋零
@@ -176,7 +176,7 @@ affix.adversity.reflective.desc=受到近战伤害时反弹15%-50%给攻击者(�
 affix.adversity.haste.name=迅捷
 affix.adversity.haste.desc=移动速度提升15%-50%(随等级提升)
 affix.adversity.reaper.name=死神
-affix.adversity.reaper.desc=玩家死亡次数越少，怪物越强(0次死亡+200%伤害/+50%速度)
+affix.adversity.reaper.desc=玩家死亡次数越少怪物越强(0死=+200%伤害/+50%速度，10死后衰减，30死后消失)
 affix.adversity.blunt.name=钝击
 affix.adversity.blunt.desc=玩家护甲越高受伤越多(超过4护甲后每点+4%伤害，上限+150%)
 affix.adversity.giant_slayer.name=巨人杀手
@@ -186,7 +186,7 @@ affix.adversity.shield_breaker.desc=玩家吸收值(黄心)越高受伤越多(�
 affix.adversity.bloodthirst.name=嗜血
 affix.adversity.bloodthirst.desc=玩家血量越低受伤越多(50%血以下触发，30%以下大幅增强，最高+200%)
 affix.adversity.avarice.name=强欲
-affix.adversity.avarice.desc=玩家背包槽位占用越多受伤越多(超过9格后每格+3%伤害，上限+150%)
+affix.adversity.avarice.desc=玩家物品栏(含装备栏)槽位占用越多受伤越多(超过9格后每格+3%伤害，上限+150%)
 affix.adversity.hero.name=英雄
 affix.adversity.hero.desc=受到的伤害变为平方根(100伤害→10伤害)，大幅削弱高爆发
 affix.adversity.divine.name=神明
@@ -194,7 +194,7 @@ affix.adversity.divine.desc=受到的伤害变为立方根(125伤害→5伤害)�
 affix.adversity.outer_god.name=外神
 affix.adversity.outer_god.desc=受到的伤害变为四次根(256伤害→4伤害)，终极防御
 affix.adversity.tetanus.name=破伤风
-affix.adversity.tetanus.desc=累计命中5次后触发发作，扣除玩家当前生命的50%(10秒不被打重置)
+affix.adversity.tetanus.desc=累计命中5次后触发发作，扣除50%当前生命(10秒衰减，高等级所需次数降低至3)
 affix.adversity.reversal.name=逆转
 affix.adversity.reversal.desc=伤害逆转：低伤害变高，高伤害变低（弱攻击更有效）
 affix.adversity.oblivion.name=遗忘
@@ -216,7 +216,7 @@ affix.adversity.divest.desc=攻击25%+几率封印饰品或手持物品20秒(转
 affix.adversity.annihilate.name=湮灭
 affix.adversity.annihilate.desc=攻击15%+几率将背包物品送入虚空60秒后自动返还(不会真正丢失)
 affix.adversity.nightmare.name=梦魇
-affix.adversity.nightmare.desc=攻击40%+几率施加失明/迟缓等负面效果，由不睡觉触发的专属词条
+affix.adversity.nightmare.desc=恐惧效果+减速+无视护甲的幻象伤害，梦魇系统专属词条
 affix.adversity.greed.name=贪婪
 affix.adversity.greed.desc=玩家装备的饰品越多受伤越多(每个饰品+15%伤害，上限+100%)
 affix.adversity.black_swan.name=黑天鹅
@@ -320,7 +320,15 @@ guide.adversity.tab.rituals=仪式
 guide.adversity.tab.progression=进度
 guide.adversity.tab.tips=技巧
 guide.adversity.tab.affixes=词条
+guide.adversity.tab.difficulty=难度
 guide.adversity.tab.crt=CRT接口
+
+# 难度系统页
+guide.adversity.difficulty.title=难度系统
+guide.adversity.difficulty.intro=难度由距离和时间两个维度共同决定。距离出生点越远、游戏时间越长，怪物就越强大。精英怪在高难度区域产生，携带词条并获得属性加成。
+guide.adversity.difficulty.source=⬡ 难度来源
+guide.adversity.difficulty.scaling=⬡ 属性缩放
+guide.adversity.difficulty.tiers=⬡ 精英等级
 
 # 词条百科
 guide.adversity.affixes.title=词条百科
@@ -333,10 +341,10 @@ guide.adversity.affixes.withering=§8凋零§r：叠加腐蚀并降低护甲（6
 guide.adversity.affixes.blunt=§7钝击§r：护甲值越高受到的伤害越大（每点+4%，上限+150%）。
 guide.adversity.affixes.giant_slayer=§7巨人杀手§r：最大生命值越高受到的伤害越大（每点+2%，上限+200%）。
 guide.adversity.affixes.shield_breaker=§7破盾§r：吸收值越高受到的伤害越大（每点+8%，上限+250%）。
-guide.adversity.affixes.bloodthirst=§4渴血§r：玩家生命值百分比越低伤害越高，50%以下指数级增长。
-guide.adversity.affixes.avarice=§e强欲§r：背包占用槽位越多伤害越大（每槽+3%，上限+150%）。§7[反制：轻装护身符]
+guide.adversity.affixes.bloodthirst=§4嗜血§r：玩家生命值百分比越低伤害越高，50%以下触发，30%以下加速增长，最高+200%。
+guide.adversity.affixes.avarice=§e强欲§r：物品栏(含装备栏)占用槽位越多伤害越大（超9格后每槽+3%，上限+150%）。§7[反制：轻装护身符]
 guide.adversity.affixes.greed=§e贪婪§r：装备饰品越多伤害越大（每件+15%，上限+100%）。
-guide.adversity.affixes.reaper=§5死神§r：玩家死亡次数越少怪物越强（最高+200%伤害，+50%速度）。
+guide.adversity.affixes.reaper=§5死神§r：玩家死亡次数越少怪物越强（0死=+200%伤害/+50%速度，10死后衰减，30死后消失）。
 guide.adversity.affixes.nightmare=§5梦魇§r：恐惧效果+减速+无视护甲的幻象伤害。
 
 guide.adversity.affixes.curses=§4⚠ 永久诅咒（不可逆！）
@@ -347,15 +355,15 @@ guide.adversity.affixes.black_coffin=§4黑棺§r：§c永久§r封印背包槽�
 guide.adversity.affixes.defensive=§a🛡 防御型词条
 guide.adversity.affixes.reflective=§e反射§r：反弹近战伤害给攻击者。反弹比例随等级提升。§7[反制：真伤水晶]
 guide.adversity.affixes.regenerating=§a再生§r：持续回复生命值。§7[反制：凋零印记]
-guide.adversity.affixes.hardened=§7硬化§r：完全免疑击退+霸体（受伤后1秒30%减伤，2秒CD）。
+guide.adversity.affixes.hardened=§7硬化§r：完全免疫击退+霸体（受伤后1秒30%-50%减伤，2秒CD，随等级提升）。
 guide.adversity.affixes.fortified=§7铁壁§r：50%血以下触发，每缺1%血+1.5%护甲，30%以下额外加成，最高+150%护甲。
 guide.adversity.affixes.hero=§e英雄§r：受到的伤害变为平方根(√x)。100伤→ 10，16伤→4。§7[与神明/外神互斥]
 guide.adversity.affixes.divine=§b神明§r：受到的伤害变为立方根(∛x)。125伤→5，27伤→3。§7[与英雄/外神互斥]
 guide.adversity.affixes.outer_god=§5外神§r：受到的伤害变为四次根(x^0.25)。256伤→4，10000伤→10。仅通过飞升获得。§7[终极防御]
-guide.adversity.affixes.adaptive=§9自适应§r：记忆伤害类型，相同类型的伤害逐渐降低。
+guide.adversity.affixes.adaptive=§9自适应§r：记忆最近5次伤害类型，重复类型每次+15%抗性（最高60%）。切换伤害类型可重置。
 guide.adversity.affixes.antimagic=§5反魔§r：免疫魔法伤害。 6格光环使玩家正面药水失效。§7[反制：反魔护符]
 guide.adversity.affixes.symbiotic=§d共生§r：与附近同类分摊受到的伤害。
-guide.adversity.affixes.shedding=§a蜓皮§r：致命伤时25%概率触发：复活到 30%HP+清除debuff+加速。每只怪仅一次。
+guide.adversity.affixes.shedding=§a蜕皮§r：致命伤时25%-50%概率触发(随等级)：复活到~30%HP+清除debuff+加速。每只怪仅一次。
 guide.adversity.affixes.ascension=§6飞升§r：死亡时升阶防御词条：英雄→神明→外神链。§7[反制：封魂之尘]
 
 guide.adversity.affixes.utility=§d⚡ 功能型词条
@@ -363,13 +371,13 @@ guide.adversity.affixes.teleporting=§d传送§r：受伤后传送到随机位�
 guide.adversity.affixes.blinding=§8致盲§r：施加屏幕致盲效果+降低攻击力。§7[反制：澄明之眼]
 guide.adversity.affixes.horror=§5恐惧§r：施加屏幕恐惧效果+击退+减速。§7[反制：勇气护符]
 guide.adversity.affixes.shackle=§8枷锁§r：攻击时随机封印装备槽。§7[反制：灵魂锁链]
-guide.adversity.affixes.divest=§c褮夺§r：25%概率将随机一件饰品封印为令牌（~20秒后自动恢复）。无Baubles模组则封印手持物品。§7[反制：空间锚点]
-guide.adversity.affixes.disenchant=§5消魔§r：20%概率临时沉默一件装备的全部附魔，持60秒+。§7[反制：附魔守护者]
+guide.adversity.affixes.divest=§c褫夺§r：25%概率将随机一件饰品封印为令牌（~20秒后自动恢复）。无Baubles模组则封印手持物品。§7[反制：空间锚点]
+guide.adversity.affixes.disenchant=§5祛魔§r：20%概率临时沉默一件装备的全部附魔，持60秒+。§7[反制：附魔守护者]
 guide.adversity.affixes.gravity=§9重力§r：将玩家拉向怪物。§7[反制：锚石项链]
 guide.adversity.affixes.haste=§b疾速§r：永久提升移动速度。
 guide.adversity.affixes.splitting=§a分裂§r：死亡时分裂为2个弱化副本（半血）。副本不再分裂，不掉落。§7[反制：幽灵斗篷]
 guide.adversity.affixes.oblivion=§8遗忘§r：攻击时使玩家丢失经验。§7[反制：记忆水晶]
-guide.adversity.affixes.tetanus=§2破伤风§r：累计命中5次后扣除50%当前HP。命中计数10秒后衰减。§7[反制：免疫徽章]
+guide.adversity.affixes.tetanus=§2破伤风§r：累计命中5次(高等级降至3次)后扣除50%当前HP(至少4点)。10秒后衰减。§7[反制：免疫徽章]
 guide.adversity.affixes.reversal=§c逆转§r：反转伤害规则——弱攻击反而伤害更高，强攻击伤害大幅缩水。请用弱武器！§7[反制：平衡护符]
 
 guide.adversity.affixes.special=§6★ 特殊型词条
@@ -377,7 +385,7 @@ guide.adversity.affixes.vampiric=§4吸血§r：20%+3%/tier吸血。血债叠层
 guide.adversity.affixes.purifier=§e净化者§r：夺取玩家正面药水并转移给怪物。30秒内玩家无法获得新药水。
 guide.adversity.affixes.unclean=§2不洁§r：攻击时施加随机减益效果组合。
 guide.adversity.affixes.annihilate=§c湮灭§r：攻击时随机将玩家背包物品临时删除到虚空。
-guide.adversity.affixes.thorny=§2荆棘§r：近战攻击者获得“刺伤”叠层（每层+10%受伤），5层触发刺穿真实伤害。
+guide.adversity.affixes.thorny=§2荆棘§r：近战攻击者获得“刺伤”叠层（每层+10%受伤），5层触发4+穿甲伤害(随等级提升)。
 
 # CRT/整合包作者页
 guide.adversity.crt.title=CraftTweaker API
@@ -510,8 +518,8 @@ guide.adversity.enchants.intro=这些特殊附魔可以帮助你对抗精英怪�
 guide.adversity.enchants.list=附魔列表
 guide.adversity.enchants.soulbound=灵魂锁定：保护装备免受枷锁封印。等级I: 33%% / II: 66%% / III: 100%%阻挡率
 guide.adversity.enchants.breaker=破咒者：攻击时10/20/30%%几率移除精英的一个随机词条
-guide.adversity.enchants.entropy_affinity=熵能亲和：+25%%/+50%%熵能掉落(护甲附魔)
-guide.adversity.enchants.purifying_touch=净化之触：缩短封印持续时间-30%%/-50%%/-70%%(护甲附魔)
+guide.adversity.enchants.entropy_affinity=熵能亲和：+25%%/+50%%熵能掉落(护甲附魔，多件乘法叠加)
+guide.adversity.enchants.purifying_touch=净化之触：缩短封印持续时间-30%%/-50%%/-70%%(护甲附魔，取最高等级不叠加)
 guide.adversity.enchants.resolute_will=坚定意志：免疫净化者(Purifier)词条的药水窃取效果
 
 # 仪式页
@@ -650,13 +658,13 @@ adversity.ward.giantslayer=巨人杀手
 adversity.bauble.guardian_heart.special=§d[被动] §7累计阻止%d次诅咒触发圣盾
 adversity.bauble.guardian_heart.effect1=§9+4生命值
 adversity.bauble.guardian_heart.effect2=§9低血减伤20%
-adversity.bauble.guardian_heart.effect3=§9致命保护(50%保命)
+adversity.bauble.guardian_heart.effect3=§9致命保护(50%保命，3分钟CD)
 
 # 空间锚点特效
 adversity.bauble.spatial_anchor.special=§d[被动] §7阻止褫夺获得攻击加成
 adversity.bauble.spatial_anchor.effect1=§9+15%攻击力
-adversity.bauble.spatial_anchor.effect2=§9+25%暴击伤害
-adversity.bauble.spatial_anchor.effect3=§9击杀回血
+adversity.bauble.spatial_anchor.effect2=§925%几率触发+25%伤害
+adversity.bauble.spatial_anchor.effect3=§9击杀回复1心
 
 # 灵魂锁链特效
 adversity.bauble.soul_chain.special=§d[被动] §7阻止枷锁眩晕攻击者
@@ -703,9 +711,9 @@ adversity.bauble.bloodrage_emblem.effect1=§9攻击吸血5%
 adversity.bauble.bloodrage_emblem.effect2=§9低血加攻速(最高+30%)
 adversity.bauble.bloodrage_emblem.effect3=§9击杀回复半心
 
-adversity.bauble.temporal_watch.effect1=§9debuff时间-40%
-adversity.bauble.temporal_watch.effect2=§9buff时间+30%
-adversity.bauble.temporal_watch.effect3=§9饥饿-25%
+adversity.bauble.temporal_watch.effect1=§98格内敌人攻速-20%
+adversity.bauble.temporal_watch.effect2=§9致死伤害触发2秒时停(3分钟CD)
+adversity.bauble.temporal_watch.effect3=§9词条抵抗:迅捷/狂暴/遗忘
 
 adversity.bauble.phantom_cloak.effect1=§9潜行时隐身
 adversity.bauble.phantom_cloak.effect2=§9背刺+40%
@@ -841,3 +849,17 @@ adversity.crafting.need_sanctuary=必须在圣所附近才能合成此物品
 adversity.crafting.too_far=距离圣所祭坛太远（最远%d格）
 adversity.crafting.tier_too_low=需要圣所等级%d（当前: %d）
 adversity.crafting.stage_required=需要 %s 阶段才能合成此物品
+
+# GS 视觉反馈
+adversity.hud.stage=阶段
+adversity.stage.none=无
+adversity.stage.awakened=觉醒
+adversity.stage.scholar=学者
+adversity.stage.warden=守卫
+adversity.stage.champion=冠军
+adversity.stage.unlock=阶段解锁: %s
+adversity.gui.craft_may_require_stage=§c合成可能需要更高阶段
+adversity.gui.requires=需要
+adversity.gui.blocked_enchants=封鎖的附魔
+adversity.gui.blocked_crafting=封鎖的合成
+item.adversity.enchant_gating_tool.name=附魔门控工具

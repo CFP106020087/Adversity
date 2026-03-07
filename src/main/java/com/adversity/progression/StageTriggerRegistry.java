@@ -5,27 +5,29 @@ import com.adversity.capability.CapabilityHandler;
 import com.adversity.capability.IAdversityCapability;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 自动阶段触发注册表
  * 支持基于击杀、难度达标等条件自动解锁阶段
+ * 
+ * 击杀计数持久化到 PlayerPersisted NBT:
+ * PlayerPersisted.AdversityKillCounts.{triggerId} = int
  */
 @Mod.EventBusSubscriber(modid = Adversity.MODID)
 public class StageTriggerRegistry {
 
+    private static final String NBT_KILL_COUNTS = "AdversityKillCounts";
+
     private static final List<KillTrigger> KILL_TRIGGERS = new ArrayList<>();
     private static final List<DifficultyTrigger> DIFFICULTY_TRIGGERS = new ArrayList<>();
-    private static final Map<String, Integer> playerKillCounts = new HashMap<>();
 
     public static class KillTrigger {
         public final String id;
@@ -69,7 +71,6 @@ public class StageTriggerRegistry {
     public static void clearAll() {
         KILL_TRIGGERS.clear();
         DIFFICULTY_TRIGGERS.clear();
-        playerKillCounts.clear();
         Adversity.LOGGER.info("Cleared all stage triggers");
     }
 
@@ -79,6 +80,38 @@ public class StageTriggerRegistry {
 
     public static int getDifficultyTriggerCount() {
         return DIFFICULTY_TRIGGERS.size();
+    }
+
+    // ==================== 持久化 API ====================
+
+    /**
+     * 从 PlayerPersisted NBT 读取击杀计数
+     */
+    private static int getKillCount(EntityPlayer player, String triggerId) {
+        NBTTagCompound persisted = player.getEntityData()
+                .getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+        if (!persisted.hasKey(NBT_KILL_COUNTS)) {
+            return 0;
+        }
+        return persisted.getCompoundTag(NBT_KILL_COUNTS).getInteger(triggerId);
+    }
+
+    /**
+     * 写入击杀计数到 PlayerPersisted NBT
+     */
+    private static void setKillCount(EntityPlayer player, String triggerId, int count) {
+        NBTTagCompound playerData = player.getEntityData();
+        NBTTagCompound persisted = playerData.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+        NBTTagCompound killCounts = persisted.getCompoundTag(NBT_KILL_COUNTS);
+
+        if (count <= 0) {
+            killCounts.removeTag(triggerId);
+        } else {
+            killCounts.setInteger(triggerId, count);
+        }
+
+        persisted.setTag(NBT_KILL_COUNTS, killCounts);
+        playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, persisted);
     }
 
     // ==================== 事件处理 ====================
@@ -110,15 +143,14 @@ public class StageTriggerRegistry {
             if (cap.hasStage(trigger.rewardStage))
                 continue;
 
-            String key = player.getName() + ":" + trigger.id;
-            int count = playerKillCounts.getOrDefault(key, 0) + 1;
-            playerKillCounts.put(key, count);
+            int count = getKillCount(player, trigger.id) + 1;
+            setKillCount(player, trigger.id, count);
 
             if (count >= trigger.requiredKills) {
                 ProgressionEventHandler.addStage(player, trigger.rewardStage);
-                playerKillCounts.remove(key);
-                Adversity.LOGGER.info("Kill trigger '{}' activated for {}: stage '{}' unlocked",
-                        trigger.id, player.getName(), trigger.rewardStage);
+                setKillCount(player, trigger.id, 0); // 清除已完成的计数
+                Adversity.LOGGER.info("Kill trigger '{}' activated for {}: stage '{}' unlocked ({}/{})",
+                        trigger.id, player.getName(), trigger.rewardStage, count, trigger.requiredKills);
             }
         }
     }

@@ -835,3 +835,17 @@ adversity.crafting.need_sanctuary=Must be near a sanctuary to craft this item
 adversity.crafting.too_far=Too far from sanctuary altar (max %d blocks)
 adversity.crafting.tier_too_low=Requires sanctuary tier %d (current: %d)
 adversity.crafting.stage_required=Requires %s stage to craft this item
+
+# GS Visual Feedback
+adversity.hud.stage=Stage
+adversity.stage.none=None
+adversity.stage.awakened=Awakened
+adversity.stage.scholar=Scholar
+adversity.stage.warden=Warden
+adversity.stage.champion=Champion
+adversity.stage.unlock=Stage Unlocked: %s
+adversity.gui.craft_may_require_stage=§cCrafting may require a higher stage
+adversity.gui.requires=Requires
+adversity.gui.blocked_enchants=Blocked Enchantments
+adversity.gui.blocked_crafting=Blocked Crafting
+item.adversity.enchant_gating_tool.name=Enchant Gating Tool

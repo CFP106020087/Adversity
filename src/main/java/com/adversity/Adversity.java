@@ -53,6 +53,10 @@ public class Adversity {
         net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler(
                 instance,
                 new com.adversity.client.gui.AdversityGuiHandler());
+
+        // 加载 JSON 配置（CRT 在之后執行，同 key 自然覆蓋）
+        com.adversity.config.StageGatingConfigLoader.loadIfNeeded();
+        com.adversity.config.RitualConfigLoader.loadIfNeeded();
     }
 
     @Mod.EventHandler

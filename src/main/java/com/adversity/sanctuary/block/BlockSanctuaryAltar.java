@@ -249,13 +249,22 @@ public class BlockSanctuaryAltar extends Block implements ITileEntityProvider {
 
     /**
      * 检查物品是否是配置的激活物品
+     * CRT 覆蓋優先，否則使用 config
      * 支持格式: modid:item_name 或 modid:item_name:metadata
      */
     private boolean isActivationItem(net.minecraft.item.ItemStack stack) {
         if (stack.isEmpty())
             return false;
 
-        String[] configItems = com.adversity.config.AdversityConfig.sanctuarySettings.activationItems;
+        // 取得啟動物品列表：CRT 覆蓋 > config
+        String[] configItems;
+        if (com.adversity.sanctuary.StageGatingRegistry.hasActivationItemOverride()) {
+            java.util.List<String> crtItems = com.adversity.sanctuary.StageGatingRegistry.getActivationItems();
+            configItems = crtItems.toArray(new String[0]);
+        } else {
+            configItems = com.adversity.config.AdversityConfig.sanctuarySettings.activationItems;
+        }
+
         if (configItems == null || configItems.length == 0) {
             // 没有配置物品时，允许任意物品激活
             return true;
@@ -300,5 +309,17 @@ public class BlockSanctuaryAltar extends Block implements ITileEntityProvider {
         }
 
         return false;
+    }
+
+    /**
+     * 取得啟動物品顯示名稱（用於錯誤訊息）
+     */
+    public static String getActivationItemDisplay() {
+        if (com.adversity.sanctuary.StageGatingRegistry.hasActivationItemOverride()) {
+            java.util.List<String> items = com.adversity.sanctuary.StageGatingRegistry.getActivationItems();
+            return items.isEmpty() ? "any" : items.get(0);
+        }
+        String[] items = com.adversity.config.AdversityConfig.sanctuarySettings.activationItems;
+        return (items != null && items.length > 0) ? items[0] : "any";
     }
 }

@@ -186,43 +186,17 @@ public class SealedSlotOverlayRenderer {
     }
 
     /**
-     * Get GUI left position using reflection
+     * Get GUI left position using Forge public getter
      */
     private static int getGuiLeft(GuiContainer gui) {
-        try {
-            java.lang.reflect.Field field = GuiContainer.class.getDeclaredField("guiLeft");
-            field.setAccessible(true);
-            return field.getInt(gui);
-        } catch (Exception e) {
-            // Fallback: try obfuscated name
-            try {
-                java.lang.reflect.Field field = GuiContainer.class.getDeclaredField("field_147003_i");
-                field.setAccessible(true);
-                return field.getInt(gui);
-            } catch (Exception e2) {
-                return 0;
-            }
-        }
+        return gui.getGuiLeft();
     }
 
     /**
-     * Get GUI top position using reflection
+     * Get GUI top position using Forge public getter
      */
     private static int getGuiTop(GuiContainer gui) {
-        try {
-            java.lang.reflect.Field field = GuiContainer.class.getDeclaredField("guiTop");
-            field.setAccessible(true);
-            return field.getInt(gui);
-        } catch (Exception e) {
-            // Fallback: try obfuscated name
-            try {
-                java.lang.reflect.Field field = GuiContainer.class.getDeclaredField("field_147009_r");
-                field.setAccessible(true);
-                return field.getInt(gui);
-            } catch (Exception e2) {
-                return 0;
-            }
-        }
+        return gui.getGuiTop();
     }
 
     /**

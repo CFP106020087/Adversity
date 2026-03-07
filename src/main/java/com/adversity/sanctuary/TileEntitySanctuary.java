@@ -30,12 +30,20 @@ public class TileEntitySanctuary extends TileEntity implements ITickable, IInven
 
     private static final int SYNC_INTERVAL = 20; // 每秒同步一次
 
-    // 物品槽位: 0=燃料, 1=仪式输入, 2=仪式输出
-    private ItemStack fuelSlot = ItemStack.EMPTY;
-    private ItemStack ritualInputSlot = ItemStack.EMPTY;
-    private ItemStack ritualOutputSlot = ItemStack.EMPTY;
+    // ========== 槽位常量 ==========
+    public static final int MAX_RITUAL_SLOTS = 100;
+    public static final int SLOT_FUEL = 0;
+    public static final int SLOT_OUTPUT = 1;
+    public static final int SLOT_RITUAL_START = 2; // 2 ~ 101
+    public static final int TOTAL_SLOTS = 2 + MAX_RITUAL_SLOTS; // 102
+
+    // 物品槽位陣列
+    private ItemStack[] inventory = new ItemStack[TOTAL_SLOTS];
 
     public TileEntitySanctuary() {
+        for (int i = 0; i < TOTAL_SLOTS; i++) {
+            inventory[i] = ItemStack.EMPTY;
+        }
     }
 
     public void setType(SanctuaryType type) {
@@ -419,24 +427,24 @@ public class TileEntitySanctuary extends TileEntity implements ITickable, IInven
         if (!activated || world == null || world.isRemote)
             return false;
 
-        // 检查输入槽位
-        if (ritualInputSlot.isEmpty())
+        // 检查输入槽位（第一个输入槽）
+        if (inventory[SLOT_RITUAL_START].isEmpty())
             return false;
 
         // 检查输出槽位是否为空
-        if (!ritualOutputSlot.isEmpty())
+        if (!inventory[SLOT_OUTPUT].isEmpty())
             return false;
 
         // 查找匹配的仪式
         com.adversity.sanctuary.ritual.Rite rite = com.adversity.sanctuary.ritual.RitualManager
-                .getRite(ritualInputSlot);
+                .getRite(inventory[SLOT_RITUAL_START]);
         if (rite == null) {
             player.sendMessage(new net.minecraft.util.text.TextComponentTranslation("adversity.ritual.no_match"));
             return false;
         }
 
         // 检查输入数量是否足够
-        if (ritualInputSlot.getCount() < rite.getInput().getCount()) {
+        if (inventory[SLOT_RITUAL_START].getCount() < rite.getInput().getCount()) {
             player.sendMessage(
                     new net.minecraft.util.text.TextComponentTranslation("adversity.ritual.not_enough_input"));
             return false;
@@ -476,11 +484,11 @@ public class TileEntitySanctuary extends TileEntity implements ITickable, IInven
         cachedFuel -= rite.getEntropyCost();
 
         // 消耗输入物品
-        ritualInputSlot.shrink(rite.getInput().getCount());
+        inventory[SLOT_RITUAL_START].shrink(rite.getInput().getCount());
 
         // 放置输出物品
         if (!rite.getOutput().isEmpty()) {
-            ritualOutputSlot = rite.getOutput().copy();
+            inventory[SLOT_OUTPUT] = rite.getOutput().copy();
         }
 
         // 给予阶段奖励 (通过 EventHandler 触发事件)
@@ -512,72 +520,35 @@ public class TileEntitySanctuary extends TileEntity implements ITickable, IInven
     }
 
     /**
-     * 处理特殊仪式效果
+     * 處理儀式效果（通過 RitualEffectRegistry 分派）
      */
     private void handleSpecialRitualEffects(com.adversity.sanctuary.ritual.Rite rite,
             net.minecraft.entity.player.EntityPlayer player) {
-        String riteName = rite.getId().getPath();
 
-        switch (riteName) {
-            case "purge_curse":
-                // 净化诅咒：清除所有负面药水效果
-                java.util.List<net.minecraft.potion.Potion> toRemove = new java.util.ArrayList<>();
-                for (net.minecraft.potion.PotionEffect effect : player.getActivePotionEffects()) {
-                    if (effect.getPotion().isBadEffect()) {
-                        toRemove.add(effect.getPotion());
-                    }
-                }
-                for (net.minecraft.potion.Potion potion : toRemove) {
-                    player.removePotionEffect(potion);
-                }
+        // 優先使用 rite 指定的 effectId
+        net.minecraft.util.ResourceLocation effectId = rite.getEffectId();
 
-                // 清除饥饿和虚弱等常见负面效果
-                player.removePotionEffect(net.minecraft.init.MobEffects.HUNGER);
-                player.removePotionEffect(net.minecraft.init.MobEffects.WEAKNESS);
-                player.removePotionEffect(net.minecraft.init.MobEffects.MINING_FATIGUE);
-                player.removePotionEffect(net.minecraft.init.MobEffects.NAUSEA);
-                player.removePotionEffect(net.minecraft.init.MobEffects.BLINDNESS);
-                player.removePotionEffect(net.minecraft.init.MobEffects.POISON);
-                player.removePotionEffect(net.minecraft.init.MobEffects.WITHER);
-                player.removePotionEffect(net.minecraft.init.MobEffects.SLOWNESS);
-
-                // 恢复饥饿值和饱和度
-                player.getFoodStats().addStats(6, 0.6f);
-
-                // 提示玩家
-                player.sendMessage(new net.minecraft.util.text.TextComponentTranslation(
-                        "adversity.ritual.purge_curse.success"));
-
-                // 净化粒子效果
-                if (world instanceof net.minecraft.world.WorldServer) {
-                    ((net.minecraft.world.WorldServer) world).spawnParticle(
-                            net.minecraft.util.EnumParticleTypes.VILLAGER_HAPPY,
-                            player.posX, player.posY + 1.0, player.posZ,
-                            30, 0.5, 0.5, 0.5, 0.1);
-                }
-                break;
-
-            case "awakening":
-                // 觉醒仪式额外效果：给予玩家临时增益
-                player.addPotionEffect(new net.minecraft.potion.PotionEffect(
-                        net.minecraft.init.MobEffects.REGENERATION, 600, 1)); // 30秒再生II
-                player.addPotionEffect(new net.minecraft.potion.PotionEffect(
-                        net.minecraft.init.MobEffects.RESISTANCE, 600, 0)); // 30秒抗性I
-                break;
-
-            default:
-                // 其他仪式无特殊效果
-                break;
+        // 如果沒有指定 effectId，嘗試用 rite ID 查找（向後兼容）
+        if (effectId == null) {
+            effectId = rite.getId();
         }
+
+        com.adversity.sanctuary.ritual.IRitualEffect effect = com.adversity.sanctuary.ritual.RitualEffectRegistry
+                .get(effectId);
+
+        if (effect != null) {
+            effect.apply(player, rite, this, rite.getEffectParams());
+        }
+        // 沒有註冊效果 = 純物品轉化/命令儀式，無額外效果
     }
 
     /**
      * 获取当前输入槽位匹配的仪式信息 (用于GUI显示)
      */
     public com.adversity.sanctuary.ritual.Rite getMatchingRite() {
-        if (ritualInputSlot.isEmpty())
+        if (inventory[SLOT_RITUAL_START].isEmpty())
             return null;
-        return com.adversity.sanctuary.ritual.RitualManager.getRite(ritualInputSlot);
+        return com.adversity.sanctuary.ritual.RitualManager.getRite(inventory[SLOT_RITUAL_START]);
     }
 
     @Override
@@ -586,13 +557,13 @@ public class TileEntitySanctuary extends TileEntity implements ITickable, IInven
             return;
 
         // 处理燃料槽位的物品
-        if (!fuelSlot.isEmpty() && activated) {
-            int fuelValue = getFuelValueFromStack(fuelSlot);
+        if (!inventory[SLOT_FUEL].isEmpty() && activated) {
+            int fuelValue = getFuelValueFromStack(inventory[SLOT_FUEL]);
             if (fuelValue > 0 && cachedFuel < cachedMaxFuel) {
                 // 添加燃料
                 int added = addFuel(fuelValue);
                 if (added >= 0) {
-                    fuelSlot.shrink(1);
+                    inventory[SLOT_FUEL].shrink(1);
                     markDirty();
                 } else {
                     Adversity.LOGGER.warn("Sanctuary fuel add failed at {} (zone not found?)", pos);
@@ -658,26 +629,24 @@ public class TileEntitySanctuary extends TileEntity implements ITickable, IInven
 
     @Override
     public int getSizeInventory() {
-        return 3; // 0=燃料槽, 1=仪式输入, 2=仪式输出
+        return TOTAL_SLOTS;
     }
 
     @Override
     public boolean isEmpty() {
-        return fuelSlot.isEmpty() && ritualInputSlot.isEmpty() && ritualOutputSlot.isEmpty();
+        for (ItemStack stack : inventory) {
+            if (!stack.isEmpty())
+                return false;
+        }
+        return true;
     }
 
     @Override
     public ItemStack getStackInSlot(int index) {
-        switch (index) {
-            case 0:
-                return fuelSlot;
-            case 1:
-                return ritualInputSlot;
-            case 2:
-                return ritualOutputSlot;
-            default:
-                return ItemStack.EMPTY;
+        if (index >= 0 && index < TOTAL_SLOTS) {
+            return inventory[index];
         }
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -704,16 +673,8 @@ public class TileEntitySanctuary extends TileEntity implements ITickable, IInven
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-        switch (index) {
-            case 0:
-                fuelSlot = stack;
-                break;
-            case 1:
-                ritualInputSlot = stack;
-                break;
-            case 2:
-                ritualOutputSlot = stack;
-                break;
+        if (index >= 0 && index < TOTAL_SLOTS) {
+            inventory[index] = stack;
         }
         markDirty();
     }
@@ -742,16 +703,13 @@ public class TileEntitySanctuary extends TileEntity implements ITickable, IInven
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        switch (index) {
-            case 0:
-                return isValidFuel(stack); // 燃料槽
-            case 1:
-                return true; // 仪式输入槽，任何物品
-            case 2:
-                return false; // 仪式输出槽，只能取出
-            default:
-                return false;
-        }
+        if (index == SLOT_FUEL)
+            return isValidFuel(stack);
+        if (index == SLOT_OUTPUT)
+            return false; // 输出槽只能取出
+        if (index >= SLOT_RITUAL_START && index < TOTAL_SLOTS)
+            return true; // 仪式输入槽
+        return false;
     }
 
     @Override
@@ -800,9 +758,9 @@ public class TileEntitySanctuary extends TileEntity implements ITickable, IInven
 
     @Override
     public void clear() {
-        fuelSlot = ItemStack.EMPTY;
-        ritualInputSlot = ItemStack.EMPTY;
-        ritualOutputSlot = ItemStack.EMPTY;
+        for (int i = 0; i < TOTAL_SLOTS; i++) {
+            inventory[i] = ItemStack.EMPTY;
+        }
     }
 
     @Override
@@ -829,26 +787,17 @@ public class TileEntitySanctuary extends TileEntity implements ITickable, IInven
         nbt.setInteger("tier", tier);
         nbt.setBoolean("activated", activated);
 
-        // 保存燃料槽
-        if (!fuelSlot.isEmpty()) {
-            NBTTagCompound fuelTag = new NBTTagCompound();
-            fuelSlot.writeToNBT(fuelTag);
-            nbt.setTag("FuelSlot", fuelTag);
+        // 保存所有非空槽位
+        net.minecraft.nbt.NBTTagList invList = new net.minecraft.nbt.NBTTagList();
+        for (int i = 0; i < TOTAL_SLOTS; i++) {
+            if (!inventory[i].isEmpty()) {
+                NBTTagCompound slotTag = new NBTTagCompound();
+                slotTag.setInteger("Slot", i);
+                inventory[i].writeToNBT(slotTag);
+                invList.appendTag(slotTag);
+            }
         }
-
-        // 保存仪式输入槽
-        if (!ritualInputSlot.isEmpty()) {
-            NBTTagCompound inputTag = new NBTTagCompound();
-            ritualInputSlot.writeToNBT(inputTag);
-            nbt.setTag("RitualInputSlot", inputTag);
-        }
-
-        // 保存仪式输出槽
-        if (!ritualOutputSlot.isEmpty()) {
-            NBTTagCompound outputTag = new NBTTagCompound();
-            ritualOutputSlot.writeToNBT(outputTag);
-            nbt.setTag("RitualOutputSlot", outputTag);
-        }
+        nbt.setTag("Inventory", invList);
 
         return nbt;
     }
@@ -864,15 +813,32 @@ public class TileEntitySanctuary extends TileEntity implements ITickable, IInven
         tier = nbt.getInteger("tier");
         activated = nbt.getBoolean("activated");
 
-        // 读取燃料槽
-        fuelSlot = nbt.hasKey("FuelSlot") ? new ItemStack(nbt.getCompoundTag("FuelSlot")) : ItemStack.EMPTY;
+        // 清空并重讀
+        for (int i = 0; i < TOTAL_SLOTS; i++) {
+            inventory[i] = ItemStack.EMPTY;
+        }
 
-        // 读取仪式输入槽
-        ritualInputSlot = nbt.hasKey("RitualInputSlot") ? new ItemStack(nbt.getCompoundTag("RitualInputSlot"))
-                : ItemStack.EMPTY;
-
-        // 读取仪式输出槽
-        ritualOutputSlot = nbt.hasKey("RitualOutputSlot") ? new ItemStack(nbt.getCompoundTag("RitualOutputSlot"))
-                : ItemStack.EMPTY;
+        if (nbt.hasKey("Inventory")) {
+            // 新格式
+            net.minecraft.nbt.NBTTagList invList = nbt.getTagList("Inventory", 10);
+            for (int i = 0; i < invList.tagCount(); i++) {
+                NBTTagCompound slotTag = invList.getCompoundTagAt(i);
+                int slot = slotTag.getInteger("Slot");
+                if (slot >= 0 && slot < TOTAL_SLOTS) {
+                    inventory[slot] = new ItemStack(slotTag);
+                }
+            }
+        } else {
+            // 舉格式向後兌容
+            if (nbt.hasKey("FuelSlot")) {
+                inventory[SLOT_FUEL] = new ItemStack(nbt.getCompoundTag("FuelSlot"));
+            }
+            if (nbt.hasKey("RitualInputSlot")) {
+                inventory[SLOT_RITUAL_START] = new ItemStack(nbt.getCompoundTag("RitualInputSlot"));
+            }
+            if (nbt.hasKey("RitualOutputSlot")) {
+                inventory[SLOT_OUTPUT] = new ItemStack(nbt.getCompoundTag("RitualOutputSlot"));
+            }
+        }
     }
 }

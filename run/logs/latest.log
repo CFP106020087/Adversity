@@ -1,174 +1,171 @@
-[16:12:34] [main/INFO] [GradleStart]: Found and added coremod: fermiumbooter.FermiumPlugin
-[16:12:34] [main/INFO] [GradleStart]: Found and added coremod: com.adversity.asm.AdversityLoadingPlugin
-[16:12:34] [main/INFO] [GradleStart]: Running with arguments: [--userProperties, {}, --assetsDir, C:/Users/jason/.gradle/caches/minecraft/assets, --assetIndex, 1.12, --accessToken{REDACTED}, --version, 1.12.2, --tweakClass, net.minecraftforge.fml.common.launcher.FMLTweaker, --tweakClass, net.minecraftforge.gradle.tweakers.CoremodTweaker]
-[16:12:34] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLTweaker
-[16:12:34] [main/INFO] [LaunchWrapper]: Using primary tweak class name net.minecraftforge.fml.common.launcher.FMLTweaker
-[16:12:34] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.CoremodTweaker
-[16:12:34] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLTweaker
-[16:12:34] [main/INFO] [FML]: Forge Mod Loader version 14.23.5.2847 for Minecraft 1.12.2 loading
-[16:12:34] [main/INFO] [FML]: Java is OpenJDK 64-Bit Server VM, version 1.8.0_472, running on Windows 11:amd64:10.0, installed at C:\Program Files\Eclipse Adoptium\jdk-8.0.472.8-hotspot\jre
-[16:12:34] [main/ERROR] [FML]: Apache Maven library folder was not in the format expected. Using default libraries directory.
-[16:12:34] [main/ERROR] [FML]: Full: C:\Users\jason\.gradle\caches\modules-2\files-2.1\org.apache.maven\maven-artifact\3.5.3\7dc72b6d6d8a6dced3d294ed54c2cc3515ade9f4\maven-artifact-3.5.3.jar
-[16:12:34] [main/ERROR] [FML]: Trimmed: c:/users/jason/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-artifact/3.5.3/
-[16:12:34] [main/INFO] [FML]: Managed to load a deobfuscated Minecraft name- we are in a deobfuscated environment. Skipping runtime deobfuscation
-[16:12:34] [main/INFO] [FML]: Detected deobfuscated environment, loading log configs for colored console logs.
-[16:12:35] [main/INFO] [FML]: Ignoring missing certificate for coremod FMLCorePlugin (net.minecraftforge.fml.relauncher.FMLCorePlugin), we are in deobf and it's a forge core plugin
-[16:12:35] [main/INFO] [FML]: Ignoring missing certificate for coremod FMLForgePlugin (net.minecraftforge.classloading.FMLForgePlugin), we are in deobf and it's a forge core plugin
-[16:12:35] [main/INFO] [FML]: Found a command line coremod : com.adversity.asm.AdversityLoadingPlugin
-[16:12:35] [main/INFO] [STDOUT]: [com.adversity.asm.AdversityLoadingPlugin:<clinit>:21]: [Adversity] AdversityLoadingPlugin static init
-[16:12:35] [main/INFO] [FermiumRegistryAPI]: FermiumRegistryAPI supplied "adversity.early.mixins.json" for early mixin enqueue, adding.
-[16:12:35] [main/INFO] [STDOUT]: [com.adversity.asm.AdversityLoadingPlugin:<clinit>:25]: [Adversity] Early mixins queued via FermiumBooter
-[16:12:35] [main/INFO] [FML]: Ignoring missing certificate for coremod AdversityCore (com.adversity.asm.AdversityLoadingPlugin), as this is probably a dev workspace
-[16:12:35] [main/INFO] [FML]: Found a command line coremod : fermiumbooter.FermiumPlugin
-[16:12:35] [main/INFO] [FML]: Ignoring missing certificate for coremod FermiumBooter (fermiumbooter.FermiumPlugin), as this is probably a dev workspace
-[16:12:35] [main/INFO] [mixin]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/C:/mywork/adversity/libs/%60FermiumBooter-1.2.0.jar Service=LaunchWrapper Env=CLIENT
-[16:12:35] [main/INFO] [mixin]: Initialised Mixin FML Remapper Adapter with net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper@1c93f6e1
-[16:12:35] [main/INFO] [mixin]: Compatibility level set to JAVA_8
-[16:12:35] [main/INFO] [FML]: Searching C:\mywork\adversity\run\.\mods for mods
-[16:12:35] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.gradle.tweakers.CoremodTweaker
-[16:12:35] [main/INFO] [GradleStart]: Injecting location in coremod net.minecraftforge.fml.relauncher.FMLCorePlugin
-[16:12:35] [main/INFO] [GradleStart]: Injecting location in coremod net.minecraftforge.classloading.FMLForgePlugin
-[16:12:35] [main/INFO] [GradleStart]: Injecting location in coremod com.adversity.asm.AdversityLoadingPlugin
-[16:12:35] [main/INFO] [GradleStart]: Injecting location in coremod fermiumbooter.FermiumPlugin
-[16:12:35] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker
-[16:12:35] [main/INFO] [LaunchWrapper]: Loading tweak class name org.spongepowered.asm.mixin.EnvironmentStateTweaker
-[16:12:35] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLDeobfTweaker
-[16:12:35] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.AccessTransformerTweaker
-[16:12:35] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker
-[16:12:35] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker
-[16:12:35] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.relauncher.CoreModManager$FMLPluginWrapper
-[16:12:35] [main/ERROR] [FML]: FML appears to be missing any signature data. This is not a good thing
-[16:12:35] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.relauncher.CoreModManager$FMLPluginWrapper
-[16:12:35] [main/INFO] [LaunchWrapper]: Calling tweak class org.spongepowered.asm.mixin.EnvironmentStateTweaker
-[16:12:35] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.relauncher.CoreModManager$FMLPluginWrapper
-[16:12:35] [main/INFO] [FermiumBooter]: FermiumBooter adding "adversity.early.mixins.json" for early mixin application.
-[16:12:35] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLDeobfTweaker
-[16:12:35] [main/INFO] [mixin]: Remapping refMap mixins.fermiumbooter.refmap.json using C:\Users\jason\.gradle\caches\minecraft\de\oceanlabs\mcp\mcp_stable\39\1.12.2\srgs\srg-mcp.srg
-[16:12:35] [main/INFO] [MixinExtras|Service]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.1).
-[16:12:35] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.relauncher.CoreModManager$FMLPluginWrapper
-[16:12:35] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.gradle.tweakers.AccessTransformerTweaker
-[16:12:35] [main/INFO] [GradleStart]: Remapping AccessTransformer rules...
-[16:12:35] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.TerminalTweaker
-[16:12:35] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.TerminalTweaker
-[16:12:35] [main/WARN] [mixin]: Reference map 'mixins.adversity.refmap.json' for adversity.early.mixins.json could not be read. If this is a development environment you can ignore this message
-[16:12:35] [main/ERROR] [mixin]: Classloader restrictions [PACKAGE_TRANSFORMER_EXCLUSION] encountered loading adversity.early.mixins.json:MixinContainerEnchantment, name: com.adversity.mixin.MixinContainerEnchantment
-[16:12:35] [main/INFO] [STDOUT]: [com.adversity.asm.ContainerEnchantmentTransformer:transform:34]: [Adversity ASM] Transforming ContainerEnchantment class: net.minecraft.inventory.ContainerEnchantment
-[16:12:35] [main/INFO] [STDOUT]: [com.adversity.asm.ContainerEnchantmentTransformer:transform:47]: [Adversity ASM] Found onCraftMatrixChanged method: onCraftMatrixChanged(Lnet/minecraft/inventory/IInventory;)V
-[16:12:35] [main/INFO] [STDOUT]: [com.adversity.asm.ContainerEnchantmentTransformer:transformOnCraftMatrixChanged:96]: [Adversity ASM] Injected hook into onCraftMatrixChanged
-[16:12:35] [main/INFO] [STDOUT]: [com.adversity.asm.ContainerEnchantmentTransformer:transform:56]: [Adversity ASM] Found enchantItem method: enchantItem(Lnet/minecraft/entity/player/EntityPlayer;I)Z
-[16:12:35] [main/INFO] [STDOUT]: [com.adversity.asm.ContainerEnchantmentTransformer:transformEnchantItem:113]: [Adversity ASM] Injected PRE-hook into enchantItem
-[16:12:35] [main/INFO] [STDOUT]: [com.adversity.asm.ContainerEnchantmentTransformer:transformEnchantItem:140]: [Adversity ASM] Injected POST-hook into enchantItem
-[16:12:35] [main/INFO] [STDOUT]: [com.adversity.asm.ContainerEnchantmentTransformer:transform:65]: [Adversity ASM] Successfully transformed ContainerEnchantment
-[16:12:35] [main/INFO] [LaunchWrapper]: Launching wrapped minecraft {net.minecraft.client.main.Main}
-[16:12:35] [main/INFO] [STDOUT]: [com.adversity.asm.GuiContainerTransformer:transform:29]: [Adversity ASM] Transforming GuiContainer class: net.minecraft.client.gui.inventory.GuiContainer
-[16:12:35] [main/INFO] [STDOUT]: [com.adversity.asm.GuiContainerTransformer:transform:40]: [Adversity ASM] Found drawSlot method: drawSlot(Lnet/minecraft/inventory/Slot;)V
-[16:12:35] [main/INFO] [STDOUT]: [com.adversity.asm.GuiContainerTransformer:transformDrawSlot:99]: [Adversity ASM] Injected hook into drawSlot
-[16:12:35] [main/INFO] [STDOUT]: [com.adversity.asm.GuiContainerTransformer:transform:50]: [Adversity ASM] Successfully transformed GuiContainer.drawSlot
-[16:12:36] [Client thread/INFO] [net.minecraft.client.Minecraft]: Setting user: Player296
-[16:12:36] [Client thread/INFO] [STDOUT]: [com.adversity.asm.ContainerTransformer:transform:36]: [Adversity ASM] Transforming Container class: net.minecraft.inventory.Container
-[16:12:36] [Client thread/INFO] [STDOUT]: [com.adversity.asm.ContainerTransformer:transform:48]: [Adversity ASM] Found slotClick method: slotClick(IILnet/minecraft/inventory/ClickType;Lnet/minecraft/entity/player/EntityPlayer;)Lnet/minecraft/item/ItemStack;
-[16:12:36] [Client thread/INFO] [STDOUT]: [com.adversity.asm.ContainerTransformer:transformSlotClick:129]: [Adversity ASM] Injected hook into slotClick, maxLocals=18
-[16:12:36] [Client thread/INFO] [STDOUT]: [com.adversity.asm.ContainerTransformer:transform:58]: [Adversity ASM] Successfully transformed Container.slotClick
-[16:12:37] [Client thread/WARN] [net.minecraft.client.settings.GameSettings]: Skipping bad option: lastServer:
-[16:12:37] [Client thread/INFO] [net.minecraft.client.Minecraft]: LWJGL Version: 2.9.4
-[16:12:37] [Client thread/INFO] [FML]: -- System Details --
+[13:29:54] [main/INFO] [GradleStart]: Extra: []
+[13:29:54] [main/INFO] [GradleStart]: Found and added coremod: fermiumbooter.FermiumPlugin
+[13:29:54] [main/INFO] [GradleStart]: Found and added coremod: com.adversity.asm.AdversityLoadingPlugin
+[13:29:54] [main/INFO] [GradleStart]: Running with arguments: [--userProperties, {}, --assetsDir, C:/Users/jason/.gradle/caches/minecraft/assets, --assetIndex, 1.12, --accessToken{REDACTED}, --version, 1.12.2, --tweakClass, net.minecraftforge.fml.common.launcher.FMLTweaker, --tweakClass, net.minecraftforge.gradle.tweakers.CoremodTweaker]
+[13:29:54] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLTweaker
+[13:29:54] [main/INFO] [LaunchWrapper]: Using primary tweak class name net.minecraftforge.fml.common.launcher.FMLTweaker
+[13:29:54] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.CoremodTweaker
+[13:29:54] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLTweaker
+[13:29:54] [main/INFO] [FML]: Forge Mod Loader version 14.23.5.2847 for Minecraft 1.12.2 loading
+[13:29:54] [main/INFO] [FML]: Java is OpenJDK 64-Bit Server VM, version 1.8.0_472, running on Windows 11:amd64:10.0, installed at C:\Program Files\Eclipse Adoptium\jdk-8.0.472.8-hotspot\jre
+[13:29:54] [main/ERROR] [FML]: Apache Maven library folder was not in the format expected. Using default libraries directory.
+[13:29:54] [main/ERROR] [FML]: Full: C:\Users\jason\.gradle\caches\modules-2\files-2.1\org.apache.maven\maven-artifact\3.5.3\7dc72b6d6d8a6dced3d294ed54c2cc3515ade9f4\maven-artifact-3.5.3.jar
+[13:29:54] [main/ERROR] [FML]: Trimmed: c:/users/jason/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-artifact/3.5.3/
+[13:29:54] [main/INFO] [FML]: Managed to load a deobfuscated Minecraft name- we are in a deobfuscated environment. Skipping runtime deobfuscation
+[13:29:54] [main/INFO] [FML]: Detected deobfuscated environment, loading log configs for colored console logs.
+[13:29:55] [main/INFO] [FML]: Ignoring missing certificate for coremod FMLCorePlugin (net.minecraftforge.fml.relauncher.FMLCorePlugin), we are in deobf and it's a forge core plugin
+[13:29:55] [main/INFO] [FML]: Ignoring missing certificate for coremod FMLForgePlugin (net.minecraftforge.classloading.FMLForgePlugin), we are in deobf and it's a forge core plugin
+[13:29:55] [main/INFO] [FML]: Found a command line coremod : com.adversity.asm.AdversityLoadingPlugin
+[13:29:55] [main/INFO] [STDOUT]: [com.adversity.asm.AdversityLoadingPlugin:<clinit>:21]: [Adversity] AdversityLoadingPlugin static init
+[13:29:55] [main/INFO] [FermiumRegistryAPI]: FermiumRegistryAPI supplied "adversity.early.mixins.json" for early mixin enqueue, adding.
+[13:29:55] [main/INFO] [STDOUT]: [com.adversity.asm.AdversityLoadingPlugin:<clinit>:25]: [Adversity] Early mixins queued via FermiumBooter
+[13:29:55] [main/INFO] [FermiumRegistryAPI]: FermiumRegistryAPI supplied "adversity.late.mixins.json" for late mixin enqueue, adding.
+[13:29:55] [main/INFO] [STDOUT]: [com.adversity.asm.AdversityLoadingPlugin:<clinit>:29]: [Adversity] Late mixins queued via FermiumBooter
+[13:29:55] [main/INFO] [FML]: Ignoring missing certificate for coremod AdversityCore (com.adversity.asm.AdversityLoadingPlugin), as this is probably a dev workspace
+[13:29:55] [main/INFO] [FML]: Found a command line coremod : fermiumbooter.FermiumPlugin
+[13:29:55] [main/INFO] [FML]: Ignoring missing certificate for coremod FermiumBooter (fermiumbooter.FermiumPlugin), as this is probably a dev workspace
+[13:29:55] [main/INFO] [mixin]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/C:/mywork/adversity/libs/%60FermiumBooter-1.2.0.jar Service=LaunchWrapper Env=CLIENT
+[13:29:55] [main/INFO] [mixin]: Initialised Mixin FML Remapper Adapter with net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper@1458ed9c
+[13:29:55] [main/INFO] [mixin]: Compatibility level set to JAVA_8
+[13:29:55] [main/INFO] [FML]: Searching C:\mywork\adversity\run\.\mods for mods
+[13:29:55] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.gradle.tweakers.CoremodTweaker
+[13:29:55] [main/INFO] [GradleStart]: Injecting location in coremod net.minecraftforge.fml.relauncher.FMLCorePlugin
+[13:29:55] [main/INFO] [GradleStart]: Injecting location in coremod net.minecraftforge.classloading.FMLForgePlugin
+[13:29:55] [main/INFO] [GradleStart]: Injecting location in coremod com.adversity.asm.AdversityLoadingPlugin
+[13:29:55] [main/INFO] [GradleStart]: Injecting location in coremod fermiumbooter.FermiumPlugin
+[13:29:55] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker
+[13:29:55] [main/INFO] [LaunchWrapper]: Loading tweak class name org.spongepowered.asm.mixin.EnvironmentStateTweaker
+[13:29:55] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLDeobfTweaker
+[13:29:55] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.AccessTransformerTweaker
+[13:29:55] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker
+[13:29:55] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker
+[13:29:55] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.relauncher.CoreModManager$FMLPluginWrapper
+[13:29:55] [main/ERROR] [FML]: FML appears to be missing any signature data. This is not a good thing
+[13:29:55] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.relauncher.CoreModManager$FMLPluginWrapper
+[13:29:55] [main/INFO] [LaunchWrapper]: Calling tweak class org.spongepowered.asm.mixin.EnvironmentStateTweaker
+[13:29:55] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.relauncher.CoreModManager$FMLPluginWrapper
+[13:29:55] [main/INFO] [FermiumBooter]: FermiumBooter adding "adversity.early.mixins.json" for early mixin application.
+[13:29:55] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLDeobfTweaker
+[13:29:55] [main/INFO] [mixin]: Remapping refMap mixins.fermiumbooter.refmap.json using C:\Users\jason\.gradle\caches\minecraft\de\oceanlabs\mcp\mcp_stable\39\1.12.2\srgs\srg-mcp.srg
+[13:29:55] [main/INFO] [MixinExtras|Service]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.1).
+[13:29:55] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.relauncher.CoreModManager$FMLPluginWrapper
+[13:29:55] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.gradle.tweakers.AccessTransformerTweaker
+[13:29:55] [main/INFO] [GradleStart]: Remapping AccessTransformer rules...
+[13:29:55] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.TerminalTweaker
+[13:29:55] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.TerminalTweaker
+[13:29:55] [main/WARN] [mixin]: Reference map 'mixins.adversity.refmap.json' for adversity.early.mixins.json could not be read. If this is a development environment you can ignore this message
+[13:29:55] [main/ERROR] [mixin]: Classloader restrictions [PACKAGE_TRANSFORMER_EXCLUSION] encountered loading adversity.early.mixins.json:MixinContainerEnchantment, name: com.adversity.mixin.MixinContainerEnchantment
+[13:29:55] [main/ERROR] [mixin]: Classloader restrictions [PACKAGE_TRANSFORMER_EXCLUSION] encountered loading adversity.early.mixins.json:MixinContainerRepair, name: com.adversity.mixin.MixinContainerRepair
+[13:29:55] [main/ERROR] [mixin]: Classloader restrictions [PACKAGE_TRANSFORMER_EXCLUSION] encountered loading adversity.early.mixins.json:MixinSlot, name: com.adversity.mixin.MixinSlot
+[13:29:55] [main/ERROR] [mixin]: Classloader restrictions [PACKAGE_TRANSFORMER_EXCLUSION] encountered loading adversity.early.mixins.json:MixinCraftingManager, name: com.adversity.mixin.MixinCraftingManager
+[13:29:55] [main/ERROR] [mixin]: Classloader restrictions [PACKAGE_TRANSFORMER_EXCLUSION] encountered loading adversity.early.mixins.json:MixinGuiCrafting, name: com.adversity.mixin.MixinGuiCrafting
+[13:29:55] [main/ERROR] [mixin]: Classloader restrictions [PACKAGE_TRANSFORMER_EXCLUSION] encountered loading adversity.early.mixins.json:MixinGuiInventory, name: com.adversity.mixin.MixinGuiInventory
+[13:29:55] [main/ERROR] [mixin]: Classloader restrictions [PACKAGE_TRANSFORMER_EXCLUSION] encountered loading adversity.early.mixins.json:MixinGuiEnchantment, name: com.adversity.mixin.MixinGuiEnchantment
+[13:29:55] [main/ERROR] [mixin]: Classloader restrictions [PACKAGE_TRANSFORMER_EXCLUSION] encountered loading adversity.early.mixins.json:MixinGuiRepair, name: com.adversity.mixin.MixinGuiRepair
+[13:29:55] [main/INFO] [LaunchWrapper]: Launching wrapped minecraft {net.minecraft.client.main.Main}
+[13:29:56] [Client thread/INFO] [net.minecraft.client.Minecraft]: Setting user: Player312
+[13:29:57] [Client thread/WARN] [net.minecraft.client.settings.GameSettings]: Skipping bad option: lastServer:
+[13:29:57] [Client thread/INFO] [net.minecraft.client.Minecraft]: LWJGL Version: 2.9.4
+[13:29:57] [Client thread/INFO] [FML]: -- System Details --
 Details:
 	Minecraft Version: 1.12.2
 	Operating System: Windows 11 (amd64) version 10.0
 	Java Version: 1.8.0_472, Temurin
 	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode), Temurin
-	Memory: 1187824352 bytes (1132 MB) / 1341652992 bytes (1279 MB) up to 15176040448 bytes (14473 MB)
+	Memory: 1226027120 bytes (1169 MB) / 1379401728 bytes (1315 MB) up to 15176040448 bytes (14473 MB)
 	JVM Flags: 0 total; 
 	IntCache: cache: 0, tcache: 0, allocated: 0, tallocated: 0
 	FML: 
 	Loaded coremods (and transformers): 
 AdversityCore (Adversity-1.0.0.jar)
-  com.adversity.asm.ContainerTransformer
-  com.adversity.asm.GuiContainerTransformer
-  com.adversity.asm.ContainerEnchantmentTransformer
+  
 FermiumBooter (`FermiumBooter-1.2.0.jar)
   
 	GL info: ' Vendor: 'NVIDIA Corporation' Version: '4.6.0 NVIDIA 591.44' Renderer: 'NVIDIA GeForce RTX 5070/PCIe/SSE2'
-[16:12:37] [Client thread/INFO] [FML]: MinecraftForge v14.23.5.2847 Initialized
-[16:12:37] [Client thread/INFO] [FML]: Starts to replace vanilla recipe ingredients with ore ingredients.
-[16:12:37] [Client thread/INFO] [FML]: Invalid recipe found with multiple oredict ingredients in the same ingredient...
-[16:12:37] [Client thread/INFO] [FML]: Replaced 1227 ore ingredients
-[16:12:37] [Client thread/INFO] [FML]: Searching C:\mywork\adversity\run\.\mods for mods
-[16:12:38] [Client thread/INFO] [FML]: Forge Mod Loader has identified 10 mods to load
-[16:12:38] [Client thread/INFO] [FML]: Attempting connection with missing mods [minecraft, mcp, FML, forge, ctgui, crafttweaker, crafttweakerjei, adversity, baubles, worldedit] at CLIENT
-[16:12:38] [Client thread/INFO] [FML]: Attempting connection with missing mods [minecraft, mcp, FML, forge, ctgui, crafttweaker, crafttweakerjei, adversity, baubles, worldedit] at SERVER
-[16:12:39] [Client thread/INFO] [net.minecraft.client.resources.SimpleReloadableResourceManager]: Reloading ResourceManager: Default, FMLFileResourcePack:Forge Mod Loader, FMLFileResourcePack:Minecraft Forge, FMLFileResourcePack:CT-GUI, FMLFileResourcePack:CraftTweaker2, FMLFileResourcePack:CraftTweaker JEI Support, FMLFileResourcePack:Adversity, FMLFileResourcePack:Baubles, FMLFileResourcePack:WorldEdit
-[16:12:39] [Client thread/INFO] [FML]: Processing ObjectHolder annotations
-[16:12:39] [Client thread/INFO] [FML]: Found 1218 ObjectHolder annotations
-[16:12:39] [Client thread/INFO] [FML]: Identifying ItemStackHolder annotations
-[16:12:39] [Client thread/INFO] [FML]: Found 0 ItemStackHolder annotations
-[16:12:39] [Client thread/INFO] [FML]: Configured a dormant chunk cache size of 0
-[16:12:39] [Forge Version Check/INFO] [forge.VersionCheck]: [forge] Starting version check at http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
-[16:12:39] [Client thread/INFO] [adversity]: Adversity Pre-Initialization
-[16:12:39] [Client thread/INFO] [adversity]: Adversity Capabilities registered
-[16:12:39] [Client thread/INFO] [adversity]: Progression Event Handler initialized (using existing capability)
-[16:12:39] [Client thread/INFO] [adversity]: Initializing Affix Registry
-[16:12:39] [Client thread/INFO] [adversity]: Affix Registry initialized with 43 affixes
-[16:12:39] [Client thread/INFO] [adversity]: Initializing Ritual System...
-[16:12:39] [Client thread/INFO] [adversity]: Ritual System initialized with 13 rituals
-[16:12:39] [Client thread/INFO] [adversity]: Network packets registered
-[16:12:39] [Client thread/INFO] [adversity]: Capability, Affix Registry, Progression and Network initialized
-[16:12:39] [Client thread/INFO] [adversity]: Registering Adversity blocks...
-[16:12:39] [Client thread/INFO] [adversity]: Adversity blocks registered
-[16:12:39] [Client thread/INFO] [FML]: Applying holder lookups
-[16:12:39] [Client thread/INFO] [FML]: Holder lookups applied
-[16:12:39] [Client thread/INFO] [adversity]: Registering Adversity items...
-[16:12:39] [Client thread/INFO] [adversity]: Adversity items registered
-[16:12:39] [Client thread/INFO] [FML]: Applying holder lookups
-[16:12:39] [Client thread/INFO] [FML]: Holder lookups applied
-[16:12:39] [Client thread/INFO] [adversity]: Registering Adversity enchantments...
-[16:12:39] [Client thread/INFO] [adversity]: Adversity enchantments registered
-[16:12:39] [Client thread/INFO] [FML]: Applying holder lookups
-[16:12:39] [Client thread/INFO] [FML]: Holder lookups applied
-[16:12:39] [Client thread/INFO] [FML]: Applying holder lookups
-[16:12:39] [Client thread/INFO] [FML]: Holder lookups applied
-[16:12:39] [Client thread/INFO] [FML]: Injecting itemstacks
-[16:12:39] [Client thread/INFO] [FML]: Itemstack injection complete
-[16:12:39] [Thread-3/INFO] [FML]: Using sync timing. 200 frames of Display.update took 215238100 nanos
-[16:12:40] [Forge Version Check/INFO] [forge.VersionCheck]: [forge] Found status: OUTDATED Target: 14.23.5.2859
-[16:12:40] [Forge Version Check/INFO] [forge.VersionCheck]: [crafttweaker] Starting version check at https://updates.blamejared.com/get?n=crafttweaker&gv=1.12.2
-[16:12:40] [Sound Library Loader/INFO] [net.minecraft.client.audio.SoundManager]: Starting up SoundSystem...
-[16:12:41] [Thread-6/INFO] [net.minecraft.client.audio.SoundManager]: Initializing LWJGL OpenAL
-[16:12:41] [Thread-6/INFO] [net.minecraft.client.audio.SoundManager]: (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
-[16:12:41] [Thread-6/INFO] [net.minecraft.client.audio.SoundManager]: OpenAL initialized.
-[16:12:41] [Forge Version Check/INFO] [forge.VersionCheck]: [crafttweaker] Found status: BETA Target: null
-[16:12:41] [Sound Library Loader/INFO] [net.minecraft.client.audio.SoundManager]: Sound engine started
-[16:12:42] [Client thread/INFO] [FML]: Max texture size: 16384
-[16:12:42] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/phantom_cloak.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:42] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/sealed_token.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:42] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/spatial_anchor.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:42] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/calm_dust.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/corrosion_bane.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/soul_seal_dust.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/entropy_core.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/enchant_guardian.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/affix_lens.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/frost_ward.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/courage_charm.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/affix_guide.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/entropy_shard.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/flame_ward.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/void_shard.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/light_amulet.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/affix_crystal.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/anchor_stone.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/difficulty_detector.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/entropy_crystal.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/balance_charm.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:43] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/memory_crystal.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:44] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/affix_essence.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:44] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/redemption_key.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:44] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/redemption_heart.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:44] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/guardian_heart.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:44] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/clarity_lens.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:44] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/immunity_badge.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
-[16:12:44] [Client thread/INFO] [net.minecraft.client.renderer.texture.TextureMap]: Created: 8192x4096 textures-atlas
-[16:12:44] [Client thread/ERROR] [FML]: Parsing error loading recipe adversity:phantom_cloak
+[13:29:57] [Client thread/INFO] [FML]: MinecraftForge v14.23.5.2847 Initialized
+[13:29:57] [Client thread/INFO] [FML]: Starts to replace vanilla recipe ingredients with ore ingredients.
+[13:29:57] [Client thread/INFO] [FML]: Invalid recipe found with multiple oredict ingredients in the same ingredient...
+[13:29:57] [Client thread/INFO] [FML]: Replaced 1227 ore ingredients
+[13:29:57] [Client thread/INFO] [FML]: Searching C:\mywork\adversity\run\.\mods for mods
+[13:29:58] [Client thread/INFO] [FML]: Forge Mod Loader has identified 11 mods to load
+[13:29:58] [Client thread/INFO] [FermiumBooter]: FermiumBooter adding "adversity.late.mixins.json" for late mixin application.
+[13:29:58] [Client thread/WARN] [mixin]: Reference map 'mixins.adversity.refmap.json' for adversity.late.mixins.json could not be read. If this is a development environment you can ignore this message
+[13:29:58] [Client thread/ERROR] [mixin]: Classloader restrictions [PACKAGE_TRANSFORMER_EXCLUSION] encountered loading adversity.late.mixins.json:MixinJeiRecipeRegistry, name: com.adversity.mixin.MixinJeiRecipeRegistry
+[13:29:58] [Client thread/INFO] [FML]: Attempting connection with missing mods [minecraft, mcp, FML, forge, ctgui, crafttweaker, crafttweakerjei, adversity, baubles, jei, worldedit] at CLIENT
+[13:29:58] [Client thread/INFO] [FML]: Attempting connection with missing mods [minecraft, mcp, FML, forge, ctgui, crafttweaker, crafttweakerjei, adversity, baubles, jei, worldedit] at SERVER
+[13:29:59] [Client thread/INFO] [net.minecraft.client.resources.SimpleReloadableResourceManager]: Reloading ResourceManager: Default, FMLFileResourcePack:Forge Mod Loader, FMLFileResourcePack:Minecraft Forge, FMLFileResourcePack:CT-GUI, FMLFileResourcePack:CraftTweaker2, FMLFileResourcePack:CraftTweaker JEI Support, FMLFileResourcePack:Adversity, FMLFileResourcePack:Baubles, FMLFileResourcePack:Just Enough Items, FMLFileResourcePack:WorldEdit
+[13:29:59] [Client thread/INFO] [FML]: Processing ObjectHolder annotations
+[13:29:59] [Client thread/INFO] [FML]: Found 1219 ObjectHolder annotations
+[13:29:59] [Client thread/INFO] [FML]: Identifying ItemStackHolder annotations
+[13:29:59] [Client thread/INFO] [FML]: Found 0 ItemStackHolder annotations
+[13:29:59] [Client thread/INFO] [FML]: Configured a dormant chunk cache size of 0
+[13:29:59] [Forge Version Check/INFO] [forge.VersionCheck]: [forge] Starting version check at http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
+[13:29:59] [Client thread/INFO] [adversity]: Adversity Pre-Initialization
+[13:29:59] [Client thread/INFO] [adversity]: Adversity Capabilities registered
+[13:29:59] [Client thread/INFO] [adversity]: Progression Event Handler initialized
+[13:29:59] [Client thread/INFO] [adversity]: Initializing Affix Registry
+[13:29:59] [Client thread/INFO] [adversity]: Affix Registry initialized with 43 affixes
+[13:29:59] [Client thread/INFO] [adversity]: Initializing Ritual System...
+[13:29:59] [Client thread/INFO] [adversity]: Built-in rituals disabled by config. Ritual registration delegated to CRT/external mods.
+[13:29:59] [Client thread/INFO] [adversity]: Network packets registered
+[13:29:59] [Client thread/INFO] [adversity]: Capability, Affix Registry, Progression and Network initialized
+[13:29:59] [Client thread/INFO] [adversity]: Registering Adversity blocks...
+[13:29:59] [Client thread/INFO] [adversity]: Adversity blocks registered
+[13:29:59] [Client thread/INFO] [FML]: Applying holder lookups
+[13:29:59] [Client thread/INFO] [FML]: Holder lookups applied
+[13:29:59] [Client thread/INFO] [adversity]: Registering Adversity items...
+[13:29:59] [Client thread/INFO] [adversity]: Adversity items registered
+[13:29:59] [Client thread/INFO] [FML]: Applying holder lookups
+[13:29:59] [Client thread/INFO] [FML]: Holder lookups applied
+[13:29:59] [Client thread/INFO] [adversity]: Registering Adversity enchantments...
+[13:29:59] [Client thread/INFO] [adversity]: Adversity enchantments registered
+[13:29:59] [Client thread/INFO] [adversity]: [Adversity] Registered potions
+[13:29:59] [Client thread/INFO] [FML]: Applying holder lookups
+[13:29:59] [Client thread/INFO] [FML]: Holder lookups applied
+[13:29:59] [Client thread/INFO] [FML]: Applying holder lookups
+[13:29:59] [Client thread/INFO] [FML]: Holder lookups applied
+[13:29:59] [Client thread/INFO] [FML]: Injecting itemstacks
+[13:29:59] [Client thread/INFO] [FML]: Itemstack injection complete
+[13:30:00] [Thread-3/INFO] [FML]: Using sync timing. 200 frames of Display.update took 369946596 nanos
+[13:30:00] [Forge Version Check/INFO] [forge.VersionCheck]: [forge] Found status: OUTDATED Target: 14.23.5.2859
+[13:30:00] [Forge Version Check/INFO] [forge.VersionCheck]: [crafttweaker] Starting version check at https://updates.blamejared.com/get?n=crafttweaker&gv=1.12.2
+[13:30:00] [Sound Library Loader/INFO] [net.minecraft.client.audio.SoundManager]: Starting up SoundSystem...
+[13:30:01] [Thread-6/INFO] [net.minecraft.client.audio.SoundManager]: Initializing LWJGL OpenAL
+[13:30:01] [Thread-6/INFO] [net.minecraft.client.audio.SoundManager]: (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+[13:30:01] [Thread-6/INFO] [net.minecraft.client.audio.SoundManager]: OpenAL initialized.
+[13:30:01] [Sound Library Loader/INFO] [net.minecraft.client.audio.SoundManager]: Sound engine started
+[13:30:02] [Client thread/INFO] [FML]: Max texture size: 16384
+[13:30:02] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/phantom_cloak.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:02] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/sealed_token.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:02] [Forge Version Check/INFO] [forge.VersionCheck]: [crafttweaker] Found status: BETA Target: null
+[13:30:02] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/spatial_anchor.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:02] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/calm_dust.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:02] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/corrosion_bane.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:02] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/soul_seal_dust.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:03] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/entropy_core.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:03] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/enchant_guardian.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:03] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/affix_lens.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:03] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/frost_ward.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:03] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/courage_charm.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:03] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/affix_guide.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:03] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/entropy_shard.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:03] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/flame_ward.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:03] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/void_shard.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:03] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/light_amulet.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:03] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/affix_crystal.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:03] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/anchor_stone.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:03] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/difficulty_detector.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:03] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/entropy_crystal.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:03] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/balance_charm.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:03] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/memory_crystal.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:04] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/affix_essence.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:04] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/redemption_key.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:04] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/redemption_heart.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:04] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/guardian_heart.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:04] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/clarity_lens.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:04] [Client thread/WARN] [net.minecraft.client.renderer.texture.TextureMap]: Texture adversity:textures/items/immunity_badge.png with size 500x500 will have visual artifacts at mip level 4, it can only support level 2. Please report to the mod author that the texture should be some multiple of 16x16.
+[13:30:04] [Client thread/INFO] [net.minecraft.client.renderer.texture.TextureMap]: Created: 8192x4096 textures-atlas
+[13:30:04] [Client thread/ERROR] [FML]: Parsing error loading recipe adversity:phantom_cloak
 com.google.gson.JsonSyntaxException: Unknown item 'minecraft:phantom_membrane'
 	at net.minecraftforge.common.crafting.CraftingHelper.getItemStackBasic(CraftingHelper.java:262) ~[CraftingHelper.class:?]
 	at net.minecraftforge.common.crafting.CraftingHelper.lambda$init$16(CraftingHelper.java:544) ~[CraftingHelper.class:?]
@@ -197,7 +194,7 @@ com.google.gson.JsonSyntaxException: Unknown item 'minecraft:phantom_membrane'
 	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_472]
 	at net.minecraftforge.gradle.GradleStartCommon.launch(GradleStartCommon.java:97) [start/:?]
 	at GradleStart.main(GradleStart.java:25) [start/:?]
-[16:12:44] [Client thread/ERROR] [FML]: Parsing error loading recipe adversity:memory_crystal
+[13:30:04] [Client thread/ERROR] [FML]: Parsing error loading recipe adversity:memory_crystal
 com.google.gson.JsonSyntaxException: Unknown item 'minecraft:lapis_lazuli'
 	at net.minecraftforge.common.crafting.CraftingHelper.getItemStackBasic(CraftingHelper.java:262) ~[CraftingHelper.class:?]
 	at net.minecraftforge.common.crafting.CraftingHelper.lambda$init$16(CraftingHelper.java:544) ~[CraftingHelper.class:?]
@@ -226,7 +223,7 @@ com.google.gson.JsonSyntaxException: Unknown item 'minecraft:lapis_lazuli'
 	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_472]
 	at net.minecraftforge.gradle.GradleStartCommon.launch(GradleStartCommon.java:97) [start/:?]
 	at GradleStart.main(GradleStart.java:25) [start/:?]
-[16:12:44] [Client thread/ERROR] [FML]: Parsing error loading recipe adversity:enchant_guardian
+[13:30:04] [Client thread/ERROR] [FML]: Parsing error loading recipe adversity:enchant_guardian
 com.google.gson.JsonSyntaxException: Unknown item 'minecraft:lapis_lazuli'
 	at net.minecraftforge.common.crafting.CraftingHelper.getItemStackBasic(CraftingHelper.java:262) ~[CraftingHelper.class:?]
 	at net.minecraftforge.common.crafting.CraftingHelper.lambda$init$16(CraftingHelper.java:544) ~[CraftingHelper.class:?]
@@ -255,70 +252,96 @@ com.google.gson.JsonSyntaxException: Unknown item 'minecraft:lapis_lazuli'
 	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_472]
 	at net.minecraftforge.gradle.GradleStartCommon.launch(GradleStartCommon.java:97) [start/:?]
 	at GradleStart.main(GradleStart.java:25) [start/:?]
-[16:12:44] [Client thread/INFO] [FML]: Applying holder lookups
-[16:12:44] [Client thread/INFO] [FML]: Holder lookups applied
-[16:12:44] [Client thread/INFO] [adversity]: Adversity Initialization
-[16:12:44] [Client thread/INFO] [adversity]: Difficulty Manager initialized with 2 providers
-[16:12:44] [Client thread/INFO] [adversity]: === Adversity Scaling Configuration ===
-[16:12:44] [Client thread/INFO] [adversity]: Health: LINEAR (rate=0.12, max=0.0)
-[16:12:44] [Client thread/INFO] [adversity]: Damage: LINEAR (rate=0.03, max=0.0)
-[16:12:44] [Client thread/INFO] [adversity]: Armor: LINEAR (rate=0.5, max=30.0)
-[16:12:44] [Client thread/INFO] [adversity]: DR: SIGMOID (rate=0.05, max=0.5)
-[16:12:44] [Client thread/INFO] [adversity]: --- Sample Values (Difficulty 10, 20, 50) ---
-[16:12:44] [Client thread/INFO] [adversity]: Diff 10: HP=2.2x, DMG=1.3x, Armor=+5.0, DR=19.7%
-[16:12:44] [Client thread/INFO] [adversity]: Diff 20: HP=3.4x, DMG=1.6x, Armor=+10.0, DR=31.6%
-[16:12:44] [Client thread/INFO] [adversity]: Diff 50: HP=7.0x, DMG=2.5x, Armor=+25.0, DR=45.9%
-[16:12:44] [Client thread/INFO] [adversity]: Event handlers registered
-[16:12:45] [Client thread/INFO] [adversity]: Client handlers registered
-[16:12:45] [Client thread/INFO] [FML]: Injecting itemstacks
-[16:12:45] [Client thread/INFO] [FML]: Itemstack injection complete
-[16:12:45] [Client thread/INFO] [adversity]: Adversity Post-Initialization
-[16:12:45] [Client thread/INFO] [adversity]: Adversity loaded successfully
-[16:12:45] [Client thread/INFO] [worldedit]: WorldEdit for Forge (version 6.1.10-SNAPSHOT) is loaded
-[16:12:45] [Client thread/INFO] [FML]: Forge Mod Loader has successfully loaded 10 mods
-[16:12:45] [Client thread/WARN] [net.minecraft.client.settings.GameSettings]: Skipping bad option: lastServer:
-[16:12:45] [Client thread/INFO] [com.mojang.text2speech.NarratorWindows]: Narrator library for x64 successfully loaded
-[16:12:46] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FML
-[16:12:50] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Starting integrated minecraft server version 1.12.2
-[16:12:50] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Generating keypair
-[16:12:50] [Server thread/INFO] [FML]: Injecting existing registry data into this server instance
-[16:12:50] [Server thread/INFO] [FML]: Applying holder lookups
-[16:12:50] [Server thread/INFO] [FML]: Holder lookups applied
-[16:12:50] [Server thread/INFO] [FML]: Loading dimension 0 (2 1) (net.minecraft.server.integrated.IntegratedServer@278393d1)
-[16:12:51] [Server thread/INFO] [net.minecraft.advancements.AdvancementList]: Loaded 488 advancements
-[16:12:51] [Server thread/INFO] [FML]: Loading dimension -1 (2 1) (net.minecraft.server.integrated.IntegratedServer@278393d1)
-[16:12:51] [Server thread/INFO] [FML]: Loading dimension 1 (2 1) (net.minecraft.server.integrated.IntegratedServer@278393d1)
-[16:12:51] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Preparing start region for level 0
-[16:12:51] [Server thread/INFO] [adversity]: Config cache refreshed: 0 whitelist, 2 blacklist, 0 disabled affixes, 0 forced tier, 0 elite blacklist
-[16:12:51] [Server thread/INFO] [adversity]: Adversity commands registered
-[16:12:51] [Server thread/INFO] [FML]: Unloading dimension -1
-[16:12:51] [Server thread/INFO] [FML]: Unloading dimension 1
-[16:12:51] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Changing view distance to 25, from 10
-[16:12:52] [Netty Local Client IO #0/INFO] [FML]: Server protocol version 2
-[16:12:52] [Netty Server IO #1/INFO] [FML]: Client protocol version 2
-[16:12:52] [Netty Server IO #1/INFO] [FML]: Client attempting to join with 10 mods : minecraft@1.12.2,crafttweaker@4.1.20,ctgui@1.0.0,adversity@1.0.0,FML@8.0.99.99,crafttweakerjei@2.0.3,forge@14.23.5.2847,worldedit@6.1.10-SNAPSHOT,baubles@1.5.2,mcp@9.42
-[16:12:52] [Netty Local Client IO #0/INFO] [FML]: [Netty Local Client IO #0] Client side modded connection established
-[16:12:52] [Server thread/INFO] [FML]: [Server thread] Server side modded connection established
-[16:12:52] [Server thread/INFO] [net.minecraft.server.management.PlayerList]: Player296[local:E:e24bb1bf] logged in with entity id 2 at (-236.2191202911069, 45.032339429227875, 40.11337395902939)
-[16:12:52] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Player296村?
-[16:12:54] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
-[16:12:54] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level '2 1'/overworld
-[16:13:27] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] /gamemode, /gamerule, /give, /gmask, /green
-[16:13:28] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: [Player296: 眤村?家Α砆?竚??硑家Α ]
-[16:13:28] [Client thread/INFO] [net.minecraft.client.gui.GuiNewChat]: [CHAT] 村?家Α砆穝??硑家Α
-[16:13:29] [Client thread/INFO] [net.minecraft.advancements.AdvancementList]: Loaded 2 advancements
-[16:13:59] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
-[16:13:59] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level '2 1'/overworld
-[16:14:00] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Stopping server
-[16:14:00] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving players
-[16:14:00] [Server thread/INFO] [net.minecraft.network.NetHandlerPlayServer]: Player296 lost connection: ?钡いゎ
-[16:14:00] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Player296癶村?
-[16:14:00] [Server thread/INFO] [net.minecraft.network.NetHandlerPlayServer]: Stopping singleplayer server as player logged out
-[16:14:00] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving worlds
-[16:14:00] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level '2 1'/overworld
-[16:14:00] [Server thread/INFO] [FML]: Unloading dimension 0
-[16:14:01] [Server thread/INFO] [FML]: Applying holder lookups
-[16:14:01] [Server thread/INFO] [FML]: Holder lookups applied
-[16:14:02] [Client thread/INFO] [net.minecraft.client.Minecraft]: Stopping!
-[16:14:02] [Client thread/INFO] [net.minecraft.client.audio.SoundManager]: SoundSystem shutting down...
-[16:14:02] [Client thread/WARN] [net.minecraft.client.audio.SoundManager]: Author: Paul Lamb, www.paulscode.com
+[13:30:05] [Client thread/INFO] [FML]: Applying holder lookups
+[13:30:05] [Client thread/INFO] [FML]: Holder lookups applied
+[13:30:05] [Client thread/INFO] [jei]: Created: 256x128 textures-atlas
+[13:30:05] [Client thread/INFO] [adversity]: Adversity Initialization
+[13:30:05] [Client thread/INFO] [adversity]: Difficulty Manager initialized with 2 providers
+[13:30:05] [Client thread/INFO] [adversity]: === Adversity Scaling Configuration ===
+[13:30:05] [Client thread/INFO] [adversity]: Health: LINEAR (rate=0.12, max=0.0)
+[13:30:05] [Client thread/INFO] [adversity]: Damage: LINEAR (rate=0.03, max=0.0)
+[13:30:05] [Client thread/INFO] [adversity]: Armor: LINEAR (rate=0.5, max=30.0)
+[13:30:05] [Client thread/INFO] [adversity]: DR: SIGMOID (rate=0.05, max=0.5)
+[13:30:05] [Client thread/INFO] [adversity]: --- Sample Values (Difficulty 10, 20, 50) ---
+[13:30:05] [Client thread/INFO] [adversity]: Diff 10: HP=2.2x, DMG=1.3x, Armor=+5.0, DR=19.7%
+[13:30:05] [Client thread/INFO] [adversity]: Diff 20: HP=3.4x, DMG=1.6x, Armor=+10.0, DR=31.6%
+[13:30:05] [Client thread/INFO] [adversity]: Diff 50: HP=7.0x, DMG=2.5x, Armor=+25.0, DR=45.9%
+[13:30:05] [Client thread/INFO] [adversity]: Built-in special ritual effects registered (purge_curse, awakening)
+[13:30:05] [Client thread/INFO] [adversity]: Event handlers registered
+[13:30:05] [Client thread/INFO] [adversity]: Client handlers registered
+[13:30:05] [Client thread/INFO] [adversity]: [Adversity] Stage gating loaded from JSON: 0 items, 0 enchantments, 0 dimensions, 0 entities, 0 biomes
+[13:30:05] [Client thread/INFO] [adversity]: [Adversity] No rituals defined in rituals.json
+[13:30:05] [Client thread/INFO] [FML]: Injecting itemstacks
+[13:30:05] [Client thread/INFO] [FML]: Itemstack injection complete
+[13:30:05] [Client thread/INFO] [adversity]: Adversity Post-Initialization
+[13:30:05] [Client thread/INFO] [adversity]: Adversity loaded successfully
+[13:30:05] [Client thread/INFO] [worldedit]: WorldEdit for Forge (version 6.1.10-SNAPSHOT) is loaded
+[13:30:05] [Client thread/INFO] [jei]: Starting JEI...
+[13:30:05] [Client thread/INFO] [jei]: Registering recipe categories...
+[13:30:05] [Client thread/INFO] [adversity]: JEI: Registered ritual recipe category
+[13:30:05] [Client thread/INFO] [jei]: Registering recipe categories took 20.11 ms
+[13:30:05] [Client thread/INFO] [jei]: Registering mod plugins...
+[13:30:05] [Client thread/INFO] [adversity]: JEI: Registered 5 ritual recipes
+[13:30:05] [Client thread/INFO] [jei]: Registering mod plugins took 101.3 ms
+[13:30:05] [Client thread/INFO] [jei]: Building recipe registry...
+[13:30:05] [Client thread/INFO] [jei]: Building recipe registry took 38.65 ms
+[13:30:05] [Client thread/INFO] [jei]: Building ingredient list...
+[13:30:05] [Client thread/INFO] [jei]: Building ingredient list took 11.41 ms
+[13:30:05] [Client thread/INFO] [jei]: Building ingredient filter...
+[13:30:05] [Client thread/INFO] [jei]: Building ingredient filter took 85.00 ms
+[13:30:05] [Client thread/INFO] [jei]: Building bookmarks...
+[13:30:05] [Client thread/INFO] [jei]: Building bookmarks took 6.949 ms
+[13:30:05] [Client thread/INFO] [jei]: Building runtime...
+[13:30:05] [Client thread/INFO] [jei]: Building runtime took 54.94 ms
+[13:30:05] [Client thread/INFO] [jei]: Optimizing memory usage...
+[13:30:05] [Client thread/INFO] [jei]: Optimizing memory usage took 15.54 ms
+[13:30:05] [Client thread/INFO] [jei]: Starting JEI took 435.1 ms
+[13:30:05] [Client thread/INFO] [FML]: Forge Mod Loader has successfully loaded 11 mods
+[13:30:05] [Client thread/WARN] [net.minecraft.client.settings.GameSettings]: Skipping bad option: lastServer:
+[13:30:05] [Client thread/INFO] [com.mojang.text2speech.NarratorWindows]: Narrator library for x64 successfully loaded
+[13:30:06] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FML
+[13:30:09] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Starting integrated minecraft server version 1.12.2
+[13:30:09] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Generating keypair
+[13:30:10] [Server thread/INFO] [FML]: Injecting existing registry data into this server instance
+[13:30:10] [Server thread/INFO] [FML]: Applying holder lookups
+[13:30:10] [Server thread/INFO] [FML]: Holder lookups applied
+[13:30:10] [Server thread/INFO] [FML]: Loading dimension 0 (穝) (net.minecraft.server.integrated.IntegratedServer@978593)
+[13:30:10] [Server thread/INFO] [net.minecraft.advancements.AdvancementList]: Loaded 488 advancements
+[13:30:10] [Server thread/INFO] [FML]: Loading dimension -1 (穝) (net.minecraft.server.integrated.IntegratedServer@978593)
+[13:30:10] [Server thread/INFO] [FML]: Loading dimension 1 (穝) (net.minecraft.server.integrated.IntegratedServer@978593)
+[13:30:10] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Preparing start region for level 0
+[13:30:10] [Server thread/INFO] [adversity]: Config cache refreshed: 0 whitelist, 2 blacklist, 0 disabled affixes, 0 forced tier, 0 elite blacklist
+[13:30:10] [Server thread/INFO] [adversity]: Adversity commands registered
+[13:30:11] [Server thread/INFO] [FML]: Unloading dimension -1
+[13:30:11] [Server thread/INFO] [FML]: Unloading dimension 1
+[13:30:11] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Changing view distance to 25, from 10
+[13:30:11] [Netty Local Client IO #0/INFO] [FML]: Server protocol version 2
+[13:30:11] [Netty Server IO #1/INFO] [FML]: Client protocol version 2
+[13:30:11] [Netty Server IO #1/INFO] [FML]: Client attempting to join with 11 mods : minecraft@1.12.2,crafttweaker@4.1.20,ctgui@1.0.0,adversity@1.0.0,FML@8.0.99.99,crafttweakerjei@2.0.3,forge@14.23.5.2847,worldedit@6.1.10-SNAPSHOT,baubles@1.5.2,mcp@9.42,jei@4.16.1.1013
+[13:30:11] [Netty Local Client IO #0/INFO] [FML]: [Netty Local Client IO #0] Client side modded connection established
+[13:30:12] [Server thread/INFO] [FML]: [Server thread] Server side modded connection established
+[13:30:12] [Server thread/INFO] [net.minecraft.server.management.PlayerList]: Player312[local:E:7762c8db] logged in with entity id 353 at (151.72652862516034, 71.0, 234.95816575327743)
+[13:30:12] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Player312村?
+[13:30:13] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[13:30:13] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level '穝'/overworld
+[13:30:30] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[13:30:30] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level '穝'/overworld
+[13:30:48] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[13:30:48] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level '穝'/overworld
+[13:31:03] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[13:31:03] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level '穝'/overworld
+[13:31:16] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer]: Saving and pausing game...
+[13:31:16] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level '穝'/overworld
+[13:31:17] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Stopping server
+[13:31:17] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving players
+[13:31:17] [Server thread/INFO] [net.minecraft.network.NetHandlerPlayServer]: Player312 lost connection: ?钡いゎ
+[13:31:17] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Player312癶村?
+[13:31:17] [Server thread/INFO] [net.minecraft.network.NetHandlerPlayServer]: Stopping singleplayer server as player logged out
+[13:31:17] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving worlds
+[13:31:17] [Server thread/INFO] [net.minecraft.server.MinecraftServer]: Saving chunks for level '穝'/overworld
+[13:31:17] [Server thread/INFO] [FML]: Unloading dimension 0
+[13:31:17] [Server thread/INFO] [FML]: Applying holder lookups
+[13:31:17] [Server thread/INFO] [FML]: Holder lookups applied
+[13:31:18] [Client thread/INFO] [net.minecraft.client.Minecraft]: Stopping!
+[13:31:18] [Client thread/INFO] [net.minecraft.client.audio.SoundManager]: SoundSystem shutting down...
+[13:31:19] [Client thread/WARN] [net.minecraft.client.audio.SoundManager]: Author: Paul Lamb, www.paulscode.com

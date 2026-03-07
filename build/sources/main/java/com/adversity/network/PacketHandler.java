@@ -92,6 +92,27 @@ public class PacketHandler {
                         id++,
                         Side.SERVER);
 
+        // 覺醒選擇 GUI (Server -> Client)
+        INSTANCE.registerMessage(
+                        PacketOpenAwakeningGUI.Handler.class,
+                        PacketOpenAwakeningGUI.class,
+                        id++,
+                        Side.CLIENT);
+
+        // 覺醒效果選擇 (Client -> Server)
+        INSTANCE.registerMessage(
+                        PacketAwakeningSelection.Handler.class,
+                        PacketAwakeningSelection.class,
+                        id++,
+                        Side.SERVER);
+
+        // 附魔門控配置保存 (Client -> Server)
+        INSTANCE.registerMessage(
+                        PacketSaveEnchantGating.Handler.class,
+                        PacketSaveEnchantGating.class,
+                        id++,
+                        Side.SERVER);
+
         Adversity.LOGGER.info("Network packets registered");
     }
 }

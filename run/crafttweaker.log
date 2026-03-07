@@ -1,10 +1,43 @@
 [PREINITIALIZATION][CLIENT][INFO] Current loaders after merging: [[preinit]]
 [PREINITIALIZATION][CLIENT][INFO] Loading scripts for loader with names [preinit]
-[PREINITIALIZATION][CLIENT][INFO] Completed script loading in: 1ms
+[PREINITIALIZATION][CLIENT][INFO] [preinit | SIDE_CLIENT]: Skipping file {[0:crafttweaker]: test_enchant_gating.zs} as we are currently loading with a different loader
+[PREINITIALIZATION][CLIENT][INFO] [preinit | SIDE_CLIENT]: Skipping file {[0:crafttweaker]: test_ritual_system.zs} as we are currently loading with a different loader
+[PREINITIALIZATION][CLIENT][INFO] Completed script loading in: 2ms
 [INITIALIZATION][CLIENT][INFO] CraftTweaker: Building registry
 [INITIALIZATION][CLIENT][INFO] CraftTweaker: Successfully built item registry
 [INITIALIZATION][CLIENT][INFO] Current loaders after merging: [[preinit], [recipeevent | crafttweaker]]
 [INITIALIZATION][CLIENT][INFO] Loading scripts for loader with names [crafttweaker | recipeevent]
-[INITIALIZATION][CLIENT][INFO] Completed script loading in: 0ms
+[INITIALIZATION][CLIENT][INFO] [crafttweaker | SIDE_CLIENT]: Loading Script: {[0:crafttweaker]: test_enchant_gating.zs}
+[INITIALIZATION][CLIENT][INFO] [Adversity] Set enchantment gating: stage=champion, blacklist=true, entries=3
+[INITIALIZATION][CLIENT][INFO] [Adversity Test] Enchant gating: whitelist mode, only sharpness exempt, all others gated to champion
+[INITIALIZATION][CLIENT][INFO] [crafttweaker | SIDE_CLIENT]: Loading Script: {[0:crafttweaker]: test_ritual_system.zs}
+[INITIALIZATION][CLIENT][INFO] [Adversity] Set item stage: minecraft:diamond_sword -> scholar
+[INITIALIZATION][CLIENT][INFO] [Adversity] Set item stage: minecraft:diamond_chestplate -> scholar
+[INITIALIZATION][CLIENT][INFO] [Adversity] Set item stage: minecraft:diamond_leggings -> scholar
+[INITIALIZATION][CLIENT][INFO] [Adversity] Set item stage: minecraft:diamond_boots -> scholar
+[INITIALIZATION][CLIENT][INFO] [Adversity] Set item stage: minecraft:diamond_helmet -> scholar
+[INITIALIZATION][CLIENT][INFO] [Test] Item gating: diamond sword + armor → scholar
+[INITIALIZATION][CLIENT][INFO] [Adversity] Registered multi-input ritual: five_gem_fusion (5 inputs)
+[INITIALIZATION][CLIENT][INFO] [Test] 5-input ritual registered: five_gem_fusion
+[INITIALIZATION][CLIENT][INFO] [Adversity] Registered multi-input ritual: four_element_merge (4 inputs)
+[INITIALIZATION][CLIENT][INFO] [Test] 4-input ritual registered: four_element_merge
+[INITIALIZATION][CLIENT][INFO] [Adversity] Registered multi-input ritual: triple_ore_refine (3 inputs)
+[INITIALIZATION][CLIENT][INFO] [Test] 3-input ritual registered: triple_ore_refine
+[INITIALIZATION][CLIENT][INFO] [Adversity] Registered multi-input ritual: dual_crystal_forge (2 inputs)
+[INITIALIZATION][CLIENT][INFO] [Test] 2-input ritual registered: dual_crystal_forge
+[INITIALIZATION][CLIENT][INFO] [Adversity] Registered ritual: simple_convert
+[INITIALIZATION][CLIENT][INFO] [Test] 1-input ritual registered: simple_convert
+[INITIALIZATION][CLIENT][INFO] [Adversity] Set ritual effect: simple_convert -> adversity:awakening
+[INITIALIZATION][CLIENT][INFO] [Test] setRitualEffect: simple_convert → awakening (select 2 effects for 30s)
+[INITIALIZATION][CLIENT][INFO] [Test] Elite loot: T5 → guaranteed diamond block
+[INITIALIZATION][CLIENT][INFO] ============================================================
+[INITIALIZATION][CLIENT][INFO] [Adversity Test] Ritual system test script loaded!
+[INITIALIZATION][CLIENT][INFO]   -> Item gating: diamond gear → scholar
+[INITIALIZATION][CLIENT][INFO]   -> Rituals: 1/2/3/4/5 input variants registered
+[INITIALIZATION][CLIENT][INFO]   -> Max input count = 5 (GUI should show 5 slots)
+[INITIALIZATION][CLIENT][INFO]   -> setRitualEffect: awakening effect configured
+[INITIALIZATION][CLIENT][INFO]   -> Elite loot: T5 → diamond_block (100%)
+[INITIALIZATION][CLIENT][INFO] ============================================================
+[INITIALIZATION][CLIENT][INFO] Completed script loading in: 124ms
 [POSTINITIALIZATION][CLIENT][INFO] Removing recipes for various outputs
 [AVAILABLE][CLIENT][INFO] Fixed the RecipeBook

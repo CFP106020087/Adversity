@@ -1,0 +1,51 @@
+{
+  "_comment": "=== Adversity Ritual Configuration ===",
+  "_doc_priority": "CraftTweaker scripts override these settings. CRT takes priority.",
+  "_doc_categories": "stage_unlock | crafting | utility | difficulty | custom",
+  "_doc_fields": {
+    "id": "Unique ritual ID. Auto-prepends 'adversity:' if no colon present.",
+    "inputs": "Array of input items: [{item, count, meta(optional)}]. Single or multiple.",
+    "output": "Output item: {item, count, meta(optional)}. Omit or null for command-only.",
+    "entropy_cost": "Sanctuary entropy cost (integer).",
+    "required_stage": "Stage required to perform. null = no requirement.",
+    "reward_stage": "Stage granted upon completion. null = no reward.",
+    "command": "Server command. Placeholders: {player}, {x}, {y}, {z}, {dim}.",
+    "cooldown_ticks": "Cooldown in ticks (20=1sec). 0 = no cooldown.",
+    "category": "Category for display. Auto-guessed if omitted.",
+    "effect": "Ritual effect ID for special effects (e.g. adversity:purge_curse).",
+    "effect_params": "Parameters for the effect (depends on effect type)."
+  },
+
+  "_example_stage_unlock": {
+    "id": "awakening",
+    "inputs": [{"item": "minecraft:golden_apple", "count": 1}],
+    "output": {"item": "adversity:sanctuary_compass", "count": 1},
+    "entropy_cost": 500,
+    "reward_stage": "awakened",
+    "category": "stage_unlock"
+  },
+
+  "_example_command_ritual": {
+    "id": "prayer_of_peace",
+    "inputs": [{"item": "adversity:calm_dust", "count": 4}],
+    "entropy_cost": 200,
+    "command": "advdiff sub {player} 1",
+    "cooldown_ticks": 6000,
+    "category": "difficulty"
+  },
+
+  "_example_purge": {
+    "id": "purge_curse",
+    "inputs": [{"item": "minecraft:milk_bucket", "count": 1}],
+    "entropy_cost": 1000,
+    "required_stage": "warden",
+    "effect": "adversity:purge_curse",
+    "effect_params": {
+      "curse_type": "black_swan",
+      "purge_amount": 0.1,
+      "immunity_duration": 6000
+    }
+  },
+
+  "rituals": []
+}
